@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31702.278
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcticWolfApi", "ArcticWolfApi\ArcticWolfApi.csproj", "{7E068292-633A-473C-8795-1B3C43CE327C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcticWolfApi", "ArcticWolfApi\ArcticWolfApi.csproj", "{7E068292-633A-473C-8795-1B3C43CE327C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcticWolfLauncher", "ArcticWolfLauncher\ArcticWolfLauncher.csproj", "{C316AC99-4A34-45BD-8BC8-BD4BD69ED87D}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcticWolfLauncher", "ArcticWolfLauncher\ArcticWolfLauncher.csproj", "{C316AC99-4A34-45BD-8BC8-BD4BD69ED87D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

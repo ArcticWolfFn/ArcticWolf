@@ -9,6 +9,7 @@
   <ItemGroup>
     <None Remove="Resources\FortniteClient-Win64-Shipping_BE.exe" />
     <None Remove="Resources\FortniteLauncher.exe" />
+    <None Remove="Resources\PlataniumV2.dll" />
   </ItemGroup>
 
   <ItemGroup>
@@ -16,6 +17,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\FortniteLauncher.exe">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\PlataniumV2.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
