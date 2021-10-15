@@ -7,9 +7,12 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.OpenApi.Models;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace ArcticWolfApi
@@ -26,7 +29,15 @@ namespace ArcticWolfApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
+            services.AddMvc().AddNewtonsoftJson((Action<MvcNewtonsoftJsonOptions>)(options =>
+            {
+                options.SerializerSettings.Converters.Add((Newtonsoft.Json.JsonConverter)new IsoDateTimeConverter()
+                {
+                    DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fff'Z'"
+                });
+                options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
+            }));
+            services.AddHttpContextAccessor();
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -43,7 +54,7 @@ namespace ArcticWolfApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ArcticWolfApi v1"));
             }
-
+            app.UseEpicStatusErrors();
             app.UseHttpsRedirection();
 
             app.UseRouting();

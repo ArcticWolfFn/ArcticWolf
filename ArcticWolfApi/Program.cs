@@ -11,6 +11,12 @@ namespace ArcticWolfApi
 {
     public class Program
     {
+        public static string ClientId { get; set; }
+
+        public static string Id { get; set; }
+
+        public static string DisplayName { get; set; }
+
         public static void Main(string[] args)
         {
             CreateHostBuilder(args).Build().Run();

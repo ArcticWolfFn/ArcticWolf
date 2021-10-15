@@ -24,7 +24,10 @@ namespace ArcticWolfLauncher
         public MainWindow()
         {
             InitializeComponent();
+        }
 
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
             LauncherService.LaunchGame();
         }
     }

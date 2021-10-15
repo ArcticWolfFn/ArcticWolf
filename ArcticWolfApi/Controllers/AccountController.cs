@@ -1,7 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ArcticWolfApi.Exceptions.OAuth;
+using ArcticWolfApi.Models.Account;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Controllers
@@ -13,7 +17,7 @@ namespace ArcticWolfApi.Controllers
         [HttpPost("oauth/token")]
         public ActionResult<OAuthToken> CreateOAuthToken([FromForm] string grant_type)
         {
-            try
+            /*try
             {
                 Program.ClientId = Encoding.UTF8.GetString(Convert.FromBase64String(this.Request.Headers["authorization"].ToString().Split(" ")[1])).Split(":")[0];
                 if (Program.ClientId != "ec684b8c687f479fadea3cb2ad83f5c6")
@@ -22,7 +26,7 @@ namespace ArcticWolfApi.Controllers
             catch
             {
                 throw new InvalidClientException();
-            }
+            }*/
             IFormCollection form = this.Request.Form;
             if (grant_type == "client_credentials")
                 return (ActionResult<OAuthToken>)new OAuthToken(Program.ClientId);
@@ -49,9 +53,9 @@ namespace ArcticWolfApi.Controllers
         public ActionResult KillOAuthSession(string accessToken) => (ActionResult)this.NoContent();
 
         [HttpGet("public/account")]
-        public ActionResult<List<Rift.Backend.Models.Account.Account>> GetAccountLookupByIds() => (ActionResult<List<Rift.Backend.Models.Account.Account>>)new List<Rift.Backend.Models.Account.Account>()
+        public ActionResult<List<Account>> GetAccountLookupByIds() => (ActionResult<List<Account>>)new List<Account>()
     {
-      new Rift.Backend.Models.Account.Account()
+      new Account()
       {
         Id = Program.Id,
         DisplayName = Program.DisplayName
@@ -59,10 +63,10 @@ namespace ArcticWolfApi.Controllers
     };
 
         [HttpGet("public/account/{accountId}")]
-        public ActionResult<Rift.Backend.Models.Account.Account> GetAccountLookupById(
+        public ActionResult<Account> GetAccountLookupById(
           string accountId)
         {
-            return (ActionResult<Rift.Backend.Models.Account.Account>)new Rift.Backend.Models.Account.Account()
+            return (ActionResult<Account>)new Account()
             {
                 Id = Program.Id,
                 DisplayName = Program.DisplayName

@@ -11,7 +11,7 @@ namespace ArcticWolfLauncher.Services
     {
         public static void LaunchGame()
         {
-            string gamePath = @"D:\Software\Games\Fortnite\FortniteGame\Binaries\Win64\FortniteClient-Win64-Shipping.exe";
+            string gamePath = @"D:\Games\FN Custom\15.00\FortniteGame\Binaries\Win64\FortniteClient-Win64-Shipping.exe";
             string flToken = "7a848a93a74ba68876c36C1c";
 
             List<string> baseArgs = new List<string>()
