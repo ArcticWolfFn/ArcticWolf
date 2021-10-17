@@ -10,11 +10,10 @@ using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Controllers
 {
-    [Route("/fortnite/api/game/v2/matchmakingservice/ticket/player/{playerId}")]
     [ApiController]
     public class MatchmakingController : ControllerBase
     {
-        [HttpGet]
+        [HttpGet("/fortnite/api/game/v2/matchmakingservice/ticket/player/{playerId}")]
         public ActionResult<TicketResponse> Get(string playerId, [FromQuery(Name = "bucketId")] string bucketId, [FromQuery(Name = "accountId")] string accountId)
         {
             ParsedBckt parsedBckt = new ParsedBckt();
@@ -26,7 +25,7 @@ namespace ArcticWolfApi.Controllers
                 parsedBckt.HotfixVersion = int.Parse(splitted[1]);
                 parsedBckt.Region = splitted[2];
                 parsedBckt.Playlist = splitted[3];
-            }catch (Exception ex)
+            } catch (Exception ex)
             {
                 throw new UnhandledErrorException("Invalid bucketId");
             }
@@ -56,7 +55,16 @@ namespace ArcticWolfApi.Controllers
             TicketResponse response = new TicketResponse();
             response.payload = payload;
 
-            return (ActionResult<TicketResponse>) response;
+            return (ActionResult<TicketResponse>)response;
+        }
+
+        [HttpGet("/fortnite/api/matchmaking/session/{sessionId}")]
+        public ActionResult<VerifySessionResponse> VerifyMatchmakingSession(string sessionId)
+        {
+            VerifySessionResponse response = new VerifySessionResponse();
+            response.buildUniqueId = Request.Cookies.First(x => x.Key == "NetCL").Value;
+
+            return (ActionResult<VerifySessionResponse>)response;
         }
     }
 
@@ -108,5 +116,34 @@ namespace ArcticWolfApi.Controllers
             }
             return string.Join("", result.ToArray());
         }
+    }
+
+    public class VerifySessionResponse
+    {
+        public string id { get; set; }
+        public string ownerId { get; set; } = "ArcticWolf";
+        public string ownerName { get; set; } = "ArcticWolf";
+        public string serverName { get; set; } = "ArcticWolf";
+        public string serverAddress { get; set; } = "127.0.0.1";
+        public int serverPort { get; set; } = -1;
+        public int totalPlayers { get; set; } = 0;
+        public int maxPublicPlayers { get; set; } = 0;
+        public int openPublicPlayers { get; set; } = 0;
+        public int maxPrivatePlayers { get; set; } = 0;
+        public int openPrivatePlayers { get; set; } = 0;
+        public object attributes { get; set; } = new object();
+        public List<object> publicPlayers { get; set; } = new List<object>();
+        public List<object> privatePlayers { get; set; } = new List<object>();
+        public bool allowJoinInProgress { get; set; } = false;
+        public bool shouldAdvertise { get; set; } = false;
+        public bool isDedicated { get; set; } = false;
+        public bool usesStats { get; set; } = false;
+        public bool allowInvites { get; set; } = false;
+        public bool usesPresence { get; set; } = false;
+        public bool allowJoinViaPresence { get; set; } = true;
+        public bool allowJoinViaPresenceFriendsOnly { get; set; } = false;
+        public string buildUniqueId { get; set; } = "00000000";
+        public string lastUpdated { get; set; } = "2020-11-09T00:40:28.878Z";
+        public bool started { get; set; } = false;
     }
 }
