@@ -13,6 +13,10 @@ namespace ArcticWolfApi.Filters
     {
         public override void OnException(ExceptionContext context)
         {
+            Console.WriteLine("Excpetion Message: " + context.Exception.Message);
+            Console.WriteLine("Excpetion StackTrace: " + context.Exception.StackTrace);
+            Console.WriteLine("Excpetion Source: " + context.Exception.Source);
+
             if (!(context.Exception is BaseException))
                 context.Exception = (Exception)new UnhandledErrorException(context.Exception.Message ?? "");
             BaseException exception = (BaseException)context.Exception;

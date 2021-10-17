@@ -19,7 +19,7 @@ namespace ArcticWolfApi.Exceptions
         }
 
         [JsonProperty("errorCode")]
-        public string Code => this.GetType().FullName.Replace(".Backend.Models", "").ToLower();
+        public string Code => this.GetType().FullName.Replace(".Models", "").ToLower();
 
         [JsonProperty("errorMessage")]
         public override string Message => base.Message;

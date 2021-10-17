@@ -37,7 +37,7 @@ namespace ArcticWolfApi.Controllers
             data.playerId = accountId;
             data.partyPlayerIds.Add(accountId);
             data.bucketId = $"FN:Live:{parsedBckt.NetCL}:{parsedBckt.HotfixVersion}:{parsedBckt.Region}:{parsedBckt.Playlist}:PC:public:1";
-            data.attributes.Add(new KeyValuePair<string, string>("player.userAgent", Request.Headers.First(x => x.Key == "user-agent").Value));
+            data.attributes.Add(new KeyValuePair<string, string>("player.userAgent", Request.Headers["User-Agent"].ToString()));
 
             foreach (KeyValuePair<string, StringValues> item in Request.Query)
             {
