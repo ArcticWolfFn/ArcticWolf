@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ArcticWolfApi.Models.Content;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,11 +38,11 @@ namespace ArcticWolfApi.Controllers
             {
                 BattleRoyaleNews = new BattleRoyaleNewsEntry(new object[1]
               {
-          (object) new BattleRoyaleNewsWebsiteMOTD("Rift", "Welcome to Rift!\nTo go in-game and begin your experience, press F3.", "https://cdn.discordapp.com/attachments/797250357485895730/797250571845107722/background.png", tileImage, "https://discord.gg/RiftFN", "Join the Discord")
+          (object) new BattleRoyaleNewsMOTD("Arctic Wolf", "Welcome to Arctic Wolf!", "https://cdn.discordapp.com/attachments/797250357485895730/797250571845107722/background.png", tileImage)
               }),
                 EmergencyNotice = new EmergencyNoticeEntry(new PagesMessage[1]
               {
-          new PagesMessage("Rift", "Press F3 to go in-game.\nDiscord: discord.gg/RiftFN")
+          new PagesMessage("Arctic Wolf", "")
               }),
                 SubgameInfo = new SubgameInfoEntry()
                 {

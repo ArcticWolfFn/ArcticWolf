@@ -11,11 +11,71 @@ namespace ArcticWolfApi
 {
     public class Program
     {
+        public static readonly Dictionary<string, object> CosmeticLoadout = new Dictionary<string, object>()
+    {
+      {
+        "character",
+        (object) ""
+      },
+      {
+        "backpack",
+        (object) ""
+      },
+      {
+        "pickaxe",
+        (object) "AthenaPickaxe:defaultpickaxe"
+      },
+      {
+        "glider",
+        (object) "AthenaGlider:defaultglider"
+      },
+      {
+        "skydivecontrail",
+        (object) ""
+      },
+      {
+        "loadingscreen",
+        (object) ""
+      },
+      {
+        "musicpack",
+        (object) ""
+      },
+      {
+        "dance",
+        (object) new string[6]
+        {
+          "AthenaDance:eid_dancemoves",
+          "",
+          "",
+          "",
+          "",
+          ""
+        }
+      },
+      {
+        "itemwrap",
+        (object) new string[7]{ "", "", "", "", "", "", "" }
+      }
+    };
+        public static readonly string[] WhitelistedCosmetics = new string[5]
+        {
+      "AthenaPickaxe:defaultpickaxe",
+      "AthenaGlider:defaultglider",
+      "AthenaDance:eid_dancemoves",
+      "AthenaDance:eid_wir",
+      "AthenaDance:eid_boogiedown"
+        };
+
         public static string ClientId { get; set; }
 
         public static string Id { get; set; }
 
         public static string DisplayName { get; set; }
+
+        public static int AthenaRvn { get; set; }
+
+        public static int CommonCoreRvn { get; set; }
 
         public static void Main(string[] args)
         {

@@ -1,23 +1,23 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
   <PropertyGroup>
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Resources\System\DefaultEngine.ini" />
-    <None Remove="Resources\System\DefaultGame.ini" />
-    <None Remove="Resources\System\DefaultInput.ini" />
+    <None Remove="Resources\Cloudstorage\System\DefaultEngine.ini" />
+    <None Remove="Resources\Cloudstorage\System\DefaultGame.ini" />
+    <None Remove="Resources\Cloudstorage\System\DefaultInput.ini" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Include="Resources\System\DefaultEngine.ini">
+    <Content Include="Resources\Cloudstorage\System\DefaultEngine.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\System\DefaultGame.ini">
+    <Content Include="Resources\Cloudstorage\System\DefaultGame.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="Resources\System\DefaultInput.ini">
+    <Content Include="Resources\Cloudstorage\System\DefaultInput.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Resources\ClientSettings\" />
+    <Folder Include="Resources\Cloudstorage\ClientSettings\" />
   </ItemGroup>
 
 </Project>
