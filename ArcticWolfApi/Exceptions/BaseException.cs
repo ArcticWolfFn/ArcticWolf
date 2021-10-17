@@ -31,7 +31,7 @@ namespace ArcticWolfApi.Exceptions
         public int NumericCode { get; private set; }
 
         [JsonProperty("originatingService")]
-        public string OriginatingService => "rift";
+        public string OriginatingService => "arcticwolf";
 
         [JsonProperty("intent")]
         public string Intent => "prod";

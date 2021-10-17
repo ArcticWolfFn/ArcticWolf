@@ -26,7 +26,7 @@ namespace ArcticWolfApi
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
-                    webBuilder.UseUrls("http://*:5595");
+                    webBuilder.UseUrls("http://*:8000");
                     webBuilder.UseStartup<Startup>();
                 });
     }

@@ -5,9 +5,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Resources\System\DefaultEngine.ini" />
+    <None Remove="Resources\System\DefaultGame.ini" />
+    <None Remove="Resources\System\DefaultInput.ini" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\System\DefaultEngine.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\System\DefaultGame.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\System\DefaultInput.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="5.0.11" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Resources\ClientSettings\" />
   </ItemGroup>
 
 </Project>
