@@ -1,9 +1,11 @@
 ﻿using ArcticWolfApi.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Controllers
@@ -13,7 +15,7 @@ namespace ArcticWolfApi.Controllers
     public class MatchmakingController : ControllerBase
     {
         [HttpGet]
-        public ActionResult Get(string playerId, [FromQuery(Name = "bucketId")] string bucketId, [FromQuery(Name = "accountId")] string accountId)
+        public ActionResult<TicketResponse> Get(string playerId, [FromQuery(Name = "bucketId")] string bucketId, [FromQuery(Name = "accountId")] string accountId)
         {
             ParsedBckt parsedBckt = new ParsedBckt();
 
@@ -31,7 +33,7 @@ namespace ArcticWolfApi.Controllers
 
             Response.Cookies.Append("NetCL", parsedBckt.NetCL);
 
-            TicketResponseData data = new TicketResponseData();
+            TicketResponsePayload data = new TicketResponsePayload();
             data.playerId = accountId;
             data.partyPlayerIds.Add(accountId);
             data.bucketId = $"FN:Live:{parsedBckt.NetCL}:{parsedBckt.HotfixVersion}:{parsedBckt.Region}:{parsedBckt.Playlist}:PC:public:1";
@@ -46,9 +48,24 @@ namespace ArcticWolfApi.Controllers
                     data.attributes.Add(new KeyValuePair<string, string>("player.preferredSubregion", item.Value.ToString().Split(",")[0]));
                 }
 
-
+                data.attributes.Add(new KeyValuePair<string, string>(item.Key, item.Value));
             }
+
+            string payload = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data)));
+
+            TicketResponse response = new TicketResponse();
+            response.payload = payload;
+
+            return (ActionResult<TicketResponse>) response;
         }
+    }
+
+    public class TicketResponse
+    {
+        public string serviceUrl = "ws://matchmaking-fn.herokuapp.com/";
+        public string ticketType = "mms-player";
+        public string payload;
+        public string signature = null;
     }
 
     public class ParsedBckt
@@ -59,7 +76,7 @@ namespace ArcticWolfApi.Controllers
         public int HotfixVersion = -1;
     }
 
-    public class TicketResponseData
+    public class TicketResponsePayload
     {
         public string playerId;
         public List<string> partyPlayerIds = new List<string>();
@@ -68,7 +85,7 @@ namespace ArcticWolfApi.Controllers
         public DateTime expireAt;
         public string nonce;
 
-        public TicketResponseData()
+        public TicketResponsePayload()
         {
             attributes.Add(new KeyValuePair<string, string>("player.preferredSubregion", "None"));
             attributes.Add(new KeyValuePair<string, string>("player.option.spectator", "false"));
