@@ -1,7 +1,10 @@
+using ArcticWolfApi.Filters;
+using ArcticWolfApi.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Filters;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -37,6 +40,8 @@ namespace ArcticWolfApi
                 });
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
             }));
+            services.AddMvc((Action<MvcOptions>)(options => options.Filters.Add((IFilterMetadata)new BaseExceptionFilterAttribute())));
+            services.AddSingleton<IProfileService, ProfileService>();
             services.AddHttpContextAccessor();
             services.AddControllers();
             services.AddSwaggerGen(c =>
