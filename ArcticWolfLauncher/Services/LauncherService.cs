@@ -10,6 +10,10 @@ namespace ArcticWolfLauncher.Services
 {
     public static class LauncherService
     {
+        private static Process _fnLauncherProcess = null;
+        private static Process _fnAntiCheatProcess = null;
+        private static Process _fortniteProcess = null;
+
         public static void LaunchGame()
         {
             string gamePath = @"D:\Games\FN Custom\15.00\FortniteGame\Binaries\Win64\FortniteClient-Win64-Shipping.exe";
@@ -30,7 +34,7 @@ namespace ArcticWolfLauncher.Services
         };
             string args = string.Join(" ", baseArgs);
 
-            Process fortniteProcess = new Process()
+            _fortniteProcess = new()
             {
                 StartInfo = new ProcessStartInfo()
                 {
@@ -40,22 +44,30 @@ namespace ArcticWolfLauncher.Services
                 EnableRaisingEvents = true
             };
 
-            fortniteProcess.Start();
+            _fortniteProcess.Exited += FortniteProcess_Exited;
 
-            Process _fnLauncherProcess = Process.Start(new ProcessStartInfo()
+            _fortniteProcess.Start();
+
+            _fnLauncherProcess = Process.Start(new ProcessStartInfo()
             {
                 Arguments = args,
                 CreateNoWindow = true,
                 FileName = "Resources/FortniteLauncher.exe"
             });
-            Process _fnAntiCheatProcess = Process.Start(new ProcessStartInfo()
+            _fnAntiCheatProcess = Process.Start(new ProcessStartInfo()
             {
                 Arguments = args,
                 CreateNoWindow = true,
                 FileName = "Resources/FortniteClient-Win64-Shipping_BE.exe"
             });
 
-            InjectDll(fortniteProcess.Id, "Resources/Platanium.dll");
+            InjectDll(_fortniteProcess.Id, "Resources/Platanium.dll");
+        }
+
+        private static void FortniteProcess_Exited(object sender, EventArgs e)
+        {
+            _fnLauncherProcess?.Kill();
+            _fnAntiCheatProcess?.Kill();
         }
 
         public static void InjectDll(int processId, string path)
