@@ -53,7 +53,7 @@ namespace ArcticWolfApi.Controllers
             string payload = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data)));
 
             TicketResponse response = new TicketResponse();
-            response.payload = payload;
+            response.payload = "";
 
             return (ActionResult<TicketResponse>)response;
         }
@@ -62,10 +62,36 @@ namespace ArcticWolfApi.Controllers
         public ActionResult<VerifySessionResponse> VerifyMatchmakingSession(string sessionId)
         {
             VerifySessionResponse response = new VerifySessionResponse();
+            response.id = sessionId;
             response.buildUniqueId = Request.Cookies.First(x => x.Key == "NetCL").Value;
 
             return (ActionResult<VerifySessionResponse>)response;
         }
+
+        [HttpGet("/fortnite/api/game/v2/matchmaking/account/{accountId}/session/{sessionId}")]
+        public ActionResult<MatchmakingAccountSessionResponse> GetMatchmakingAccountSession(string accountId, string sessionId)
+        {
+            MatchmakingAccountSessionResponse response = new();
+            response.accountId = accountId;
+            response.sessionId = sessionId;
+
+            return response;
+        }
+
+
+
+        [HttpPost("/fortnite/api/matchmaking/session/{sessionId}/join")]
+        public ActionResult JoinMatchmakingSession(string sessionId)
+        {
+            return this.NoContent();
+        }
+    }
+
+    public class MatchmakingAccountSessionResponse
+    {
+        public string accountId = "";
+        public string sessionId = "";
+        public string key = "none";
     }
 
     public class TicketResponse
@@ -73,7 +99,7 @@ namespace ArcticWolfApi.Controllers
         public string serviceUrl = "ws://matchmaking-fn.herokuapp.com/";
         public string ticketType = "mms-player";
         public string payload;
-        public string signature = null;
+        public string signature = "";
     }
 
     public class ParsedBckt
@@ -125,7 +151,7 @@ namespace ArcticWolfApi.Controllers
         public string ownerName { get; set; } = "ArcticWolf";
         public string serverName { get; set; } = "ArcticWolf";
         public string serverAddress { get; set; } = "127.0.0.1";
-        public int serverPort { get; set; } = -1;
+        public int serverPort { get; set; } = 7777;
         public int totalPlayers { get; set; } = 0;
         public int maxPublicPlayers { get; set; } = 0;
         public int openPublicPlayers { get; set; } = 0;
@@ -143,7 +169,7 @@ namespace ArcticWolfApi.Controllers
         public bool allowJoinViaPresence { get; set; } = true;
         public bool allowJoinViaPresenceFriendsOnly { get; set; } = false;
         public string buildUniqueId { get; set; } = "00000000";
-        public string lastUpdated { get; set; } = "2020-11-09T00:40:28.878Z";
+        public DateTime lastUpdated { get; set; } = DateTime.UtcNow;
         public bool started { get; set; } = false;
     }
 }

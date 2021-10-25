@@ -16,7 +16,13 @@ namespace ArcticWolfLauncher.Services
 
         public static void LaunchGame()
         {
-            string gamePath = @"D:\Games\FN Custom\15.00\FortniteGame\Binaries\Win64\FortniteClient-Win64-Shipping.exe";
+            string gamePath = Path.Join(AppSettings.Default.FNPath, @"\FortniteGame\Binaries\Win64\FortniteClient-Win64-Shipping.exe");
+            if (!File.Exists(gamePath))
+            {
+                MessageBox.Show("Invalid game path", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+
             string flToken = "7a848a93a74ba68876c36C1c";
 
             List<string> baseArgs = new List<string>()
@@ -61,7 +67,7 @@ namespace ArcticWolfLauncher.Services
                 FileName = "Resources/FortniteClient-Win64-Shipping_BE.exe"
             });
 
-            InjectDll(_fortniteProcess.Id, "Resources/Platanium.dll");
+            InjectDll(_fortniteProcess.Id, "Resources/PlataniumV2.dll");
         }
 
         private static void FortniteProcess_Exited(object sender, EventArgs e)

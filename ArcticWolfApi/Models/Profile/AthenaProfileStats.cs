@@ -12,7 +12,7 @@ namespace ArcticWolfApi.Models.Profile
         public int LifetimeWins;
 
         [JsonProperty("past_seasons")]
-        public object PastSeasons => (object)new { };
+        public object PastSeasons => new();
 
         [JsonProperty("season")]
         public object Season => (object)new

@@ -8,15 +8,19 @@ using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Controllers
 {
-    [Route("fortnite/api/[controller]/v1/timeline")]
+    [Route("fortnite/api/[controller]/v1/")]
     [ApiController]
     public class CalendarController : ControllerBase
     {
+        [HttpGet("timeline")]
         public ActionResult<Timeline> GetTimeline()
         {
             int seasonNumber = this.Request.GetSeasonNumber();
             Decimal buildVersion = this.Request.GetBuildVersion();
+
+            // set lobby season for battle pass etc
             string str = seasonNumber == 2 ? "LobbyWinterDecor" : string.Format("LobbySeason{0}", (object)seasonNumber);
+
             Timeline timeline1 = new Timeline();
             Timeline timeline2 = timeline1;
             Dictionary<string, TimelineChannel> dictionary1 = new Dictionary<string, TimelineChannel>();

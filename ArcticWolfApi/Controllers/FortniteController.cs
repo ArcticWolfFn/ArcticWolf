@@ -25,7 +25,7 @@ namespace ArcticWolfApi.Controllers
         [HttpGet("game/v2/enabled_features")]
         public ActionResult<string[]> GetEnabledFeatures() => (ActionResult<string[]>)Array.Empty<string>();
 
-        [HttpGet("game/v2/world/info")]
+        [HttpGet("game/v2/world/info")] // StW I guess
         public ActionResult<object> GetWorldInfo() => (ActionResult<object>)new object();
 
         [HttpGet("game/v2/twitch/{accountId}")]
@@ -43,5 +43,26 @@ namespace ArcticWolfApi.Controllers
 
         [HttpGet("matchmaking/session/findPlayer/{accountId}")]
         public ActionResult<string[]> FindMatchmakingSession(string accountId) => (ActionResult<string[]>)Array.Empty<string>();
+
+        [HttpGet("game/v2/br-inventory/account/{accountId}")]
+        public ActionResult<BrInventory> GetBrInventory(string accountId)
+        {
+            BrInventory response = new();
+
+            return response;
+        }
+
+        public class BrInventory
+        {
+            public Stash stash = new();
+        }
+
+        public class Stash
+        {
+            /// <summary>
+            ///     Gold Bars
+            /// </summary>
+            public int globalcash = 0;
+        }
     }
 }

@@ -29,6 +29,9 @@ namespace ArcticWolfApi.Models.Content
         [JsonProperty("dynamicbackgrounds", NullValueHandling = NullValueHandling.Ignore)]
         public DynamicBackground DynamicBackgrounds { get; set; }
 
+        [JsonProperty("playlistinformation", NullValueHandling = NullValueHandling.Ignore)]
+        public PlaylistInformationEntry PlaylistInformation { get; set; }
+
         public Pages()
           : base("Fortnite Game")
         {

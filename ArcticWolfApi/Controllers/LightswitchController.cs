@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Controllers
 {
-    [Route("[controller]/api/service/bulk/status")]
+    [Route("[controller]/api/")]
     [ApiController]
     public class LightswitchController : ControllerBase
     {
+        [HttpGet("service/bulk/status")]
         public ActionResult<List<LightswitchStatus>> GetLightswitchStatus(
           [FromQuery] string serviceId)
         {

@@ -53,14 +53,18 @@ namespace ArcticWolfApi.Controllers
         public ActionResult KillOAuthSession(string accessToken) => (ActionResult)this.NoContent();
 
         [HttpGet("public/account")]
-        public ActionResult<List<Account>> GetAccountLookupByIds() => (ActionResult<List<Account>>)new List<Account>()
+        public ActionResult<List<Account>> GetAccountLookupByIds()
+        {
+            Account account = new Account()
+            {
+                Id = Program.Id,
+                DisplayName = Program.DisplayName
+            };
+            return (ActionResult<List<Account>>)new List<Account>()
     {
-      new Account()
-      {
-        Id = Program.Id,
-        DisplayName = Program.DisplayName
-      }
+      account
     };
+        }
 
         [HttpGet("public/account/{accountId}")]
         public ActionResult<Account> GetAccountLookupById(
@@ -74,6 +78,9 @@ namespace ArcticWolfApi.Controllers
         }
 
         [HttpGet("public/account/{accountId}/externalAuths")]
-        public ActionResult<object> GetExternalAuthsById(string accountId) => (ActionResult<object>)new object();
+        public object GetExternalAuthsById(string accountId)
+        {
+            return new();
+        }
     }
 }

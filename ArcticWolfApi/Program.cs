@@ -58,13 +58,14 @@ namespace ArcticWolfApi
         (object) new string[7]{ "", "", "", "", "", "", "" }
       }
     };
-        public static readonly string[] WhitelistedCosmetics = new string[5]
+        public static readonly string[] WhitelistedCosmetics = new string[6] // itemType:id
         {
       "AthenaPickaxe:defaultpickaxe",
       "AthenaGlider:defaultglider",
       "AthenaDance:eid_dancemoves",
       "AthenaDance:eid_wir",
-      "AthenaDance:eid_boogiedown"
+      "AthenaDance:eid_boogiedown",
+      "AthenaGlider:glider_id_243_myth"
         };
 
         public static string ClientId { get; set; }

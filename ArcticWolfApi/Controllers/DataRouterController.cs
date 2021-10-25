@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Controllers
 {
-    [Route("[controller]/api/v1/public/data")]
+    [Route("[controller]/api/v1")]
     [ApiController]
     public class DataRouterController : ControllerBase
     {
+        [HttpPost("public/data")]
         public ActionResult PostDatarouter() => (ActionResult)this.NoContent();
     }
 }

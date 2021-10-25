@@ -6,7 +6,8 @@
         xmlns:local="clr-namespace:ArcticWolfLauncher"
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
-    <Grid>
-        <Button Content="Launch" Click="Button_Click" />
-    </Grid>
+    <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+        <TextBox x:Name="GamePath" MinWidth="300"  />
+        <Button Content="Launch" Click="Button_Click" Margin="0,10,0,0" />
+    </StackPanel>
 </Window>

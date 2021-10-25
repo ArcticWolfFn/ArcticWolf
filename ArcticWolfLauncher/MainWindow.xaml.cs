@@ -24,10 +24,13 @@ namespace ArcticWolfLauncher
         public MainWindow()
         {
             InitializeComponent();
+            GamePath.Text = AppSettings.Default.FNPath;
         }
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
+            AppSettings.Default.FNPath = GamePath.Text;
+            AppSettings.Default.Save();
             LauncherService.LaunchGame();
         }
     }

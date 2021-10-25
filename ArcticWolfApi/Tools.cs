@@ -6,6 +6,7 @@ using Microsoft.Extensions.Primitives;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
@@ -26,9 +27,17 @@ namespace ArcticWolfApi
             return empty.ToLower();
         }
 
-        public static int GetSeasonNumber(this HttpRequest request) => Decimal.ToInt32(request.GetBuildVersion());
+        public static int GetSeasonNumber(this HttpRequest request)
+        {
+            return Convert.ToInt32(request.GetBuildVersion());
+        }
 
         public static Decimal GetBuildVersion(this HttpRequest request)
+        {
+            return decimal.Parse(request.GetBuildVersionString(), System.Globalization.NumberStyles.Any, CultureInfo.InvariantCulture);
+        }
+
+        public static string GetBuildVersionString(this HttpRequest request)
         {
             string header = (string)request.Headers["User-Agent"];
             if (!string.IsNullOrEmpty(header))
@@ -38,15 +47,15 @@ namespace ArcticWolfApi
                     try
                     {
                         string s = header.Split("-")[1];
-                        return s == "Next" || s == "Cert" || s.Contains("+++Fortnite+Release") ? 2.0M : Decimal.Parse(s);
+                        return s == "Next" || s == "Cert" || s.Contains("+++Fortnite+Release") ? "2.0" : s;
                     }
                     catch
                     {
-                        return 1.0M;
+                        return "1.0";
                     }
                 }
             }
-            return 1.0M;
+            return "1.0";
         }
 
         public static int GetCLNumber(this HttpRequest request)

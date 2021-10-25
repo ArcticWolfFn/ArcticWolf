@@ -7,10 +7,11 @@ using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Controllers
 {
-    [Route("[controller]/api/pages/fortnite-game")]
+    [Route("[controller]/api")]
     [ApiController]
     public class ContentController : ControllerBase
     {
+        [HttpGet("pages/fortnite-game")]
         public ActionResult<Pages> GetContentPages()
         {
             int seasonNumber = this.Request.GetSeasonNumber();
