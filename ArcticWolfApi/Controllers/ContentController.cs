@@ -22,9 +22,9 @@ namespace ArcticWolfApi.Controllers
                 case 10:
                     str = "seasonx";
                     break;
-                case 15:
+                /*case 15: // not working on 15.00 but on 15.30
                     str = "season15xmas";
-                    break;
+                    break;*/
                 default:
                     str = string.Format("season{0}", (object)seasonNumber);
                     break;
