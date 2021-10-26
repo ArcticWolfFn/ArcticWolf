@@ -93,6 +93,7 @@ namespace ArcticWolfApi.Controllers
 
         private static string GetCloudstorageFile(string file)
         {
+            Console.WriteLine("Looking for: " + file);
             Dictionary<string, string> source = new Dictionary<string, string>()
       {
         {
@@ -106,6 +107,10 @@ namespace ArcticWolfApi.Controllers
         {
           "DefaultInput",
           "mhl5jvb7fm85e157u49k1lbf8p9kpj50"
+        },
+        {
+          "DefaultRuntimeOptions",
+          "mhl5jvb7fm85e157u49k1lbf8p9kpj60"
         }
       };
             return !source.ContainsKey(file) ? source.FirstOrDefault<KeyValuePair<string, string>>((Func<KeyValuePair<string, string>, bool>)(x => x.Value == file)).Key : source[file];

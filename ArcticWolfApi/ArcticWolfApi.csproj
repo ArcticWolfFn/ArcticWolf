@@ -8,6 +8,7 @@
     <None Remove="Resources\Cloudstorage\System\DefaultEngine.ini" />
     <None Remove="Resources\Cloudstorage\System\DefaultGame.ini" />
     <None Remove="Resources\Cloudstorage\System\DefaultInput.ini" />
+    <None Remove="Resources\Cloudstorage\System\DefaultRuntimeOptions.ini" />
   </ItemGroup>
 
   <ItemGroup>
@@ -18,6 +19,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Resources\Cloudstorage\System\DefaultInput.ini">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Resources\Cloudstorage\System\DefaultRuntimeOptions.ini">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
