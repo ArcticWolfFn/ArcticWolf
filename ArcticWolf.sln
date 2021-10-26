@@ -7,7 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcticWolfApi", "ArcticWolf
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcticWolfLauncher", "ArcticWolfLauncher\ArcticWolfLauncher.csproj", "{C316AC99-4A34-45BD-8BC8-BD4BD69ED87D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcticSpy", "ArcticSpy\ArcticSpy.csproj", "{859D2A79-7117-47F1-B233-3F536D3DFA7A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcticSpy", "ArcticSpy\ArcticSpy.csproj", "{859D2A79-7117-47F1-B233-3F536D3DFA7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcticWolf.DataMiner", "ArcticWolf.DataMiner\ArcticWolf.DataMiner.csproj", "{A91146A7-6C54-46C9-87AE-B59C76A7579E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -27,6 +29,10 @@ Global
 		{859D2A79-7117-47F1-B233-3F536D3DFA7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{859D2A79-7117-47F1-B233-3F536D3DFA7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{859D2A79-7117-47F1-B233-3F536D3DFA7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A91146A7-6C54-46C9-87AE-B59C76A7579E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A91146A7-6C54-46C9-87AE-B59C76A7579E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A91146A7-6C54-46C9-87AE-B59C76A7579E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A91146A7-6C54-46C9-87AE-B59C76A7579E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
