@@ -1,6 +1,7 @@
 ﻿using ArcticWolf.DataMiner.Common.Http;
 using ArcticWolf.DataMiner.Extensions;
 using ArcticWolf.DataMiner.Models.Apis.Nitestats;
+using ArcticWolf.DataMiner.Models.Apis.Nitestats.Calendar.Channels.States;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -15,6 +16,8 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
     {
         private const string LOG_PREFIX = "NiteStatsApi";
         private const string PARSER_LOG_PREFIX = "NiteStatsApi|DataParser";
+
+        private CalendarResponse _cachedLastCalendarResponse = null;
 
         public NitestatsApiClient()
         {
@@ -38,28 +41,40 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                 Error = ErrorHandler,
             });
 
-            CalendarResponse fakeResponse = JsonConvert.DeserializeObject<CalendarResponse>(JsonConvert.SerializeObject(calendarResponse));
-            fakeResponse.CacheIntervalMins = 12;
-            fakeResponse.Channels.ClientEvents.States.First().SubState.SeasonNumber = 1;
-            fakeResponse.Channels.ClientEvents.States.First().SubState.ActiveEvents.Add(new Models.Apis.Nitestats.Calendar.Channels.Event() { DevName = "CustomEvent" });
-
-            List<Difference> differences = calendarResponse.GetDifferences(fakeResponse);
-
-            foreach(Difference diff in differences)
+            if (_cachedLastCalendarResponse != null)
             {
-                switch (diff.Type)
+                // do comparison
+                List<Difference> differences = calendarResponse.GetDifferences(_cachedLastCalendarResponse);
+                foreach (Difference diff in differences)
                 {
-                    case DifferenceType.Added:
-                        Log.Error($"(PropertyChanged) Object of type {diff.Type.ToString()} at {diff.Path} has been added", PARSER_LOG_PREFIX);
-                        break;
+                    switch (diff.Type)
+                    {
+                        case DifferenceType.Added:
+                            Log.Error($"(PropertyChanged) Object of type {diff.Type.ToString()} at {diff.Path} has been added", PARSER_LOG_PREFIX);
+                            break;
 
-                    case DifferenceType.Changed:
-                        Log.Error($"(PropertyChanged) {diff.Property} changed from '{diff.OriginalValue}' to '{diff.NewValue}'", PARSER_LOG_PREFIX);
-                        break;
+                        case DifferenceType.Changed:
+                            Log.Error($"(PropertyChanged) {diff.Property} changed from '{diff.OriginalValue}' to '{diff.NewValue}'", PARSER_LOG_PREFIX);
+                            break;
 
-                    case DifferenceType.Removed:
-                        Log.Error($"(PropertyChanged) {diff.Property} at {diff.Path} was removed", PARSER_LOG_PREFIX);
-                        break;
+                        case DifferenceType.Removed:
+                            Log.Error($"(PropertyChanged) {diff.Property} at {diff.Path} was removed", PARSER_LOG_PREFIX);
+                            break;
+                    }
+                }
+
+                return;
+            }
+            else
+            {
+                // got data for first time
+
+                // process ClientMatchmaking channel
+                foreach (State<TkSubState> currentState in calendarResponse.Channels.Tk.States)
+                {
+                    TkSubState currentSubState = currentState.SubState;
+
+                    //currentSubState.K;
                 }
             }
         }

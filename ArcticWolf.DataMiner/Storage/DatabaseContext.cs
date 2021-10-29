@@ -9,9 +9,11 @@ namespace ArcticWolf.DataMiner.Storage
 {
     public class DatabaseContext : DbContext
     {
-        public string DbPath { get; private set; }
+        public DbSet<FnVersion> FnVersions { get; set; }
+        public DbSet<TkKey> TkKeys { get; set; }
+        public DbSet<PakFile> PakFiles { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite($"Data Source={DbPath}");
+            => options.UseSqlite($"Data Source={(Program.Configuration != null ? Program.Configuration.DatabasePath : "db.sqlite")}");
     }
 }

@@ -87,6 +87,11 @@ namespace ArcticWolf.DataMiner
             }
         }
 
+        public static void Verbose(string message, string prefix = null)
+        {
+            Write(LogLevel.Verbose, message, prefix);
+        }
+
         public static void Debug(string message, string prefix = null)
         {
             Write(LogLevel.Debug, message, prefix);

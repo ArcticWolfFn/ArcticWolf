@@ -1,6 +1,8 @@
-﻿using Newtonsoft.Json;
+﻿using ArcticWolf.DataMiner.Parser;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,10 +30,27 @@ namespace ArcticWolf.DataMiner.Models.Apis.Benbot
         public string CurrentFortniteVersion { get; set; }
 
         [JsonProperty("currentFortniteVersionNumber")]
-        public double CurrentFortniteVersionNumber { get; set; }
+        public decimal CurrentFortniteVersionNumber { get; set; }
 
         [JsonProperty("currentCdnVersion")]
         public string CurrentCdnVersion { get; set; }
+
+        [JsonIgnore]
+        public decimal CurrentCdnVersionNumber
+        {
+            get
+            {
+                if (_currentCdnVersionNumber != 0)
+                {
+                    return _currentCdnVersionNumber;
+                }
+
+                _currentCdnVersionNumber = VersionParser.GetVersionFromFnVersionString(CurrentCdnVersion);
+
+                return _currentCdnVersionNumber;
+            }
+        }
+        private decimal _currentCdnVersionNumber = 0;
 
         /// <summary>
         /// The amount of pak files that exist in the current version

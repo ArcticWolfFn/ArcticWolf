@@ -8,6 +8,7 @@ namespace ArcticWolf.DataMiner.Common.Logging
 {
     public enum LogLevel
     {
+        Verbose,
         Debug,
         Information,
         Warning,

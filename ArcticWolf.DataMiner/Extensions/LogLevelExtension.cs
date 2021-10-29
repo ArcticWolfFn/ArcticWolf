@@ -13,7 +13,8 @@ namespace ArcticWolf.DataMiner.Extensions
         {
             return level switch
             {
-                LogLevel.Debug => ConsoleColor.DarkGray,
+                LogLevel.Verbose => ConsoleColor.DarkGray,
+                LogLevel.Debug => ConsoleColor.Gray,
                 LogLevel.Information => ConsoleColor.Blue,
                 LogLevel.Warning => ConsoleColor.Yellow,
                 LogLevel.Error => ConsoleColor.Red,
