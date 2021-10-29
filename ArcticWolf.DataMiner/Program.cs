@@ -1,4 +1,5 @@
-﻿using ArcticWolf.DataMiner.Apis.Nitestats;
+﻿using ArcticWolf.DataMiner.Apis.Benbot;
+using ArcticWolf.DataMiner.Apis.Nitestats;
 using System;
 
 namespace ArcticWolf.DataMiner
@@ -17,6 +18,7 @@ namespace ArcticWolf.DataMiner
             );
 
             new NitestatsApiClient();
+            new BenbotApiClient();
         }
     }
 }

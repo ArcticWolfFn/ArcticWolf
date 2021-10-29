@@ -10,12 +10,19 @@ namespace ArcticWolf.DataMiner.Common.Http
     public class HttpClient
     {
         private const string LOG_PREFIX = "Http";
+        private WebClient _client = new WebClient();
+
+        public HttpClient(WebHeaderCollection defaultHeaders = null)
+        {
+            if (defaultHeaders != null)
+            {
+                _client.Headers = defaultHeaders;
+            }
+        }
 
         public HttpResponse Request(string url, RequestMethod method = RequestMethod.GET)
         {
             HttpResponse response = new HttpResponse();
-
-            WebClient client = new();
 
             try
             {
@@ -24,7 +31,7 @@ namespace ArcticWolf.DataMiner.Common.Http
                 switch (method)
                 {
                     case RequestMethod.GET:
-                        response.Content = client.DownloadString(url);
+                        response.Content = _client.DownloadString(url);
                         break;
 
                     case RequestMethod.POST:
@@ -47,12 +54,12 @@ namespace ArcticWolf.DataMiner.Common.Http
                 response.Success = false;
             }
 
-            if (client.ResponseHeaders != null)
+            if (_client.ResponseHeaders != null)
             {
-                foreach (string header in client.ResponseHeaders)
+                foreach (string header in _client.ResponseHeaders)
                 {
                     string value = "";
-                    foreach (string item in client.ResponseHeaders.GetValues(header))
+                    foreach (string item in _client.ResponseHeaders.GetValues(header))
                         value += item + ",";
 
                     Log.Debug($"Response Header: {header} Value: '{value}'", LOG_PREFIX);

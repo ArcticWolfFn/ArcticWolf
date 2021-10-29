@@ -13,8 +13,8 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 {
     public class NitestatsApiClient
     {
-        private const string LOG_PREFIX = "NiteStats";
-        private const string PARSER_LOG_PREFIX = "NiteStats|DataParser";
+        private const string LOG_PREFIX = "NiteStatsApi";
+        private const string PARSER_LOG_PREFIX = "NiteStatsApi|DataParser";
 
         public NitestatsApiClient()
         {
@@ -41,8 +41,27 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
             CalendarResponse fakeResponse = JsonConvert.DeserializeObject<CalendarResponse>(JsonConvert.SerializeObject(calendarResponse));
             fakeResponse.CacheIntervalMins = 12;
             fakeResponse.Channels.ClientEvents.States.First().SubState.SeasonNumber = 1;
+            fakeResponse.Channels.ClientEvents.States.First().SubState.ActiveEvents.Add(new Models.Apis.Nitestats.Calendar.Channels.Event() { DevName = "CustomEvent" });
 
-            calendarResponse.GetDifferences(fakeResponse);
+            List<Difference> differences = calendarResponse.GetDifferences(fakeResponse);
+
+            foreach(Difference diff in differences)
+            {
+                switch (diff.Type)
+                {
+                    case DifferenceType.Added:
+                        Log.Error($"(PropertyChanged) Object of type {diff.Type.ToString()} at {diff.Path} has been added", PARSER_LOG_PREFIX);
+                        break;
+
+                    case DifferenceType.Changed:
+                        Log.Error($"(PropertyChanged) {diff.Property} changed from '{diff.OriginalValue}' to '{diff.NewValue}'", PARSER_LOG_PREFIX);
+                        break;
+
+                    case DifferenceType.Removed:
+                        Log.Error($"(PropertyChanged) {diff.Property} at {diff.Path} was removed", PARSER_LOG_PREFIX);
+                        break;
+                }
+            }
         }
 
         void ErrorHandler(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
