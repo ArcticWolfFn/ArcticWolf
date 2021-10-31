@@ -1,6 +1,7 @@
 #pragma once
 
 #include "pch.h"
+#include <winscard.h>
 
 inline HANDLE hConsole;
 
@@ -17,8 +18,11 @@ inline HANDLE hConsole;
 #define VALIDATE_ADDRESS(address, error) \
     if (!address) { \
         MessageBoxA(0, error, XOR("PlataniumV2"), MB_OK); \
-        return; \
+		FreeLibraryAndExitThread(GetModuleHandle(NULL), 0); \
+        return 0; \
     }
+
+#define RELATIVE_ADDRESS(address, size) ((PBYTE)((UINT_PTR)(address) + *(PINT)((UINT_PTR)(address) + ((size) - sizeof(INT))) + (size)))
 
 #define DetoursEasy(address, hook) \
 	DetourTransactionBegin(); \

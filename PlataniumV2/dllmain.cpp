@@ -27,6 +27,14 @@ VOID WINAPI Main()
 	printfc(FOREGROUND_GREEN, "[=] Built on: %s at %s\n", __DATE__, __TIME__);
 
 	Hooks::Init();
+
+	while (true) {
+		if (Hooks::Misc())
+		{
+
+		}
+		Sleep(1000 / 30); // 30 fps
+	}
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)

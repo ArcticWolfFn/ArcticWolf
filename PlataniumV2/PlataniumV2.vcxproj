@@ -102,9 +102,15 @@ xcopy "$(TargetPath)" "$(SolutionDir)Build\" /F /I /R /Y</Command>
     <ClInclude Include="curl.h" />
     <ClInclude Include="curlver.h" />
     <ClInclude Include="defs.h" />
+    <ClInclude Include="enums.h" />
     <ClInclude Include="hooks.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="masks.h" />
+    <ClInclude Include="MinHook.h" />
+    <ClInclude Include="patterns.h" />
+    <ClInclude Include="structs.h" />
     <ClInclude Include="system.h" />
+    <ClInclude Include="ue4.h" />
     <ClInclude Include="url.h" />
     <ClInclude Include="util.h" />
     <ClInclude Include="pch.h" />
@@ -121,6 +127,9 @@ xcopy "$(TargetPath)" "$(SolutionDir)Build\" /F /I /R /Y</Command>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\..\..\Downloads\minhook.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -13,6 +13,12 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\memory">
+      <UniqueIdentifier>{a6786b04-f7d8-43fc-9ac6-3ba3927127f9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\minhook">
+      <UniqueIdentifier>{9a328ea9-82a4-4863-b445-d19753761a54}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -48,6 +54,24 @@
     <ClInclude Include="curl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="patterns.h">
+      <Filter>Header Files\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="masks.h">
+      <Filter>Header Files\memory</Filter>
+    </ClInclude>
+    <ClInclude Include="ue4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="MinHook.h">
+      <Filter>Header Files\minhook</Filter>
+    </ClInclude>
+    <ClInclude Include="structs.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="enums.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -62,5 +86,10 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\..\..\..\Downloads\minhook.lib">
+      <Filter>Header Files\minhook</Filter>
+    </Library>
   </ItemGroup>
 </Project>

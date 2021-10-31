@@ -7,6 +7,13 @@
 #include "curl.h"
 #include "defs.h"
 #include "veh.h"
+#include "patterns.h"
+#include "masks.h"
+#include "ue4.h"
+#include "util.h"
+#include <detours.h>
+#include "patterns.h"
+#include "patterns.h"
 
 
 //globals
@@ -161,7 +168,7 @@ void VerifyPeerPatch()
 
 namespace Hooks
 {
-	inline void Init()
+	inline bool Init()
 	{
 		printf("Init started \n");
 
@@ -234,6 +241,25 @@ namespace Hooks
 		// DetoursEasy(PushWidget, PushWidgetHook)
 
 			printfc(FOREGROUND_GREEN, "[+] No errors were occurred, you can login now!.");
+	}
+
+	inline bool Misc() {
+		//GObject Array
+		auto GObjectsAdd = Util::FindPattern(Patterns::bGlobal::GObjects, Masks::bGlobal::GObjects);
+		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
+
+		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
+
+		// not working currently
+		auto FNameToStringAdd = Util::FindPattern(Patterns::New::FNameToString,
+			Masks::New::FNameToString);
+		VALIDATE_ADDRESS(FNameToStringAdd, XOR("Failed to find FNameToString Address."));
+
+		FNameToString = decltype(FNameToString)(FNameToStringAdd);
+
+		GEngine = UE4::FindObject<UEngine*>(XOR(L"FortEngine /Engine/Transient.FortEngine_"));
+
+		return true;
 	}
 }
 
