@@ -1,4 +1,5 @@
 ﻿using ArcticWolf.DataMiner.Apis.Benbot;
+using ArcticWolf.DataMiner.Apis.FnDotNet;
 using ArcticWolf.DataMiner.Apis.Nitestats;
 using ArcticWolf.DataMiner.Managers;
 using ArcticWolf.DataMiner.Models;
@@ -46,8 +47,9 @@ namespace ArcticWolf.DataMiner
             }
             );
 
-            new NitestatsApiClient();
             BenbotApiClient = new BenbotApiClient();
+            new NitestatsApiClient();
+            new FnDotNetApiClient();
 
             AesManager.Init();
             OldVersionsManager.Init();

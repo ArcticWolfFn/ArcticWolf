@@ -33,14 +33,23 @@ namespace ArcticSpy
             _authSession = await _api.AccountService.GenerateOAuthSession(GrantType.RefreshToken, AuthClient.PC, new()
             {
 
-                { "refresh_token", "2a894242c19e438ba5f00ae7e6d1258a" },
+                { "refresh_token", "13de0ba76cb346648eda112cb9f1d233" },
             });
+
+            Console.WriteLine("New: " + _authSession.RefreshToken);
+            Console.WriteLine("Current: " + _authSession.AccessToken);
+
+            Console.WriteLine(JsonConvert.SerializeObject(await _authSession.GetAccountInfo()));
+
+
+            return;
+
+            McpResponse res = await _authSession.ClientQuestLogin(FortniteDotNet.Enums.Fortnite.Profile.Athena);
+            //res.ProfileChanges.First().
 
             EventData response = await _authSession.GetEventData(FortniteDotNet.Enums.Events.Region.EU, FortniteDotNet.Enums.Events.Platform.Windows);
 
             File.WriteAllText("GetEventData", JsonConvert.SerializeObject(response));
-
-            Console.WriteLine("New: " + _authSession.RefreshToken);
 
             return;
 

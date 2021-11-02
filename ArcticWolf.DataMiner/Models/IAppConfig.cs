@@ -14,5 +14,7 @@ namespace ArcticWolf.DataMiner.Models
 
         [Option(DefaultValue = "db.sqlite")]
         string DatabasePath { get; set; }
+
+        string FnApiRefreshToken { get; set; }
     }
 }

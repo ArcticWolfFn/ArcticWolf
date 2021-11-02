@@ -32,10 +32,13 @@ namespace ArcticWolf.DataMiner.Managers
 
         public static void AnalyseAesForVersion(decimal version)
         {
+            Log.Debug($"(Aes): Analsing keys for v{version:F}");
+
             AesResponse aesResponse = Program.BenbotApiClient.GetAesKeys.Get(version.ToString());
 
             if (aesResponse == null)
             {
+                Log.Warning($"(Aes): Failed to get aes data for v{version:F}");
                 return;
             }
 
@@ -44,7 +47,7 @@ namespace ArcticWolf.DataMiner.Managers
             if (string.IsNullOrWhiteSpace(currentVersion.MainKey) && !string.IsNullOrWhiteSpace(aesResponse.MainKey))
             {
                 currentVersion.MainKey = aesResponse.MainKey;
-                Log.Debug($"(Aes): Set MainKey for '{currentVersion.Version:F}' to '{aesResponse.MainKey}'", LOG_PREFIX);
+                Log.Information($"(Aes): Set MainKey for '{currentVersion.Version:F}' to '{aesResponse.MainKey}'", LOG_PREFIX);
             }
 
             Program.DbContext.Entry(currentVersion).Collection(x => x.PakFiles).Load();
