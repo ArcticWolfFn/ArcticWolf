@@ -17,7 +17,9 @@ namespace ArcticWolf.DataMiner
     {
         public static DatabaseContext DbContext { get; set; }
         public static IAppConfig Configuration { get; private set; }
-        public static BenbotApiClient BenbotApiClient;
+        public static BenbotApiClient BenbotApiClient { get; private set; }
+        public static NitestatsApiClient NitestatsApiClient { get; private set; }
+        public static FnDotNetApiClient FnDotNetApiClient { get; private set; }
 
         static void Main(string[] args)
         {
@@ -48,8 +50,8 @@ namespace ArcticWolf.DataMiner
             );
 
             BenbotApiClient = new BenbotApiClient();
-            new NitestatsApiClient();
-            new FnDotNetApiClient();
+            NitestatsApiClient = new NitestatsApiClient();
+            FnDotNetApiClient = new FnDotNetApiClient();
 
             AesManager.Init();
             OldVersionsManager.Init();

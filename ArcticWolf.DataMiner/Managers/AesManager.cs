@@ -14,7 +14,7 @@ namespace ArcticWolf.DataMiner.Managers
     {
         private const string LOG_PREFIX = "AesManager";
 
-        private static Timer _updateAesTimer = new Timer(10*1000);
+        private static Timer _updateAesTimer = new(10 * 1000);
 
         public static void Init()
         {

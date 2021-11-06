@@ -25,15 +25,17 @@ namespace ArcticWolfApi.Controllers
                 parsedBckt.HotfixVersion = int.Parse(splitted[1]);
                 parsedBckt.Region = splitted[2];
                 parsedBckt.Playlist = splitted[3];
-            } catch (Exception ex)
+            } catch (Exception)
             {
                 throw new UnhandledErrorException("Invalid bucketId");
             }
 
             Response.Cookies.Append("NetCL", parsedBckt.NetCL);
 
-            TicketResponsePayload data = new TicketResponsePayload();
-            data.playerId = accountId;
+            TicketResponsePayload data = new TicketResponsePayload
+            {
+                playerId = accountId
+            };
             data.partyPlayerIds.Add(accountId);
             data.bucketId = $"FN:Live:{parsedBckt.NetCL}:{parsedBckt.HotfixVersion}:{parsedBckt.Region}:{parsedBckt.Playlist}:PC:public:1";
             data.attributes.Add(new KeyValuePair<string, string>("player.userAgent", Request.Headers["User-Agent"].ToString()));
@@ -52,8 +54,10 @@ namespace ArcticWolfApi.Controllers
 
             string payload = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(data)));
 
-            TicketResponse response = new TicketResponse();
-            response.payload = "";
+            TicketResponse response = new()
+            {
+                payload = ""
+            };
 
             return (ActionResult<TicketResponse>)response;
         }
@@ -61,9 +65,11 @@ namespace ArcticWolfApi.Controllers
         [HttpGet("/fortnite/api/matchmaking/session/{sessionId}")]
         public ActionResult<VerifySessionResponse> VerifyMatchmakingSession(string sessionId)
         {
-            VerifySessionResponse response = new VerifySessionResponse();
-            response.id = sessionId;
-            response.buildUniqueId = Request.Cookies.First(x => x.Key == "NetCL").Value;
+            VerifySessionResponse response = new()
+            {
+                id = sessionId,
+                buildUniqueId = Request.Cookies.First(x => x.Key == "NetCL").Value
+            };
 
             return (ActionResult<VerifySessionResponse>)response;
         }

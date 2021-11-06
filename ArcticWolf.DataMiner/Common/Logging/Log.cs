@@ -61,8 +61,8 @@ namespace ArcticWolf.DataMiner
             }
 
             string seperator = " ";
-            string formatedDateTime = $"[{DateTime.Now.ToString()}]";
-            string formatedLogLevel = $"[{logLevel.ToString()}]";
+            string formatedDateTime = $"[{DateTime.Now}]";
+            string formatedLogLevel = $"[{logLevel}]";
 
             string formatedMessage = "";
 

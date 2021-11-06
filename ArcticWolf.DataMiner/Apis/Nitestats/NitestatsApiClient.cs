@@ -50,7 +50,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                     switch (diff.Type)
                     {
                         case DifferenceType.Added:
-                            Log.Error($"(PropertyChanged) Object of type {diff.Type.ToString()} at {diff.Path} has been added", PARSER_LOG_PREFIX);
+                            Log.Error($"(PropertyChanged) Object of type {diff.Type} at {diff.Path} has been added", PARSER_LOG_PREFIX);
                             break;
 
                         case DifferenceType.Changed:

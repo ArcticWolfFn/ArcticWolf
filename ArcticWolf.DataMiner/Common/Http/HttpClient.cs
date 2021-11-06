@@ -10,7 +10,7 @@ namespace ArcticWolf.DataMiner.Common.Http
     public class HttpClient
     {
         private const string LOG_PREFIX = "Http";
-        private WebClient _client = new WebClient();
+        private WebClient _client = new();
 
         public HttpClient(WebHeaderCollection defaultHeaders = null)
         {

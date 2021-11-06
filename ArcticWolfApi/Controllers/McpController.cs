@@ -38,12 +38,10 @@ namespace ArcticWolfApi.Controllers
         [HttpPost("IncrementNamedCounterStat")]
         public ActionResult<McpResponse> QueryProfile(string accountId)
         {
-            Action onRiftRequested = McpController.OnRiftRequested;
-            if (onRiftRequested != null)
-                onRiftRequested();
-            McpController.OnRiftRequested = (Action)null;
-            string profile = this._profile;
-            return (ActionResult<McpResponse>)new McpResponse(profile == "profile0" ? this._profileService.GenerateCommonCoreProfile(accountId, this._profile) : (profile == "common_core" ? this._profileService.GenerateCommonCoreProfile(accountId, this._profile) : (profile == "athena" ? this._profileService.GenerateAthenaProfile(accountId, this.Request.GetSeasonNumber()) : this._profileService.GenerateBlankProfile(accountId, this._profile))), this._rvn, this._profile, this._changes);
+            OnRiftRequested?.Invoke();
+            OnRiftRequested = null;
+            string profile = _profile;
+            return new McpResponse(profile == "profile0" ? _profileService.GenerateCommonCoreProfile(accountId, this._profile) : (profile == "common_core" ? this._profileService.GenerateCommonCoreProfile(accountId, this._profile) : (profile == "athena" ? this._profileService.GenerateAthenaProfile(accountId, this.Request.GetSeasonNumber()) : this._profileService.GenerateBlankProfile(accountId, this._profile))), this._rvn, this._profile, this._changes);
         }
 
         [HttpPost("SetHardcoreModifier")]

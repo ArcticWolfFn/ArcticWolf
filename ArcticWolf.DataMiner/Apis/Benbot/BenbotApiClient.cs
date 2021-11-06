@@ -55,7 +55,7 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
 
             StatusResponse statusResponse = JsonConvert.DeserializeObject<StatusResponse>(response.Content);
 
-            if (Program.Configuration.LastCheckedFnVersion != statusResponse.CurrentCdnVersionNumber || Program.DbContext.FnVersions.Where(x => x.Version == statusResponse.CurrentFortniteVersionNumber).Count() == 0)
+            if (Program.Configuration.LastCheckedFnVersion != statusResponse.CurrentCdnVersionNumber || !Program.DbContext.FnVersions.Where(x => x.Version == statusResponse.CurrentFortniteVersionNumber).Any())
             {
                 if (Program.Configuration.LastCheckedFnVersion == 0)
                 {
@@ -64,7 +64,7 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
 
                 Log.Information($"Detected a new Fn version: {$"{Program.Configuration.LastCheckedFnVersion:F}"} -> {$"{statusResponse.CurrentCdnVersionNumber:F}"}");
                 
-                if (Program.DbContext.FnVersions.Where(x => x.Version == statusResponse.CurrentCdnVersionNumber).Count() == 0)
+                if (!Program.DbContext.FnVersions.Where(x => x.Version == statusResponse.CurrentCdnVersionNumber).Any())
                 {
                     FnVersion newVersion = new();
                     newVersion.Version = statusResponse.CurrentCdnVersionNumber;
@@ -103,7 +103,7 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
             Log.Information("Current FN version is " + statusResponse.CurrentCdnVersionNumber, LOG_PREFIX);
         }
 
-        public void AnalyseStatusResponse(StatusResponse response)
+        public static void AnalyseStatusResponse(StatusResponse response)
         {
             FnVersion currentVersion = Program.DbContext.FnVersions.Where(x => x.Version == response.CurrentFortniteVersionNumber).Include(x => x.PakFiles).First();
 
@@ -112,7 +112,7 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
 
             foreach (string foundPakFile in response.AllPakFiles)
             {
-                if (dbPakFiles.Where(x => x.File == foundPakFile).Count() > 0)
+                if (dbPakFiles.Where(x => x.File == foundPakFile).Any())
                 {
                     Log.Debug($"(Pak): Skipping pak file '{foundPakFile}'. Reason: Already exists", ANALYSER_LOG_PREFIX);
                     continue;

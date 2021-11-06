@@ -23,16 +23,17 @@ namespace ArcticWolfApi.Controllers
 
             Timeline timeline1 = new Timeline();
             Timeline timeline2 = timeline1;
-            Dictionary<string, TimelineChannel> dictionary1 = new Dictionary<string, TimelineChannel>();
-            dictionary1["standalone-store"] = new TimelineChannel(new ChannelState[1]
+            Dictionary<string, TimelineChannel> dictionary1 = new Dictionary<string, TimelineChannel>
+            {
+                ["standalone-store"] = new TimelineChannel(new ChannelState[1]
             {
         new ChannelState()
         {
           ActiveEvents = new List<ChannelEvent>(),
           State = (object) new StandaloneStoreState()
         }
-            });
-            dictionary1["client-events"] = new TimelineChannel(new ChannelState[1]
+            }),
+                ["client-events"] = new TimelineChannel(new ChannelState[1]
             {
         new ChannelState()
         {
@@ -42,7 +43,8 @@ namespace ArcticWolfApi.Controllers
           },
           State = (object) new ClientEventsState(seasonNumber)
         }
-            });
+            })
+            };
             Dictionary<string, TimelineChannel> dictionary2 = dictionary1;
             timeline2.Channels = dictionary2;
             Timeline timeline3 = timeline1;

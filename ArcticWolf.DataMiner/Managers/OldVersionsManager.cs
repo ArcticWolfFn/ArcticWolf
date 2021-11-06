@@ -30,7 +30,7 @@ namespace ArcticWolf.DataMiner.Managers
         {
             IEnumerable<FnVersion> foundVersions = Program.DbContext.FnVersions.Where(x => x.Version == version);
 
-            if (foundVersions.Count() == 0)
+            if (!foundVersions.Any())
             {
                 AesResponse aesResponse = Program.BenbotApiClient.GetAesKeys.Get(version.ToString());
 

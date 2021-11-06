@@ -16,25 +16,26 @@ namespace ArcticWolfApi.Controllers
         {
             int seasonNumber = this.Request.GetSeasonNumber();
             Decimal buildVersion = this.Request.GetBuildVersion();
-            string str;
-            switch (seasonNumber)
+            string str = seasonNumber switch
             {
-                case 10:
-                    str = "seasonx";
-                    break;
+                10 => "seasonx",
                 /*case 15: // not working on 15.00 but on 15.30
-                    str = "season15xmas";
-                    break;*/
-                default:
-                    str = string.Format("season{0}", (object)seasonNumber);
-                    break;
-            }
+    str = "season15xmas";
+    break;*/
+                _ => $"season{seasonNumber}",
+            };
             string stage = str;
-            if (buildVersion >= 14.40M && buildVersion < 14.50M)
+            if (buildVersion is >= 14.40M and < 14.50M)
+            {
                 stage = "halloween2020";
+            }
+
             string tileImage = "https://cdn.discordapp.com/attachments/864975167490490419/867830756760223774/rift.png";
             if (seasonNumber >= 5)
+            {
                 tileImage = "https://cdn.discordapp.com/attachments/797250357485895730/797473690324828170/1024-512.png";
+            }
+
             return (ActionResult<Pages>)new Pages()
             {
                 BattleRoyaleNews = new BattleRoyaleNewsEntry(new object[1]
