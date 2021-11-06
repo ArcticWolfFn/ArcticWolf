@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArcticWolf.DataMiner.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,15 @@ namespace ArcticWolf.DataMiner.Constants
         public static readonly List<decimal> Versions = new()
         {
             15.30M
+        };
+
+        public static readonly List<FnSeason> Seasons = new()
+        {
+            new FnSeason(
+                seasonNum: 15,
+                startTime: new DateTime(year: 2020, month: 12, day: 2, hour: 5, minute: 0, second: 0, DateTimeKind.Utc),
+                endTime: new DateTime(year: 2021, month: 3, day: 16, hour: 4, minute: 0, second: 0, DateTimeKind.Utc)
+                ),
         };
     }
 }

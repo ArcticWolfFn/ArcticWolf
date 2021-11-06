@@ -24,6 +24,7 @@ namespace ArcticWolf.DataMiner.Apis.FnDotNet
             if (!LoginUsingRefreshToken(Program.Configuration.FnApiRefreshToken))
             {
                 Log.Error("API Client is disabled in this session because the login failed!", LOG_PREFIX);
+                return;
             }
         }
 

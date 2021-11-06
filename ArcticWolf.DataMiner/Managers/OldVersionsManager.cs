@@ -20,6 +20,10 @@ namespace ArcticWolf.DataMiner.Managers
 
         public static void AnalyseOldVersions()
         {
+            Log.Information("(EventFlags): Trying to retrive old event flags...");
+            Program.NitestatsApiClient.LoadEventFlagsFromMessages();
+
+            Log.Information("(AnalyseVersions): Starting analytics for older versions...");
             foreach (decimal version in Fortnite.Versions)
             {
                 AnalyseVersion(version);

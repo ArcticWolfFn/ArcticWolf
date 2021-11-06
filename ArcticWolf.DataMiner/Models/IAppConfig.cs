@@ -16,5 +16,10 @@ namespace ArcticWolf.DataMiner.Models
         string DatabasePath { get; set; }
 
         string FnApiRefreshToken { get; set; }
+
+        /// <summary>
+        /// File, which contains the chat history of changes to event flags.
+        /// </summary>
+        string EventFlagsDiscordChatHistoryFilePath { get; set; }
     }
 }
