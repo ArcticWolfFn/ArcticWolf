@@ -1,3 +1,4 @@
+using ArcticWolf.Storage;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
@@ -78,17 +79,25 @@ namespace ArcticWolfApi
 
         public static int CommonCoreRvn { get; set; }
 
+        public static DatabaseContext Database { get; private set; }
+
         public static void Main(string[] args)
         {
+            Database = new(@"C:\Users\Administrator\source\repos\ArcticWolf\ArcticWolf.DataMiner\bin\Debug\net5.0\db.sqlite");
+
             CreateHostBuilder(args).Build().Run();
         }
 
-        public static IHostBuilder CreateHostBuilder(string[] args) =>
-            Host.CreateDefaultBuilder(args)
-                .ConfigureWebHostDefaults(webBuilder =>
-                {
-                    webBuilder.UseUrls("http://*:8000");
-                    webBuilder.UseStartup<Startup>();
-                });
+        public static IHostBuilder CreateHostBuilder(string[] args)
+        {
+            var builder = Host.CreateDefaultBuilder(args);
+            builder.ConfigureWebHostDefaults(webBuilder =>
+            {
+                webBuilder.UseUrls("http://*:8000");
+                webBuilder.UseStartup<Startup>();
+            });
+            return builder;
+        }
+
     }
 }

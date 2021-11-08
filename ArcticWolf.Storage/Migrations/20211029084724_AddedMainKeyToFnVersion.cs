@@ -1,14 +1,14 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ArcticWolf.DataMiner.Migrations
+namespace ArcticWolf.Storage.Migrations
 {
-    public partial class AddedAesKeys : Migration
+    public partial class AddedMainKeyToFnVersion : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "AesKey",
-                table: "PakFiles",
+                name: "MainKey",
+                table: "FnVersions",
                 type: "TEXT",
                 nullable: true);
         }
@@ -16,8 +16,8 @@ namespace ArcticWolf.DataMiner.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "AesKey",
-                table: "PakFiles");
+                name: "MainKey",
+                table: "FnVersions");
         }
     }
 }

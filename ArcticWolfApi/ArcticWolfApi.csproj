@@ -36,4 +36,8 @@
     <Folder Include="Resources\Cloudstorage\ClientSettings\" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ArcticWolf.Storage\ArcticWolf.Storage.csproj" />
+  </ItemGroup>
+
 </Project>

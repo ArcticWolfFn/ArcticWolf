@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace ArcticWolf.DataMiner.Migrations
+namespace ArcticWolf.Storage.Migrations
 {
     public partial class AddEventFlags : Migration
     {

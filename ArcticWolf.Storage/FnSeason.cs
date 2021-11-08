@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace ArcticWolf.DataMiner.Models
+namespace ArcticWolf.Storage
 {
     public struct FnSeason
     {

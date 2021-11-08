@@ -3,9 +3,10 @@ using ArcticWolf.DataMiner.Apis.FnDotNet;
 using ArcticWolf.DataMiner.Apis.Nitestats;
 using ArcticWolf.DataMiner.Managers;
 using ArcticWolf.DataMiner.Models;
-using ArcticWolf.DataMiner.Storage;
+using ArcticWolf.Storage;
 using Config.Net;
 using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using System;
 using System.Globalization;
 using System.IO;
@@ -36,7 +37,7 @@ namespace ArcticWolf.DataMiner
 
             Configuration = new ConfigurationBuilder<IAppConfig>().UseIniFile("app.ini").Build();
 
-            DbContext = new DatabaseContext();
+            DbContext = new DatabaseContext(Program.Configuration.DatabasePath);
             DbContext.Database.Migrate();
 
             // DbContext.FnEventFlags.Include(x => x.TimeSpans).Include(x => x.Modifications);
@@ -48,7 +49,7 @@ namespace ArcticWolf.DataMiner
             {
                 {"Http", Common.Logging.LogLevel.Information },
                 {"AesManager", Common.Logging.LogLevel.Debug },
-                {"NiteStatsApi", Common.Logging.LogLevel.Debug }
+                {"NiteStatsApi", Common.Logging.LogLevel.Information }
             }
             );
 
@@ -58,6 +59,10 @@ namespace ArcticWolf.DataMiner
 
             AesManager.Init();
             OldVersionsManager.Init();
+
+            /*FnEventFlag flag = DbContext.FnEventFlags.Find("EventFlag.Anniversary.EnableEnemyVariants");
+            DbContext.Entry(flag).Collection(x => x.TimeSpans).Load();
+            Log.Error(JsonConvert.SerializeObject(flag));*/
 
             while (true)
             {

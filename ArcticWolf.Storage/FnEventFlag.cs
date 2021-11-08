@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArcticWolf.DataMiner.Storage
+namespace ArcticWolf.Storage
 {
     public class FnEventFlag
     {

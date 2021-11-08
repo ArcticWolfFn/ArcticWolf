@@ -1,11 +1,10 @@
-﻿using ArcticWolf.DataMiner.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArcticWolf.DataMiner.Constants
+namespace ArcticWolf.Storage.Constants
 {
     public class Fortnite
     {
@@ -30,6 +29,16 @@ namespace ArcticWolf.DataMiner.Constants
                 seasonNum: 16,
                 startTime: new DateTime(year: 2021, month: 3, day: 16, hour: 4, minute: 0, second: 0, DateTimeKind.Utc),
                 endTime: new DateTime(year: 2021, month: 6, day: 8, hour: 5, minute: 59, second: 59, DateTimeKind.Utc)
+                ),
+            new FnSeason(
+                seasonNum: 17,
+                startTime: new DateTime(year: 2021, month: 6, day: 8, hour: 6, minute: 0, second: 0, DateTimeKind.Utc),
+                endTime: new DateTime(year: 2021, month: 9, day: 13, hour: 5, minute: 59, second: 59, DateTimeKind.Utc)
+                ),
+            new FnSeason(
+                seasonNum: 18,
+                startTime: new DateTime(year: 2021, month: 6, day: 8, hour: 6, minute: 0, second: 0, DateTimeKind.Utc),
+                endTime: new DateTime(year: 2021, month: 12, day: 31, hour: 5, minute: 59, second: 59, DateTimeKind.Utc)
                 ),
         };
     }

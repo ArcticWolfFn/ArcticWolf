@@ -1,5 +1,4 @@
-﻿using ArcticWolf.DataMiner.Constants;
-using ArcticWolf.DataMiner.Models;
+﻿using ArcticWolf.Storage.Constants;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -7,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArcticWolf.DataMiner.Storage
+namespace ArcticWolf.Storage
 {
     public class FnEventFlagTimeSpan
     {
@@ -45,5 +44,28 @@ namespace ArcticWolf.DataMiner.Storage
             }
         }
         private FnSeason _endsInSeason;
+
+        [NotMapped]
+        public IEnumerable<FnSeason> Seasons
+        {
+            get
+            {
+                if (_seasons == null)
+                {
+                    _seasons = Fortnite.Seasons.Where(x =>
+                        // starts in season
+                        (x.StartTime <= StartTime && x.EndTime >= StartTime) ||
+
+                        // ends in season
+                        (x.StartTime <= EndTime && x.EndTime >= EndTime) ||
+
+                        // during season
+                        (x.StartTime >= StartTime && x.EndTime <= StartTime)
+                        );
+                }
+                return _seasons;
+            }
+        }
+        private IEnumerable<FnSeason> _seasons = null;
     }
 }

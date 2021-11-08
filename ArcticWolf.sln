@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcticWolf.DataMiner", "Arc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlataniumV2", "PlataniumV2\PlataniumV2.vcxproj", "{93968F5D-D6DE-4326-9D94-0ECF5711E100}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcticWolf.Storage", "ArcticWolf.Storage\ArcticWolf.Storage.csproj", "{27BBFD4F-9475-4104-9F7F-82B7071AC842}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -59,6 +61,14 @@ Global
 		{93968F5D-D6DE-4326-9D94-0ECF5711E100}.Release|Any CPU.ActiveCfg = Release|x64
 		{93968F5D-D6DE-4326-9D94-0ECF5711E100}.Release|x64.ActiveCfg = Release|x64
 		{93968F5D-D6DE-4326-9D94-0ECF5711E100}.Release|x64.Build.0 = Release|x64
+		{27BBFD4F-9475-4104-9F7F-82B7071AC842}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27BBFD4F-9475-4104-9F7F-82B7071AC842}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27BBFD4F-9475-4104-9F7F-82B7071AC842}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{27BBFD4F-9475-4104-9F7F-82B7071AC842}.Debug|x64.Build.0 = Debug|Any CPU
+		{27BBFD4F-9475-4104-9F7F-82B7071AC842}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27BBFD4F-9475-4104-9F7F-82B7071AC842}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27BBFD4F-9475-4104-9F7F-82B7071AC842}.Release|x64.ActiveCfg = Release|Any CPU
+		{27BBFD4F-9475-4104-9F7F-82B7071AC842}.Release|x64.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

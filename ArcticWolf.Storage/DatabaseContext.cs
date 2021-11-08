@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ArcticWolf.DataMiner.Storage
+namespace ArcticWolf.Storage
 {
     public class DatabaseContext : DbContext
     {
@@ -16,7 +16,14 @@ namespace ArcticWolf.DataMiner.Storage
         public DbSet<FnEventFlagTimeSpan> FnEventFlagTimeSpans { get; set; }
         public DbSet<FnEventFlagModification> FnEventFlagModifications { get; set; }
 
+        public string DbPath { get; private set; }
+
+        public DatabaseContext(string dbPath = "db.sqlite")
+        {
+            DbPath = dbPath;
+        }
+
         protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlite($"Data Source={(Program.Configuration != null ? Program.Configuration.DatabasePath : "db.sqlite")}");
+            => options.UseSqlite($"Data Source={DbPath}");
     }
 }

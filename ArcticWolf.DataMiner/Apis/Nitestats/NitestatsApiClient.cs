@@ -1,11 +1,12 @@
-﻿using ArcticWolf.DataMiner.Common.Http;
-using ArcticWolf.DataMiner.Constants;
+﻿
+using ArcticWolf.DataMiner.Common.Http;
 using ArcticWolf.DataMiner.Extensions;
 using ArcticWolf.DataMiner.Models;
 using ArcticWolf.DataMiner.Models.Apis.Nitestats;
 using ArcticWolf.DataMiner.Models.Apis.Nitestats.Calendar.Channels.States;
 using ArcticWolf.DataMiner.Models.Discord;
-using ArcticWolf.DataMiner.Storage;
+using ArcticWolf.Storage;
+using ArcticWolf.Storage.Constants;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -165,6 +166,11 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                         continue;
                     }
 
+                    if (eventTypeField.Value == "EventFlag.Anniversary.EnableEnemyVariants")
+                    {
+
+                    }
+
                     // get the overridden datetimes
                     string overriddenStartsField = Regex.Match(startsField.Value, "~~.*~~").Value;
                     string overriddenEndsField = Regex.Match(endsField.Value, "~~.*~~").Value;
@@ -232,7 +238,6 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                     if (flagEndSeason.SeasonNumber == 0 && flagStartSeason.SeasonNumber == 0)
                     {
                         Log.Verbose("(EventFlagsLoader): Flag starts and ends in unsupported season", LOG_PREFIX);
-                        continue;
                     }
                     else if (flagEndSeason.SeasonNumber == 0)
                     {
@@ -266,6 +271,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             if (eventFlag.TimeSpans.Any(x => x.StartTime == flagStartTimeUtc && x.EndTime == flagEndTimeUtc))
                             {
                                 Log.Verbose("(EventFlagsLoader): TimeSpan already exists", LOG_PREFIX);
+                                Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
                                 break;
                             }
 
@@ -287,14 +293,18 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             Log.Debug($"(EventFlagsLoader): Flag starts in S{flagStartSeason.SeasonNumber}", LOG_PREFIX);
                             Log.Debug($"(EventFlagsLoader): Flag ends in S{flagEndSeason.SeasonNumber}", LOG_PREFIX);
                             Log.Debug($"(EventFlagsLoader): Used in: {flagSeasonsString}", LOG_PREFIX);
+                            Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
 
                             break;
 
                         case "Modified":
 
-                            if (overriddenFlagStartTimeUtc != default && overriddenFlagEndTimeUtc != default)
+                            if (overriddenFlagStartTimeUtc == default && overriddenFlagEndTimeUtc == default)
                             {
                                 Log.Fatal($"(EventFlagsLoader): Well... That shouldn't happen. The overridden times have default values even though the flag has been modified.", LOG_PREFIX);
+                                Log.Error($"(EventFlagsLoader): Fields data for previous error: " + JsonConvert.SerializeObject(embed.Fields), LOG_PREFIX);
+                                Log.Error($"(EventFlagsLoader): Flag update from " + message.Timestamp, LOG_PREFIX);
+                                Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
                                 break;
                             }
 
@@ -302,6 +312,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             if (eventFlag.Modifications.Any(x => x.OverriddenStartTime == overriddenFlagStartTimeUtc && x.OverriddenEndTime == overriddenFlagEndTimeUtc
                             && x.NewStartTime == flagStartTimeUtc && x.NewEndTime == flagEndTimeUtc))
                             {
+                                Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
                                 break;
                             }
 
@@ -330,6 +341,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                                 if (eventFlag.TimeSpans.Any(x => x.StartTime == flagStartTimeUtc && x.EndTime == flagEndTimeUtc))
                                 {
                                     Log.Verbose("(EventFlagsLoader): TimeSpan already exists", LOG_PREFIX);
+                                    Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
                                     break;
                                 }
 
@@ -346,6 +358,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             Log.Debug($"(EventFlagsLoader): Flag starts in S{flagStartSeason.SeasonNumber}", LOG_PREFIX);
                             Log.Debug($"(EventFlagsLoader): Flag ends in S{flagEndSeason.SeasonNumber}", LOG_PREFIX);
                             Log.Debug($"(EventFlagsLoader): Used in: {flagSeasonsString}", LOG_PREFIX);
+                            Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
 
                             break;
 
@@ -357,16 +370,25 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             Log.Verbose($"(EventFlagsLoader): Flag starts in S{flagStartSeason.SeasonNumber}", LOG_PREFIX);
                             Log.Verbose($"(EventFlagsLoader): Flag ends in S{flagEndSeason.SeasonNumber}", LOG_PREFIX);
                             Log.Verbose($"(EventFlagsLoader): Used in: {flagSeasonsString}", LOG_PREFIX);
+                            Log.Verbose($"(EventFlagsLoader): _______________", LOG_PREFIX);
+
+                            // Add removed flag if it hasn't been added yet
+                            if (!eventFlag.TimeSpans.Any(x => x.StartTime == flagStartTimeUtc && x.EndTime == flagEndTimeUtc))
+                            {
+                                timeSpan = new();
+                                timeSpan.StartTime = flagStartTimeUtc;
+                                timeSpan.EndTime = flagEndTimeUtc;
+                                eventFlag.TimeSpans.Add(timeSpan);
+                            }
 
                             // if happened on patch day of new season and already exists, then don't count it to the new season
                             break;
 
                         default:
                             Log.Error($"(EventFlagsLoader): Flag '{eventTypeField.Value}' has an unknown status ({statusField.Value})", LOG_PREFIX);
+                            Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
                             break;
                     }
-
-                    Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
                 }
             }
 
@@ -381,6 +403,8 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
             Log.Information($"(EventFlagsLoader): Added {addedTSItemsCount} TS items and modified {modifiedTSItemsCount} TS items.");
 
             Program.DbContext.SaveChanges();
+
+            // ToDo: do validation: No duplicate time spans for each flag
         }
     }
 }

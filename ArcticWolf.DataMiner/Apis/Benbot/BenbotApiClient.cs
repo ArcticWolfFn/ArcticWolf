@@ -1,7 +1,7 @@
 ﻿using ArcticWolf.DataMiner.Apis.Benbot.Routes;
 using ArcticWolf.DataMiner.Common.Http;
 using ArcticWolf.DataMiner.Models.Apis.Benbot;
-using ArcticWolf.DataMiner.Storage;
+using ArcticWolf.Storage;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;

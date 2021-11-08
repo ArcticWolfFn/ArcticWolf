@@ -12,18 +12,15 @@
   <ItemGroup>
     <PackageReference Include="AnyDiff" Version="1.0.88" />
     <PackageReference Include="Config.Net" Version="4.17.0" />
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="FortniteDotNet" Version="1.0.5.1" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="5.0.11" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.11">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Ini" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="System.Collections" Version="4.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ArcticWolf.Storage\ArcticWolf.Storage.csproj" />
   </ItemGroup>
 
 </Project>
