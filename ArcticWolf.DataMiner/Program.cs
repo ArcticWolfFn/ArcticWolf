@@ -39,6 +39,8 @@ namespace ArcticWolf.DataMiner
             DbContext = new DatabaseContext();
             DbContext.Database.Migrate();
 
+            // DbContext.FnEventFlags.Include(x => x.TimeSpans).Include(x => x.Modifications);
+
             Log.Initalize(new System.Collections.Generic.List<Common.Logging.LogVisibility> 
             { 
                 Common.Logging.LogVisibility.Console 
@@ -46,6 +48,7 @@ namespace ArcticWolf.DataMiner
             {
                 {"Http", Common.Logging.LogLevel.Information },
                 {"AesManager", Common.Logging.LogLevel.Debug },
+                {"NiteStatsApi", Common.Logging.LogLevel.Debug }
             }
             );
 

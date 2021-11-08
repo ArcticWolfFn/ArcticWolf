@@ -3,14 +3,16 @@ using System;
 using ArcticWolf.DataMiner.Storage;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace ArcticWolf.DataMiner.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20211108082043_AddEventFlags")]
+    partial class AddEventFlags
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -24,39 +26,6 @@ namespace ArcticWolf.DataMiner.Migrations
                     b.HasKey("Event");
 
                     b.ToTable("FnEventFlags");
-                });
-
-            modelBuilder.Entity("ArcticWolf.DataMiner.Storage.FnEventFlagModification", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("FnEventFlagEvent")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int?>("ModifiedTimeSpanId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<DateTime>("NewEndTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("NewStartTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("OverriddenEndTime")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateTime>("OverriddenStartTime")
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("FnEventFlagEvent");
-
-                    b.HasIndex("ModifiedTimeSpanId");
-
-                    b.ToTable("FnEventFlagModifications");
                 });
 
             modelBuilder.Entity("ArcticWolf.DataMiner.Storage.FnEventFlagTimeSpan", b =>
@@ -144,19 +113,6 @@ namespace ArcticWolf.DataMiner.Migrations
                     b.ToTable("TkKeys");
                 });
 
-            modelBuilder.Entity("ArcticWolf.DataMiner.Storage.FnEventFlagModification", b =>
-                {
-                    b.HasOne("ArcticWolf.DataMiner.Storage.FnEventFlag", null)
-                        .WithMany("Modifications")
-                        .HasForeignKey("FnEventFlagEvent");
-
-                    b.HasOne("ArcticWolf.DataMiner.Storage.FnEventFlagTimeSpan", "ModifiedTimeSpan")
-                        .WithMany()
-                        .HasForeignKey("ModifiedTimeSpanId");
-
-                    b.Navigation("ModifiedTimeSpan");
-                });
-
             modelBuilder.Entity("ArcticWolf.DataMiner.Storage.FnEventFlagTimeSpan", b =>
                 {
                     b.HasOne("ArcticWolf.DataMiner.Storage.FnEventFlag", null)
@@ -184,8 +140,6 @@ namespace ArcticWolf.DataMiner.Migrations
 
             modelBuilder.Entity("ArcticWolf.DataMiner.Storage.FnEventFlag", b =>
                 {
-                    b.Navigation("Modifications");
-
                     b.Navigation("TimeSpans");
                 });
 
