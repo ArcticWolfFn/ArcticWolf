@@ -11,7 +11,6 @@
 #include "masks.h"
 #include "ue4.h"
 #include "util.h"
-#include <detours.h>
 #include "patterns.h"
 #include "patterns.h"
 
@@ -127,7 +126,7 @@ void UnsafeEnvironmentPopupHook(wchar_t** unknown1,
 	//printfc(FOREGROUND_BLUE, "[VEH] <REDACTED> Call with Case: %i\n", _case);
 }
 
-__int64 PushWidgetHook(__int64 WidgetInstance, const TCHAR* Body, const TCHAR* Widget, const TCHAR* WidgetType)
+/*__int64 PushWidgetHook(__int64 WidgetInstance, const TCHAR* Body, const TCHAR* Widget, const TCHAR* WidgetType)
 {
 	const std::wstring bodyW(Body);
 	if (bodyW == L"Logging In...")
@@ -145,7 +144,7 @@ __int64 PushWidgetHook(__int64 WidgetInstance, const TCHAR* Body, const TCHAR* W
 		DetourTransactionCommit();
 	}
 	return PushWidget(WidgetInstance, Body, Widget, WidgetType);
-}
+}*/
 
 /*bool HotfixIniFileHook(void* HotfixManager, const FString& FileName, const FString& IniData)
 {
@@ -251,11 +250,11 @@ namespace Hooks
 		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 
 		// not working currently
-		auto FNameToStringAdd = Util::FindPattern(Patterns::New::FNameToString,
+		/*auto FNameToStringAdd = Util::FindPattern(Patterns::New::FNameToString,
 			Masks::New::FNameToString);
-		VALIDATE_ADDRESS(FNameToStringAdd, XOR("Failed to find FNameToString Address."));
+		VALIDATE_ADDRESS(FNameToStringAdd, XOR("Failed to find FNameToString Address.")); 
 
-		FNameToString = decltype(FNameToString)(FNameToStringAdd);
+		FNameToString = decltype(FNameToString)(FNameToStringAdd);*/
 
 		GEngine = UE4::FindObject<UEngine*>(XOR(L"FortEngine /Engine/Transient.FortEngine_"));
 
