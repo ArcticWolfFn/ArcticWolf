@@ -38,6 +38,7 @@ namespace ArcticWolfApi.Controllers
             return (ActionResult<PrivacySettings>)new PrivacySettings(accountId);
         }
 
+        // receipts for Epic Games purchases
         [HttpGet("receipts/v1/account/{accountId}/receipts")]
         public ActionResult<string[]> GetReceipts(string accountId) => (ActionResult<string[]>)Array.Empty<string>();
 

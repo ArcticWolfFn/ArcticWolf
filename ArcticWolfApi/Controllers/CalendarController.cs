@@ -39,7 +39,8 @@ namespace ArcticWolfApi.Controllers
         {
           ActiveEvents = new List<ChannelEvent>()
           {
-            new ChannelEvent("EventFlag." + str)
+            new ChannelEvent("EventFlag." + str),
+            new ChannelEvent("EventFlag.LTQ_S15_Legendary_Week_01"),
           },
           State = (object) new ClientEventsState(seasonNumber)
         }
