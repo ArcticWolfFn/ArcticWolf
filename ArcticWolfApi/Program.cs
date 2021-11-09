@@ -93,7 +93,7 @@ namespace ArcticWolfApi
             var builder = Host.CreateDefaultBuilder(args);
             builder.ConfigureWebHostDefaults(webBuilder =>
             {
-                webBuilder.UseUrls("http://*:8000");
+                webBuilder.UseUrls("https://*:44366");
                 webBuilder.UseStartup<Startup>();
             });
             return builder;
