@@ -28,13 +28,14 @@ VOID WINAPI Main()
 
 	Hooks::Init();
 
-	while (true) {
+	// disabled due to game not starting
+	/*while (true) {
 		if (Hooks::Misc())
 		{
 
 		}
 		Sleep(1000 / 30); // 30 fps
-	}
+	}*/
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
