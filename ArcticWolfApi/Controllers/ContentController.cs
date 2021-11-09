@@ -40,11 +40,11 @@ namespace ArcticWolfApi.Controllers
             {
                 BattleRoyaleNews = new BattleRoyaleNewsEntry(new object[1]
               {
-          (object) new BattleRoyaleNewsMOTD("Arctic Wolf", "Welcome to Arctic Wolf!", "https://cdn.discordapp.com/attachments/797250357485895730/797250571845107722/background.png", tileImage)
+                  (object)new BattleRoyaleNewsMOTD("Arctic Wolf", "Welcome to Arctic Wolf!", "https://cdn.discordapp.com/attachments/797250357485895730/797250571845107722/background.png", tileImage)
               }),
                 EmergencyNotice = new EmergencyNoticeEntry(new PagesMessage[1]
               {
-          new PagesMessage("Arctic Wolf", "")
+                  new PagesMessage("Arctic Wolf", "")
               }),
                 SubgameInfo = new SubgameInfoEntry()
                 {
@@ -61,10 +61,46 @@ namespace ArcticWolfApi.Controllers
                 DynamicBackgrounds = new DynamicBackground()
                 {
                     Backgrounds = new Background(new BackgroundData[2]
+                    {
+                        new BackgroundData(stage, "lobby"),
+                        new BackgroundData(stage, "vault")
+                    })
+                },
+                TournamentInformation = new TournamentInformationEntry()
                 {
-            new BackgroundData(stage, "lobby"),
-            new BackgroundData(stage, "vault")
-                })
+                    tournament_info = new()
+                    {
+                        tournaments = new()
+                        {
+                            new()
+                            {
+                                BackgroundLeftColor = "0126B7",
+                                BackgroundRightColor = "000410",
+                                BackgroundTextColor = "000F4A",
+                                BaseColor = "FFFFFF",
+                                DetailsDescription = "Jump in for a chance to earn a new Outfit and for the top scoring players, a PlayStation 5.For more details and official rules, visit: https://fn.gg/gencup",
+                                FlavorDescription = "Jump in for a chance to earn a new Outfit and for the top scoring players, a PlayStation 5!",
+                                HighlightColor = "6DFDFF",
+                                LoadingScreenImage = "https://cdn2.unrealengine.com/14br-comp-in-game-psgenerationscup-modetile-1024x512-42764868d8a9.jpg",
+                                LongFormatTitle = "Fortnite Generations Cup - only on - PS5 | PS4",
+                                PinEarnedText = "Winner!",
+                                PlaylistTileImage = "https://cdn2.unrealengine.com/14br-comp-in-game-psgenerationscup-modetile-1024x512-42764868d8a9.jpg",
+                                PosterBackImage = "https://cdn2.unrealengine.com/14br-comp-in-game-psgenerationscup-poster-back-750x1080-5057166cf6fd.jpg",
+                                PosterFadeColor = "000D3C",
+                                PosterFrontImage = "https://cdn2.unrealengine.com/14br-comp-in-game-psgenerationscup-poster-front-750x1080-8ceecc97aa29.jpg",
+                                PrimaryColor = "FFFFFF",
+                                ScheduleInfo = "December 18th",
+                                SecondaryColor = "000F4A",
+                                ShadowColor = "000F4A",
+                                ShortFormatTitle = "Solo Tournament",
+                                TitleColor = "FFFFFF",
+                                TitleLine1 = "Generations Cup",
+                                TitleLine2 = "Only On - PS5 | PS4",
+                                TournamentDisplayId = "s15_generations",
+                                Type = "Tournament Display Info",
+                            }
+                        }
+                    }
                 }
             };
         }

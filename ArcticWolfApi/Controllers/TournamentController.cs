@@ -9,6 +9,7 @@ namespace ArcticWolfApi.Controllers
     [ApiController]
     public class TournamentController : ControllerBase
     {
+        // idk if this endpoint is even used in newer versions. Tournament data can now be found in Content -> tournamentinfo
         [HttpGet("/fortnite/api/game/v2/events/tournamentandhistory/{accountId}/{region}/{clientType}")]
         public object GetUserSetting(string accountId, string region, string clientType)
         {

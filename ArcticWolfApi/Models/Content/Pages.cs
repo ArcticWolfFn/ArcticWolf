@@ -32,6 +32,9 @@ namespace ArcticWolfApi.Models.Content
         [JsonProperty("playlistinformation", NullValueHandling = NullValueHandling.Ignore)]
         public PlaylistInformationEntry PlaylistInformation { get; set; }
 
+        [JsonProperty("tournamentinformation", NullValueHandling = NullValueHandling.Ignore)]
+        public TournamentInformationEntry TournamentInformation { get; set; }
+
         public Pages()
           : base("Fortnite Game")
         {
