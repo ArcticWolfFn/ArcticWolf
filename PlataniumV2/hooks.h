@@ -84,9 +84,15 @@ inline CURLcode CurlEasySetOptHook(struct Curl_easy* data, CURLoption tag, ...)
 			{
 				std::string path = std::string(uri.Path).data();
 
-				// special case because it contains data like vod
-				if (uri.Host.ends_with(".akamaized.net")) {
+				// akamai contains data like vod
+				if (uri.Host.ends_with("akamaized.net")) {
 					path = "/akamaized";
+					path += std::string(uri.Path).data();
+				}
+
+				// aws contains data like the retryconfig after failed logins
+				if (uri.Host.ends_with("amazonaws.com")) {
+					path = "/aws";
 					path += std::string(uri.Path).data();
 				}
 
