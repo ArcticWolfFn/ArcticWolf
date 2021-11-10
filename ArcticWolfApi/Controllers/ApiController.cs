@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using ArcticWolfApi.Models.Events;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -56,6 +58,7 @@ namespace ArcticWolfApi.Controllers
             }
         }
 
+        // GetEventData
         [HttpGet("events/{game}/download/{accountId}")]
         public ActionResult<GameEventsResponse> GetGameEventsForAccount(string game, string accountId, string region, string platform, string teamAccountIds)
         {
@@ -69,8 +72,124 @@ namespace ArcticWolfApi.Controllers
         public class GameEventsResponse
         {
             public GERAccount player = new();
-            public List<object> events = new();
-            public List<object> templates = new();
+            public List<Event> events = new()
+            {
+                new Event()
+                {
+                    GameId = "Fortnite",
+                    EventId = "epicgames_S15_FNCS_Qualifier2_EU",
+                    Regions = new() { "EU" },
+                    RegionMappings = new() { EU = "EUCOMP" },
+                    Platforms = new() { "Windows" },
+                    DisplayDataId = "s15_fncs_week2",
+                    EventGroup = "Season15FNCS",
+                    AnnouncementTime = DateTime.UtcNow.AddHours(-2),
+                    BeginTime = DateTime.UtcNow.AddDays(2),
+                    EndTime = DateTime.UtcNow.AddDays(2).AddHours(2),
+                    Metadata = new()
+                    {
+                        AccountLockType = "Season",
+                        TeamLockType = "Week",
+                        RegionLockType = "Season",
+                        MinimumAccountLevel = 30,
+                    },
+                    EventWindows = new()
+                    {
+                        new EventWindow()
+                        {
+                            EventWindowId = "S15_FNCS_Qualifier2_EU_Event1",
+                            EventTemplateId = "EventTemplate_S15_FNCS_Qualifier2_EU_Round1",
+                            CountdownBeginTime = DateTime.UtcNow.AddHours(-1),
+                            BeginTime = DateTime.UtcNow.AddDays(2),
+                            EndTime = DateTime.UtcNow.AddDays(2).AddHours(2),
+                            Round = 0,
+                            PayoutDelay = 30,
+                            IsTBD = false,
+                            CanLiveSpectate = false,
+                            ScoreLocations = new()
+                            {
+                                new ScoreLocation()
+                                {
+                                    ScoreMode = "window",
+                                    LeaderboardId = "Fortnite_EU",
+                                    UseIndividualScores = false,
+                                }
+                            },
+                            Visibility = "locked",
+                            RequireAnyTokens = new()
+                            {
+                                "ARENA_S15_Division10"
+                            },
+                            RequireNoneTokensCaller = new()
+                            {
+                                "RegionLock_S15_FNCS_BR",
+                                "S15_FNCS_EU_AutoQualified"
+                            },
+                            AdditionalRequirements = new()
+                            {
+                                "mfa",
+                                "eula:s15_fncs_rules"
+                            },
+                            Metadata = new()
+                            {
+                                ServerReplays = true,
+                                SubgroupId = "Week2",
+                                RoundType = "Qualifiers",
+                                LiveSpectateAccessToken = "S15FNCS_Observer_EU",
+                            }
+                        }
+                    }
+                }
+            };
+            public List<Template> templates = new()
+            {
+                new Template()
+                {
+                    GameId = "Fortnite",
+                    EventTemplateId = "EventTemplate_S15_FNCS_Qualifier2_EU_Round1",
+                    PlaylistId = "Playlist_ShowdownTournament_Trios",
+                    MatchCap = 10,
+                    LiveSessionAttributes = new()
+                    {
+                        "MATCHSTARTTIME"
+                    },
+                    ScoringRules = new()
+                    {
+                        new()
+                        {
+                            TrackedStat = "PLACEMENT_STAT_INDEX",
+                            MatchRule = "lte",
+                            RewardTiers = new()
+                            {
+                                new()
+                                {
+                                    KeyValue = 1,
+                                    PointsEarned = 5,
+                                    Multiplicative = false,
+                                }
+                            }
+                        },
+                        new()
+                        {
+
+                        }
+                    },
+                    TiebreakerFormula = new()
+                    {
+                        BasePointsBits = 9,
+                        Components = new()
+                        {
+                            new()
+                            {
+                                TrackedStat = "VICTORY_ROYALE_STAT",
+                                Bits = 4,
+                                Multiplier = 0,
+                                Aggregation = "sum"
+                            }
+                        }
+                    }
+                }
+            };
             public List<object> scores = new();
         }
 
