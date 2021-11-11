@@ -96,7 +96,7 @@ namespace ArcticWolfApi.Controllers
                                 TitleColor = "FFFFFF",
                                 TitleLine1 = "Generations Cup",
                                 TitleLine2 = "Only On - PS5 | PS4",
-                                TournamentDisplayId = "s15_generations",
+                                TournamentDisplayId = "s15_fncs_week2",
                                 Type = "Tournament Display Info",
                             }
                         }
