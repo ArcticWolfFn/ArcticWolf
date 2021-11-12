@@ -23,42 +23,22 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 
 	//If the game requested matchmaking we open the game mode
-	/*if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
+	if (wcsstr(nFunc.c_str(), XOR(L"BP_OnClicked")) && wcsstr(nObj.c_str(), XOR(L"Button_Play")))
 	{
 		printf(XOR("\n\n[NeoRoyale] Start!"));
 
-		//TODO: clean this mess;
-		std::string url = gUrl;
-		gUrl.clear();
-		std::string query = url.erase(0, url.find(XOR("%3A")) + 1);
-		query.erase(url.find("&"), url.size());
-		query.erase(0, url.find(XOR("playlist")));
-		std::string PlaylistName = query + "." + query;
-		const std::wstring PlaylistNameW(PlaylistName.begin(), PlaylistName.end());
-
-		auto Playlist = UE4::FindObject<UObject*>(PlaylistNameW.c_str(), true, true);
+		auto Playlist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+		gPlaylist = Playlist;
 		auto Map = APOLLO_TERRAIN;
 
-		if (PlaylistNameW.find(XOR(L"papaya")) != std::string::npos && !gPlaylist)
-		{
-			Map = APOLLO_PAPAYA;
-		}
-
-		if (Playlist && !gPlaylist)
-		{
-			gPlaylist = Playlist;
-		}
-		else if (!Playlist && !gPlaylist)
-		{
-			gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
-		}
 		Start(Map);
-	}*/
+	}
+
 	
 	if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
 	{
 		printf(XOR("\n[NeoRoyale] Init!\n"));
-		Init();
+		//Init();
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
@@ -431,26 +411,43 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	}
 
 	//Logging
-	if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
-		!wcsstr(nFunc.c_str(), L"Tick") &&
-		!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
-		!wcsstr(nFunc.c_str(), L"OnSubmixSpectralAnalysis") &&
-		!wcsstr(nFunc.c_str(), L"OnMouse") &&
-		!wcsstr(nFunc.c_str(), L"Pulse") &&
-		!wcsstr(nFunc.c_str(), L"BlueprintUpdateAnimation") &&
-		!wcsstr(nFunc.c_str(), L"BlueprintPostEvaluateAnimation") &&
-		!wcsstr(nFunc.c_str(), L"BlueprintModifyCamera") &&
-		!wcsstr(nFunc.c_str(), L"BlueprintModifyPostProcess") &&
-		!wcsstr(nFunc.c_str(), L"Loop Animation Curve") &&
-		!wcsstr(nFunc.c_str(), L"UpdateTime") &&
-		!wcsstr(nFunc.c_str(), L"GetMutatorByClass") &&
-		!wcsstr(nFunc.c_str(), L"UpdatePreviousPositionAndVelocity") &&
-		!wcsstr(nFunc.c_str(), L"IsCachedIsProjectileWeapon") &&
-		!wcsstr(nFunc.c_str(), L"LockOn") &&
-		!wcsstr(nFunc.c_str(), L"GetAbilityTargetingLevel") &&
-		!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
-	{
-		printf(XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), UE4::GetObjectFullName(static_cast<UObject*>(pObj)->Class).c_str());
+	if (true) {
+		if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
+			!wcsstr(nFunc.c_str(), L"Tick") &&
+			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
+			!wcsstr(nFunc.c_str(), L"OnSubmixSpectralAnalysis") &&
+			!wcsstr(nFunc.c_str(), L"OnMouse") &&
+			!wcsstr(nFunc.c_str(), L"Pulse") &&
+			!wcsstr(nFunc.c_str(), L"BlueprintUpdateAnimation") &&
+			!wcsstr(nFunc.c_str(), L"BlueprintPostEvaluateAnimation") &&
+			!wcsstr(nFunc.c_str(), L"BlueprintModifyCamera") &&
+			!wcsstr(nFunc.c_str(), L"BlueprintModifyPostProcess") &&
+			!wcsstr(nFunc.c_str(), L"Loop Animation Curve") &&
+			!wcsstr(nFunc.c_str(), L"UpdateTime") &&
+			!wcsstr(nFunc.c_str(), L"GetMutatorByClass") &&
+			!wcsstr(nFunc.c_str(), L"UpdatePreviousPositionAndVelocity") &&
+			!wcsstr(nFunc.c_str(), L"IsCachedIsProjectileWeapon") &&
+			!wcsstr(nFunc.c_str(), L"LockOn") &&
+			!wcsstr(nFunc.c_str(), L"GetAbilityTargetingLevel") &&
+			!wcsstr(nFunc.c_str(), L"ServerTouchActiveTime") &&
+
+			//UI
+			!wcsstr(nFunc.c_str(), L"OnAnimationFinished") &&
+			!wcsstr(nFunc.c_str(), L"OnAnimationStarted") &&
+			!wcsstr(nFunc.c_str(), L"SetColorAndOpacity") &&
+			!wcsstr(nFunc.c_str(), L"OnHovered") &&
+			!wcsstr(nFunc.c_str(), L"OnUnhovered") &&
+			!wcsstr(nFunc.c_str(), L"HandleButtonReleased") &&
+			!wcsstr(nFunc.c_str(), L"HandleButtonClicked") &&
+			!wcsstr(nFunc.c_str(), L"ScrollNextItem") &&
+			!wcsstr(nFunc.c_str(), L"OnCurrentTextStyleChanged") &&
+			!wcsstr(nFunc.c_str(), L"OnButtonUnhovered") &&
+			!wcsstr(nFunc.c_str(), L"OnButtonHovered") &&
+
+			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
+		{
+			printfc(FOREGROUND_BLUE, XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), UE4::GetObjectFullName(static_cast<UObject*>(pObj)->Class).c_str());
+		}
 	}
 
 	return ProcessEvent(pObj, pFunc, pParams);

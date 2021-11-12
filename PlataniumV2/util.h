@@ -2,6 +2,7 @@
 
 #include "pch.h"
 #include <winscard.h>
+#include <cstdio>
 
 inline HANDLE hConsole;
 
@@ -55,9 +56,9 @@ public:
 	{
 		AllocConsole();
 
-		FILE* pFile;
-		freopen_s(&pFile, "CONOUT$", "w", stdout);
-		freopen_s(&pFile, "CONIN$", "r", stdin);
+		freopen("output.txt", "w", stdout);
+		freopen("error.txt", "w", stderr);
+		//freopen_s(File, "CONIN$", "r", stdin);
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	}
 

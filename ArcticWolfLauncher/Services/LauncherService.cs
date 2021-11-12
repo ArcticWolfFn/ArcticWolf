@@ -53,6 +53,8 @@ namespace ArcticWolfLauncher.Services
                     EnableRaisingEvents = true
                 };
 
+                _fortniteProcess.OutputDataReceived += _fortniteProcess_OutputDataReceived;
+
                 _fortniteProcess.Exited += FortniteProcess_Exited;
 
                 _fortniteProcess.Start();
@@ -78,6 +80,11 @@ namespace ArcticWolfLauncher.Services
 
                 InjectDll(_fortniteProcess.Id, "PlataniumV2.dll");
             });
+        }
+
+        private static void _fortniteProcess_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            Trace.WriteLine(e.Data);
         }
 
         private static void FortniteProcess_Exited(object sender, EventArgs e)

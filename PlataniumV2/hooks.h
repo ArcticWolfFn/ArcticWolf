@@ -312,8 +312,8 @@ namespace Hooks
 
 		auto Map = APOLLO_TERRAIN;
 
-		//gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
-		//Start(Map);
+		gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+		// Start(Map);
 
 		printfc(FOREGROUND_BLUE, "End Hooks::Misc");
 
