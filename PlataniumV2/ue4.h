@@ -56,8 +56,8 @@ namespace UE4
 	//Frees the memory for the name
 	inline void Free(void* buffer)
 	{
-		//FreeInternal(buffer);
-		std::free(buffer);
+		FreeInternal(buffer);
+		//std::free(buffer);
 	}
 
 	//The same as above but for FFields.

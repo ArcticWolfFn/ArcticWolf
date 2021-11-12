@@ -192,6 +192,7 @@ namespace Hooks
 	}
 
 	inline bool Misc() {
+		printfc(FOREGROUND_BLUE, "Start Hooks::Misc");
 		if (MH_Initialize() != MH_OK)
 		{
 			MessageBoxA(nullptr, XOR("Failed to initialize min-hook, terminating the thread."), XOR("Cranium"), MB_OK);
@@ -311,8 +312,10 @@ namespace Hooks
 
 		auto Map = APOLLO_TERRAIN;
 
-		gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+		//gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
 		//Start(Map);
+
+		printfc(FOREGROUND_BLUE, "End Hooks::Misc");
 
 		return true;
 	}

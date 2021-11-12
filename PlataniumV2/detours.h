@@ -18,10 +18,9 @@ inline bool bIsFlying;
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
-	/*auto nObj = UE4::GetObjectName(pObj);
+	auto nObj = UE4::GetObjectName(pObj);
 	auto nFunc = UE4::GetObjectName(pFunc);
 
-	printfc(FOREGROUND_GREEN, "%s has been called on %s", nFunc.c_str(), nObj.c_str());*/
 
 	//If the game requested matchmaking we open the game mode
 	/*if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
@@ -37,7 +36,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		std::string PlaylistName = query + "." + query;
 		const std::wstring PlaylistNameW(PlaylistName.begin(), PlaylistName.end());
 
-		auto Playlist = FindObject<UObject*>(PlaylistNameW.c_str(), true, true);
+		auto Playlist = UE4::FindObject<UObject*>(PlaylistNameW.c_str(), true, true);
 		auto Map = APOLLO_TERRAIN;
 
 		if (PlaylistNameW.find(XOR(L"papaya")) != std::string::npos && !gPlaylist)
@@ -51,23 +50,11 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		}
 		else if (!Playlist && !gPlaylist)
 		{
-			gPlaylist = FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+			gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
 		}
-
-#ifndef PROD
-		if (HWID::Validate())
-		{
-			Start(Map);
-		}
-		else
-		{
-			MessageBoxA(nullptr, XOR("Your pc isn't activated, please dm kemo#1337 on discord."), XOR("Cranium HWID System"), MB_OK);
-		}
-#else
 		Start(Map);
-#endif
 	}*/
-	/*
+	
 	if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
 	{
 		printf(XOR("\n[NeoRoyale] Init!\n"));
@@ -83,7 +70,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && bIsInit && bIsStarted)
 	{
 		/*if (gVersion > 14.30f)
-		{
+		{*/
 			UFunctions::SetupCustomInventory();
 		//}
 
@@ -279,7 +266,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 					UFunctions::Play(DEVICE_EVENT_PLAYER);
 				}
 				else
-				{
+				{*/
 					UFunctions::ConsoleLog(XOR(L"Sorry, events are currently not supported."));
 				//}
 				break;
@@ -441,9 +428,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				break;
 			}
 		}
-	}*/
+	}
 
-#ifdef LOGGING
 	//Logging
 	if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
 		!wcsstr(nFunc.c_str(), L"Tick") &&
@@ -464,11 +450,9 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		!wcsstr(nFunc.c_str(), L"GetAbilityTargetingLevel") &&
 		!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 	{
-		printf(XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), GetObjectFullName(static_cast<UObject*>(pObj)->Class).c_str());
+		printf(XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), UE4::GetObjectFullName(static_cast<UObject*>(pObj)->Class).c_str());
 	}
-#endif
 
-out:
 	return ProcessEvent(pObj, pFunc, pParams);
 }
 
