@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcticWolfApi", "ArcticWolfApi\ArcticWolfApi.csproj", "{7E068292-633A-473C-8795-1B3C43CE327C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcticWolfLauncher", "ArcticWolfLauncher\ArcticWolfLauncher.csproj", "{C316AC99-4A34-45BD-8BC8-BD4BD69ED87D}"
+	ProjectSection(ProjectDependencies) = postProject
+		{93968F5D-D6DE-4326-9D94-0ECF5711E100} = {93968F5D-D6DE-4326-9D94-0ECF5711E100}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcticSpy", "ArcticSpy\ArcticSpy.csproj", "{859D2A79-7117-47F1-B233-3F536D3DFA7A}"
 EndProject
@@ -13,7 +16,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcticWolf.DataMiner", "Arc
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PlataniumV2", "PlataniumV2\PlataniumV2.vcxproj", "{93968F5D-D6DE-4326-9D94-0ECF5711E100}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcticWolf.Storage", "ArcticWolf.Storage\ArcticWolf.Storage.csproj", "{27BBFD4F-9475-4104-9F7F-82B7071AC842}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcticWolf.Storage", "ArcticWolf.Storage\ArcticWolf.Storage.csproj", "{27BBFD4F-9475-4104-9F7F-82B7071AC842}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

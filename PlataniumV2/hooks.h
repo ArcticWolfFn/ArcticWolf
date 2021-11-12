@@ -13,16 +13,18 @@
 #include "util.h"
 #include "patterns.h"
 #include "patterns.h"
+#include "detours.h"
 
 
 //globals
 static void* UnsafeEnvironmentPopupAddress;
 static void* RequestExitWithStatusAddress;
 static void* RequestExitAddress;
-static void* CurlEasyAddress;
-static void* CurlSetAddress;
+static uintptr_t CurlEasyAddress;
+static uintptr_t CurlSetAddress;
 static void* PushWidgetAddress;
 //inline void* HotfixManagerInstance;
+inline bool isReady = false;
 
 //def
 //static bool (*HotfixIniFile)(void* HotfixManager, const FString& FileName, const FString& IniData);
@@ -74,6 +76,8 @@ inline CURLcode CurlEasySetOptHook(struct Curl_easy* data, CURLoption tag, ...)
 		printfc(FOREGROUND_BLUE, "Url before: %s \n", url.c_str());
 
 		Uri uri = Uri::Parse(url);
+
+		if (url.find(XOR("ClientQuest")) != std::string::npos) isReady = true;
 
 		if (uri.Host.ends_with("ol.epicgames.com")
 			|| uri.Host.ends_with(".akamaized.net")
@@ -162,107 +166,137 @@ void UnsafeEnvironmentPopupHook(wchar_t** unknown1,
 	return HotfixIniFile(HotfixManager, FileName, IniData);
 }*/
 
-void VerifyPeerPatch()
-{
-	auto* const VerifyPeerAdd = Util::FindPattern("\x41\x39\x28\x0F\x95\xC0\x88\x83\x50\x04\x00\x00",
-		"xxxxxxxxxx??");
-	auto* const bytes = (uint8_t*)VerifyPeerAdd;
-	bytes[4] = 0x94; //SETE
-	printf("[DLL] VerifyPeer was changed!.\n");
-}
-
 namespace Hooks
 {
 	inline bool Init()
 	{
 		printf("Init started \n");
 
-
-		/*UnsafeEnvironmentPopupAddress = Util::FindPattern(Patterns::UnsafeEnvironmentPopup.first,
-			Patterns::UnsafeEnvironmentPopup.second);
-		VALIDATE_ADDRESS(UnsafeEnvironmentPopupAddress, "First pattern is outdated.") */
-
-			printfc(FOREGROUND_BLUE, "1");
-
-		/*RequestExitWithStatusAddress = Util::FindPattern(Patterns::RequestExitWithStatus.first,
-			Patterns::RequestExitWithStatus.second);
-		VALIDATE_ADDRESS(RequestExitWithStatusAddress, "Second pattern is outdated.")*/
-
-			printfc(FOREGROUND_BLUE, "2");
-
-		/*RequestExitAddress = Util::FindPattern(
-			"\x40\x53\x48\x83\xEC\x30\x41\xB9\x00\x00\x00\x00\x0F\xB6\xD9\x44\x38\x0D\x00\x00\x00\x00\x72\x20\x48\x8D\x05\x00\x00\x00\x00\x89\x5C\x24\x28\x4C\x8D\x05\x00\x00\x00\x00\x48\x89\x44\x24\x00\x33\xD2\x33\xC9\xE8\x00\x00\x00\x00",
-			"xxxxxxxx????xxxxxx????xxxxx????xxxxxxx????xxxx?xxxxx????");
-		VALIDATE_ADDRESS(RequestExitAddress, "SecondV2 pattern is outdated.")*/
-
-			printfc(FOREGROUND_BLUE, "3");
-
 		CurlEasyAddress = Util::FindPattern(Patterns::CurlEasySetOpt.first, Patterns::CurlEasySetOpt.second);
 		VALIDATE_ADDRESS(CurlEasyAddress, "Curl easy pattern is outdated.")
 
-			printfc(FOREGROUND_BLUE, "4");
-
 		CurlSetAddress = Util::FindPattern(Patterns::CurlSetOpt.first, Patterns::CurlSetOpt.second);
 		VALIDATE_ADDRESS(CurlSetAddress, "Curl set pattern is outdated.")
-
-			printfc(FOREGROUND_BLUE, "5");
-
-		/*PushWidgetAddress = Util::FindPattern(Patterns::PushWidget.first, Patterns::PushWidget.second);
-		VALIDATE_ADDRESS(PushWidgetAddress, "Third pattern is outdated.")*/
-
-			printfc(FOREGROUND_BLUE, "6");
 
 		CurlEasySetOpt = decltype(CurlEasySetOpt)(CurlEasyAddress);
 
 		CurlSetOpt = decltype(CurlSetOpt)(CurlSetAddress);
 
-		// PushWidget = decltype(PushWidget)(PushWidgetAddress);
-
-		/*HotfixIniFile = decltype(HotfixIniFile)(Util::FindPattern(
-			"\x48\x8B\xC4\x48\x89\x58\x20\x55\x56\x57\x41\x54\x41\x55\x41\x56\x41\x57\x48\x8D\xA8\x00\x00\x00\x00\x48\x81\xEC\x00\x00\x00\x00\x0F\x29\x70\xB8\x48\x8B\x05\x00\x00\x00\x00\x48\x33\xC4\x48\x89\x85\x00\x00\x00\x00\x8B\x5A\x08\x48\x8D\x35\x00\x00\x00\x00\x45\x33\xFF",
-			"xxxxxxxxxxxxxxxxxxxxx????xxx????xxxxxxx????xxxxxx????xxxxxx????xxx"));*/
-
-		/*if (VEH::Init())
-		{
-			VEH::AddHook(UnsafeEnvironmentPopupAddress, UnsafeEnvironmentPopupHook);
-			VEH::AddHook(RequestExitWithStatusAddress, RequestExitWithStatusHook);
-			VEH::AddHook(RequestExitAddress, RequestExitHook);
-		}*/
-
-		//VerifyPeerPatch();
-
-
-		//DetoursEasy(UnsafeEnvironmentPopupAddress, UnsafeEnvironmentPopupHook);
-		//DetoursEasy(RequestExitWithStatusAddress, RequestExitWithStatusHook);
-		//DetoursEasy(RequestExitAddress, RequestExitHook);
 
 		if (VEH::Init()) {
 			printfc(FOREGROUND_GREEN, "Here we go\n");
 			VEH::AddHook(CurlEasySetOpt, CurlEasySetOptHook);
 		}
-
-		//DetoursEasy(CurlEasySetOpt, CurlEasySetOptHook)
-
-		// DetoursEasy(PushWidget, PushWidgetHook)
-
-			printfc(FOREGROUND_GREEN, "[+] No errors were occurred, you can login now!.");
+		
+		printfc(FOREGROUND_GREEN, "[+] No errors were occurred, you can login now!.");
 	}
 
 	inline bool Misc() {
-		//GObject Array
+		if (MH_Initialize() != MH_OK)
+		{
+			MessageBoxA(nullptr, XOR("Failed to initialize min-hook, terminating the thread."), XOR("Cranium"), MB_OK);
+			FreeLibraryAndExitThread(GetModuleHandle(nullptr), 0);
+		}
+
+		//Used for ProcessEvent Hooking.
+		//Should work on everything
+		auto ProcessEventAdd = Util::FindPattern(Patterns::bGlobal::ProcessEvent, Masks::bGlobal::ProcessEvent);
+		VALIDATE_ADDRESS(ProcessEventAdd, XOR("Failed to find ProcessEvent Address."));
+
+		ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
+
+		gProcessEventAdd = ProcessEventAdd;
+
+		//Used for Camera Hooking.
+		//Tested from 12.41 to latest
+		auto GetViewPointAdd = Util::FindPattern(Patterns::bGlobal::GetViewPoint, Masks::bGlobal::GetViewPoint);
+		VALIDATE_ADDRESS(GetViewPointAdd, XOR("Failed to find GetViewPoint Address."));
+
+		GetViewPoint = decltype(GetViewPoint)(GetViewPointAdd);
+
+		//Used for getting UObjects names.
+		//Tested from 12.41 to latest
+		auto GONIAdd = Util::FindPattern(Patterns::bGlobal::GONI, Masks::bGlobal::GONI);
+		VALIDATE_ADDRESS(GONIAdd, XOR("Failed to find GetObjectName Address."));
+
+		GetObjectNameInternal = decltype(GetObjectNameInternal)(GONIAdd);
+
+		//Used for getting UObjects full names.
+		/*if (gVersion < 14.30f)
+		{
+			//Tested only on 12.41 and 12.61.
+			auto GetObjectFullNameAdd = Util::FindPattern(Patterns::Oldies::bGlobal::GetObjectFullName, Masks::Oldies::bGlobal::GetObjectFullName);
+			VALIDATE_ADDRESS(GetObjectFullNameAdd, XOR("Failed to find GetObjectFullName Address."));
+
+			GetObjectFullNameInternal = decltype(GetObjectFullNameInternal)(GetObjectFullNameAdd);
+		}
+		else
+		{*/
+			//14.30^
+			auto GetObjectFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetObjectFullName, Masks::bGlobal::GetObjectFullName);
+			VALIDATE_ADDRESS(GetObjectFullNameAdd, XOR("Failed to find GetObjectFullName Address."));
+
+			GetObjectFullNameInternal = decltype(GetObjectFullNameInternal)(GetObjectFullNameAdd);
+		//}
+
+		//Used for getting FFields full names.
+		auto GetFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetFullName, Masks::bGlobal::GetFullName);
+		VALIDATE_ADDRESS(GetFullNameAdd, XOR("Failed to find GetFullName Address."));
+
+		GetFullName = decltype(GetFullName)(GetFullNameAdd);
+
+
+		//Used to free the memory for names.
+		auto FreeInternalAdd = Util::FindPattern(Patterns::bGlobal::FreeInternal, Masks::bGlobal::FreeInternal);
+		VALIDATE_ADDRESS(FreeInternalAdd, XOR("Failed to find Free Address."));
+
+		FreeInternal = decltype(FreeInternal)(FreeInternalAdd);
+
+
+		//Used to construct objects, mostly used for console stuff.
+		//Tested from 12.41 to latest
+		auto SCOIAdd = Util::FindPattern(Patterns::bGlobal::SCOI, Masks::bGlobal::SCOI);
+		VALIDATE_ADDRESS(SCOIAdd, XOR("Failed to find SCOI Address."));
+
+		StaticConstructObject = decltype(StaticConstructObject)(SCOIAdd);
+
+		//Used to load objects.
+		//Tested from 12.41 to latest
+		auto SLOIAdd = Util::FindPattern(Patterns::bGlobal::SLOI, Masks::bGlobal::SLOI);
+		VALIDATE_ADDRESS(SLOIAdd, XOR("Failed to find SLOI Address."));
+
+		StaticLoadObject = decltype(StaticLoadObject)(SLOIAdd);
+
+		//Used for mostly everything.
+		//Tested from 12.41 to latest
+		auto GEngineAdd = Util::FindPattern(Patterns::bGlobal::GEngine, Masks::bGlobal::GEngine);
+		VALIDATE_ADDRESS(GEngineAdd, XOR("Failed to find GEngine Address."));
+
+		GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 7 + *reinterpret_cast<int32_t*>(GEngineAdd + 3));
+
+
+		//Used to find objects, dump them, mostly works as an alternative for the ObjectFinder.
 		auto GObjectsAdd = Util::FindPattern(Patterns::bGlobal::GObjects, Masks::bGlobal::GObjects);
 		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
 
 		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 
-		// not working currently
-		/*auto FNameToStringAdd = Util::FindPattern(Patterns::New::FNameToString,
-			Masks::New::FNameToString);
-		VALIDATE_ADDRESS(FNameToStringAdd, XOR("Failed to find FNameToString Address.")); 
 
-		FNameToString = decltype(FNameToString)(FNameToStringAdd);*/
+		auto AbilityPatchAdd = Util::FindPattern(Patterns::bGlobal::AbilityPatch, Masks::bGlobal::AbilityPatch);
+		VALIDATE_ADDRESS(AbilityPatchAdd, XOR("Failed to find AbilityPatch Address."));
+		/*
+		//Patches fortnite ability ownership checks, work on everysingle fortnite version.
+		//Author: @nyamimi
+		reinterpret_cast<uint8_t*>(AbilityPatchAdd)[2] = 0x85;
+		reinterpret_cast<uint8_t*>(AbilityPatchAdd)[11] = 0x8D;
 
-		GEngine = UE4::FindObject<UEngine*>(XOR(L"FortEngine /Engine/Transient.FortEngine_"));
+		//Process Event Hooking.
+		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
+		MH_EnableHook(reinterpret_cast<void*>(ProcessEventAdd));
+
+		//GetViewPoint Hooking.
+		MH_CreateHook(reinterpret_cast<void*>(GetViewPointAdd), GetViewPointDetour, reinterpret_cast<void**>(&GetViewPoint));
+		MH_EnableHook(reinterpret_cast<void*>(GetViewPointAdd));*/
 
 		return true;
 	}

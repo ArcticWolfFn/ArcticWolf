@@ -102,11 +102,14 @@ xcopy "$(TargetPath)" "$(SolutionDir)Build\" /F /I /R /Y</Command>
     <ClInclude Include="curl.h" />
     <ClInclude Include="curlver.h" />
     <ClInclude Include="defs.h" />
+    <ClInclude Include="detours.h" />
     <ClInclude Include="enums.h" />
+    <ClInclude Include="finder.h" />
     <ClInclude Include="hooks.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="masks.h" />
     <ClInclude Include="MinHook.h" />
+    <ClInclude Include="mods.h" />
     <ClInclude Include="patterns.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="system.h" />

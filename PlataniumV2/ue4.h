@@ -8,9 +8,12 @@
 #include "structs.h"
 
 inline void* (*ProcessEvent)(void*, void*, void*);
-inline UObject* (*SpawnActor)(UObject* UWorld, UClass* Class, FTransform const* UserTransformPtr,
-	const FActorSpawnParameters& SpawnParameters);
+inline int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE);
+inline FString(*GetObjectNameInternal)(PVOID);
+inline UObject* (*SpawnActor)(UObject* UWorld, UClass* Class, FTransform const* UserTransformPtr, const FActorSpawnParameters& SpawnParameters);
 inline void (*GetFullName)(FField* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
+inline void (*GetObjectFullNameInternal)(UObject* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
+inline void (*FreeInternal)(void*);
 inline GObjects* GObjs;
 inline UEngine* GEngine;
 
@@ -39,6 +42,8 @@ inline UObject* (*StaticLoadObject)(
 
 inline UObject* KismetRenderingLibrary;
 inline UObject* KismetStringLibrary;
+
+inline uintptr_t gProcessEventAdd;
 
 
 namespace UE4
@@ -117,6 +122,63 @@ namespace UE4
 				L"]\n";
 			log << item;
 		}
+	}
+
+	//The same as above but for FFields.
+	inline std::wstring GetFirstName(FField* object)
+	{
+		FString s;
+		GetFullName(object, s, nullptr, EObjectFullNameFlags::None);
+		std::wstring objectNameW = s.ToWString();
+
+		std::wstring token;
+		while (token != objectNameW)
+		{
+			token = objectNameW.substr(0, objectNameW.find_first_of(L":"));
+			objectNameW = objectNameW.substr(objectNameW.find_first_of(L":") + 1);
+		}
+
+		Free((void*)s.ToWString());
+
+		return objectNameW;
+	}
+
+	//Returns the very first name of the object (E.G: BP_PlayButton).
+	inline std::wstring GetObjectFirstName(UObject* object)
+	{
+		const FString internalName = GetObjectNameInternal(object);
+		if (!internalName.ToWString()) return L"";
+
+		std::wstring name(internalName.ToWString());
+
+		Free((void*)internalName.ToWString());
+
+		return name;
+	}
+
+	//Returns FField's type.
+	inline std::wstring GetFieldClassName(FField* obj)
+	{
+		FString s;
+		GetFullName(obj, s, nullptr, EObjectFullNameFlags::None);
+		const std::wstring objectName = s.ToWString();
+		auto className = Util::sSplit(objectName, L" ");
+
+		Free((void*)s.ToWString());
+
+		return className;
+	}
+
+	//Return FULL Object name including it's type.
+	inline std::wstring GetObjectFullName(UObject* object)
+	{
+		FString s;
+		GetObjectFullNameInternal(object, s, nullptr, EObjectFullNameFlags::None);
+		std::wstring objectNameW = s.ToWString();
+
+		Free((void*)s.ToWString());
+
+		return objectNameW;
 	}
 
 	inline void DumpBPs()

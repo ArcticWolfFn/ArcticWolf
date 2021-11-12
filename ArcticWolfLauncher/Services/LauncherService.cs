@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Text;
+using System.Threading.Tasks;
 using System.Windows;
 
 namespace ArcticWolfLauncher.Services
@@ -16,16 +17,18 @@ namespace ArcticWolfLauncher.Services
 
         public static void LaunchGame()
         {
-            string gamePath = Path.Join(AppSettings.Default.FNPath, @"\FortniteGame\Binaries\Win64\FortniteClient-Win64-Shipping.exe");
-            if (!File.Exists(gamePath))
+            Task.Run(() =>
             {
-                MessageBox.Show("Invalid game path", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
-                return;
-            }
+                string gamePath = Path.Join(AppSettings.Default.FNPath, @"\FortniteGame\Binaries\Win64\FortniteClient-Win64-Shipping.exe");
+                if (!File.Exists(gamePath))
+                {
+                    MessageBox.Show("Invalid game path", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+                    return;
+                }
 
-            string flToken = "7a848a93a74ba68876c36C1c";
+                string flToken = "7a848a93a74ba68876c36C1c";
 
-            List<string> baseArgs = new List<string>()
+                List<string> baseArgs = new List<string>()
         {
           "-AUTH_LOGIN=user@gmail.com",
           "-AUTH_PASSWORD=unused",
@@ -38,36 +41,43 @@ namespace ArcticWolfLauncher.Services
           "-nobe",
           "-skippatchcheck"
         };
-            string args = string.Join(" ", baseArgs);
+                string args = string.Join(" ", baseArgs);
 
-            _fortniteProcess = new()
-            {
-                StartInfo = new ProcessStartInfo()
+                _fortniteProcess = new()
+                {
+                    StartInfo = new ProcessStartInfo()
+                    {
+                        Arguments = args,
+                        FileName = gamePath
+                    },
+                    EnableRaisingEvents = true
+                };
+
+                _fortniteProcess.Exited += FortniteProcess_Exited;
+
+                _fortniteProcess.Start();
+
+                //prevent mapping the dll too fast
+                while (_fortniteProcess.Id == 0)
+                {
+
+                }
+
+                _fnLauncherProcess = Process.Start(new ProcessStartInfo()
                 {
                     Arguments = args,
-                    FileName = gamePath
-                },
-                EnableRaisingEvents = true
-            };
+                    CreateNoWindow = true,
+                    FileName = "Resources/FortniteLauncher.exe"
+                });
+                _fnAntiCheatProcess = Process.Start(new ProcessStartInfo()
+                {
+                    Arguments = args,
+                    CreateNoWindow = true,
+                    FileName = "Resources/FortniteClient-Win64-Shipping_BE.exe"
+                }); 
 
-            _fortniteProcess.Exited += FortniteProcess_Exited;
-
-            _fortniteProcess.Start();
-
-            _fnLauncherProcess = Process.Start(new ProcessStartInfo()
-            {
-                Arguments = args,
-                CreateNoWindow = true,
-                FileName = "Resources/FortniteLauncher.exe"
+                InjectDll(_fortniteProcess.Id, "PlataniumV2.dll");
             });
-            _fnAntiCheatProcess = Process.Start(new ProcessStartInfo()
-            {
-                Arguments = args,
-                CreateNoWindow = true,
-                FileName = "Resources/FortniteClient-Win64-Shipping_BE.exe"
-            });
-
-            InjectDll(_fortniteProcess.Id, "Resources/PlataniumV2.dll");
         }
 
         private static void FortniteProcess_Exited(object sender, EventArgs e)

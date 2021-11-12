@@ -30,6 +30,10 @@ inline HANDLE hConsole;
     DetourAttach(reinterpret_cast<void**>(&address), hook); \
     DetourTransactionCommit();
 
+#define READ_DWORD(base, offset) (*(PDWORD)(((PBYTE)base + offset)))
+
+#define READ_POINTER(base, offset) (*(PVOID *)(((PBYTE)base + offset)))
+
 
 class Util
 {
@@ -56,28 +60,44 @@ public:
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	}
 
-	static inline PVOID FindPattern(PVOID pBase, DWORD dwSize, LPCSTR lpPattern, LPCSTR lpMask)
+	static __forceinline uintptr_t FindPattern(PVOID pBase, DWORD dwSize, LPCSTR lpPattern, LPCSTR lpMask)
 	{
 		dwSize -= static_cast<DWORD>(strlen(lpMask));
-
-		for (auto index = 0UL; index < dwSize; ++index)
+		for (unsigned long index = 0; index < dwSize; ++index)
 		{
-			auto pAddress = reinterpret_cast<PBYTE>(pBase) + index;
-
-			if (MaskCompare(pAddress, lpPattern, lpMask))
-				return pAddress;
+			PBYTE pAddress = static_cast<PBYTE>(pBase) + index;
+			if (MaskCompare(pAddress, lpPattern, lpMask)) return reinterpret_cast<uintptr_t>(pAddress);
 		}
-
 		return NULL;
 	}
 
-	static inline PVOID FindPattern(LPCSTR lpPattern, LPCSTR lpMask)
+	static __forceinline uintptr_t FindPattern(LPCSTR lpPattern, LPCSTR lpMask, BOOL SleepBetween = false)
 	{
-		MODULEINFO info = {0};
+		MODULEINFO info = { nullptr };
+		GetModuleInformation(GetCurrentProcess(), GetModuleHandle(nullptr), &info, sizeof(info));
 
-		GetModuleInformation(GetCurrentProcess(), GetModuleHandle(0), &info, sizeof(info));
+		uintptr_t pAddr = 0;
 
-		return FindPattern(info.lpBaseOfDll, info.SizeOfImage, lpPattern, lpMask);
+		do
+		{
+			pAddr = FindPattern(info.lpBaseOfDll, info.SizeOfImage, lpPattern, lpMask);
+
+			Sleep(50);
+		} while (!pAddr);
+
+		return pAddr;
+	}
+
+	static __forceinline std::wstring sSplit(std::wstring s, std::wstring delimiter)
+	{
+		size_t pos;
+		std::wstring token;
+		while ((pos = s.find(delimiter)) != std::string::npos)
+		{
+			token = s.substr(0, pos);
+			return token;
+		}
+		return token;
 	}
 	
 	static std::string base64_decode(const std::string& in) {

@@ -29,22 +29,35 @@ VOID WINAPI Main()
 	Hooks::Init();
 
 	// disabled due to game not starting
-	/*while (true) {
-		if (Hooks::Misc())
-		{
-
+	bool hit = false;
+	while (true) {
+		if (isReady) {
+			if (hit == false) {
+				printfc(FOREGROUND_GREEN, "Hit Hooks:Misc()!");
+				hit = true;
+			}
+			if (Hooks::Misc())
+			{
+				break;
+			}
 		}
 		Sleep(1000 / 30); // 30 fps
-	}*/
+	}
 }
 
 BOOL APIENTRY DllMain(HMODULE hModule, DWORD dwReason, LPVOID lpReserved)
 {
-	if (dwReason == DLL_PROCESS_ATTACH)
+	switch (dwReason)
 	{
-		//CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)Main, hModule, 0, 0);
-		Main();
+	case DLL_PROCESS_ATTACH:
+		CreateThread(nullptr, 0, (LPTHREAD_START_ROUTINE)Main, hModule, 0, 0);
+		//Main();
+		break;
+	case DLL_PROCESS_DETACH:
+	case DLL_THREAD_ATTACH:
+	case DLL_THREAD_DETACH:
+	default:
+		break;
 	}
-
 	return TRUE;
 }
