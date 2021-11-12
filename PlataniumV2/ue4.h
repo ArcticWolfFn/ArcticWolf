@@ -72,7 +72,7 @@ namespace UE4
 				continue;
 			}
 
-			std::wstring objectFullName = object->GetFullName();
+			auto objectFullName = UE4::GetObjectFullName(object);
 
 			if (to_lower)
 			{
@@ -116,12 +116,12 @@ namespace UE4
 			{
 				continue;
 			}
-			std::wstring className = object->Class->GetFullName();
-			std::wstring objectName = object->GetFullName();
-			std::wstring item = L"\n[" + std::to_wstring(i) + L"] Object:[" + objectName + L"] Class:[" + className +
-				L"]\n";
+			std::wstring className = GetObjectName(static_cast<UObject*>(object->Class)).c_str();
+			std::wstring objectName = GetObjectFullName(object).c_str();
+			std::wstring item = L"\n[" + std::to_wstring(i) + L"] Object:[" + objectName + L"] Class:[" + className + L"]\n";
 			log << item;
 		}
+		log.flush();
 	}
 
 	//The same as above but for FFields.
@@ -151,7 +151,23 @@ namespace UE4
 
 		std::wstring name(internalName.ToWString());
 
-		Free((void*)internalName.ToWString());
+		// not working (breaks game)
+		//Free((void*)internalName.ToWString());
+
+		return name;
+	}
+
+	inline std::wstring GetObjectName(UObject* object)
+	{
+		std::wstring name(L"");
+		for (auto i = 0; object; object = object->Outer, ++i)
+		{
+			FString internalName = GetObjectNameInternal(object);
+			if (!internalName.ToWString()) break;
+			name = internalName.ToWString() + std::wstring(i > 0 ? L"." : L"") + name;
+
+			Free((void*)internalName.ToWString());
+		}
 
 		return name;
 	}
@@ -192,11 +208,11 @@ namespace UE4
 				continue;
 			}
 
-			auto ClassName = object->Class->GetName();
+			auto ClassName = GetObjectFirstName(object->Class);
 
 			if (ClassName == XOR(L"BlueprintGeneratedClass"))
 			{
-				auto objectNameW = object->GetName();
+				auto objectNameW = GetObjectFirstName(object);
 				log << objectNameW + L"\n";
 			}
 		}

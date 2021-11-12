@@ -1,13 +1,17 @@
 #pragma once
 #include "ue4.h"
 #include <minwindef.h>
-/*#include "neoroyale.h"
-#include "hwid.h"
-#include "kismet.h"*/
+#include "neoroyale.h"
+#include "ue4.h"
+#include "player.h"
+//#include "hwid.h"
+//#include "kismet.h"
 
 #ifndef PROD
 //#define LOGGING
 #endif
+
+using namespace NeoRoyale;
 
 inline bool bIsDebugCamera;
 inline bool bIsFlying;
@@ -17,9 +21,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	auto nObj = UE4::GetObjectFirstName(pObj);
 	auto nFunc = UE4::GetObjectFirstName(pFunc);
 
-	/*
+	printfc(FOREGROUND_GREEN, "%s has been called on %s", nFunc.c_str(), nObj.c_str());
+
 	//If the game requested matchmaking we open the game mode
-	if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
+	/*if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)
 	{
 		printf(XOR("\n\n[NeoRoyale] Start!"));
 
@@ -61,8 +66,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 #else
 		Start(Map);
 #endif
-	}
-
+	}*/
+	/*
 	if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
 	{
 		printf(XOR("\n[NeoRoyale] Init!\n"));
@@ -77,10 +82,10 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 	if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && bIsInit && bIsStarted)
 	{
-		if (gVersion > 14.30f)
+		/*if (gVersion > 14.30f)
 		{
 			UFunctions::SetupCustomInventory();
-		}
+		//}
 
 		UFunctions::PlayCustomPlayPhaseAlert();
 		LoadMoreClasses();
@@ -206,7 +211,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			Bot.TeleportTo(HitLocation, Rotation);
 
 			Bot.SetSkeletalMesh(XOR(L"SK_M_MALE_Base"));
-			Bot.Emote(FindObject<UObject*>(XOR(L"EID_HightowerSquash.EID_HightowerSquash"), true));
+			Bot.Emote(UE4::FindObject<UObject*>(XOR(L"EID_HightowerSquash.EID_HightowerSquash"), true));
 
 			Bots.push_back(Bot);
 		}
@@ -250,35 +255,18 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			case DUMP:
 			{
-				DumpGObjects();
+				UE4::DumpGObjects();
 				break;
 			}
 
 			case DUMPBPS:
 			{
-				DumpBPs();
+				UE4::DumpBPs();
 				break;
 			}
-#ifndef PROD
-			case ACTIVATE:
-			{
-				if (!arg.empty())
-				{
-					if (!HWID::WriteKeyToReg(const_cast<wchar_t*>(arg.c_str())))
-					{
-						UFunctions::ConsoleLog(XOR(L"Couldn't process your activation code!."));
-					}
-				}
-				else
-				{
-					UFunctions::ConsoleLog(XOR(L"Please input your activation key!."));
-				}
-				break;
-			}
-#endif
 			case EVENT:
 			{
-				if (gVersion == 14.60f)
+				/*if (gVersion == 14.60f)
 				{
 					UFunctions::Play(GALACTUS_EVENT_PLAYER);
 				}
@@ -292,8 +280,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				}
 				else
 				{
-					UFunctions::ConsoleLog(XOR(L"Sorry the version you are using doesn't have any event we support."));
-				}
+					UFunctions::ConsoleLog(XOR(L"Sorry, events are currently not supported."));
+				//}
 				break;
 			}
 
@@ -404,7 +392,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				if (!arg.empty())
 				{
-					auto Playlist = FindObject<UObject*>(ScriptNameW.c_str());
+					auto Playlist = UE4::FindObject<UObject*>(ScriptNameW.c_str());
 					if (Playlist)
 					{
 						gPlaylist = Playlist;
@@ -439,7 +427,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				if (!arg.empty())
 				{
-					const auto BPGClass = FindObject<UClass*>(XOR(L"Class /Script/Engine.BlueprintGeneratedClass"));
+					const auto BPGClass = UE4::FindObject<UClass*>(XOR(L"Class /Script/Engine.BlueprintGeneratedClass"));
 
 					UFunctions::StaticLoadObjectEasy(BPGClass, arg.c_str());
 				}

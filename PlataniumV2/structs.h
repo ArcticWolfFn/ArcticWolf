@@ -149,15 +149,7 @@ struct FName
 		ComparisonIndex = (name & 0xFFFFFFFFLL);
 	};
 
-	auto ToString()
-	{
-		FString temp;
-		FNameToString(this, temp);
-
-		std::wstring ret(temp.ToWString());
-
-		return ret;
-	}
+	void ToString(FString& Out);
 };
 
 struct FText
@@ -203,24 +195,6 @@ struct UObject
 		return false;
 	}
 
-	std::wstring GetName()
-	{
-		return NamePrivate.ToString();
-	}
-
-	std::wstring GetFullName()
-	{
-		std::wstring temp;
-
-		for (auto outer = Outer; outer; outer = outer->Outer)
-		{
-			temp = outer->GetName() + L"." + temp;
-		}
-
-		temp = reinterpret_cast<UObject*>(Class)->GetName() + L" " + temp + this->GetName();
-		return temp;
-	}
-
 	FName GetFName() const
 	{
 		return *reinterpret_cast<const FName*>(this + 0x18);
@@ -236,29 +210,6 @@ struct FField
 	FField* Next;
 	FName NamePrivate;
 	EObjectFlags FlagsPrivate;
-
-	std::wstring GetName()
-	{
-		return NamePrivate.ToString();
-	}
-
-	std::wstring GetTypeName()
-	{
-		return (*static_cast<FName*>(Class)).ToString();
-	}
-
-	std::wstring GetFullName()
-	{
-		std::wstring temp;
-
-		for (auto outer = Next; outer; outer = outer->Next)
-		{
-			temp = outer->GetName() + L"." + temp;
-		}
-
-		temp = static_cast<UObject*>(Class)->GetName() + L" " + temp + this->GetName();
-		return temp;
-	}
 };
 
 struct FProperty : FField

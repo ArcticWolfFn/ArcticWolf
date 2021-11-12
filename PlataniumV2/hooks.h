@@ -73,7 +73,7 @@ inline CURLcode CurlEasySetOptHook(struct Curl_easy* data, CURLoption tag, ...)
 	else if (tag == CURLOPT_URL)
 	{
 		std::string url = va_arg(arg, char*);
-		printfc(FOREGROUND_BLUE, "Url before: %s \n", url.c_str());
+		//printfc(FOREGROUND_BLUE, "Url before: %s \n", url.c_str());
 
 		Uri uri = Uri::Parse(url);
 
@@ -102,7 +102,7 @@ inline CURLcode CurlEasySetOptHook(struct Curl_easy* data, CURLoption tag, ...)
 
 				url = Uri::CreateUri(URL_PROTOCOL, URL_HOST, URL_PORT, path.c_str(), uri.QueryString);
 			}
-			printfc(FOREGROUND_BLUE, "Url after: %s \n", url.c_str());
+			//printfc(FOREGROUND_BLUE, "Url after: %s \n", url.c_str());
 		}
 
 
@@ -198,14 +198,30 @@ namespace Hooks
 			FreeLibraryAndExitThread(GetModuleHandle(nullptr), 0);
 		}
 
+		//Used to find objects, dump them, mostly works as an alternative for the ObjectFinder.
+		auto GObjectsAdd = Util::FindPattern(Patterns::bGlobal::GObjects, Masks::bGlobal::GObjects);
+		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
+
+		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
+
+		//Used for mostly everything.
+		//Tested from 12.41 to latest
+		auto GEngineAdd = Util::FindPattern(Patterns::bGlobal::GEngine, Masks::bGlobal::GEngine);
+		VALIDATE_ADDRESS(GEngineAdd, XOR("Failed to find GEngine Address."));
+
+		GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 7 + *reinterpret_cast<int32_t*>(GEngineAdd + 3));
+
 		//Used for ProcessEvent Hooking.
-		//Should work on everything
 		auto ProcessEventAdd = Util::FindPattern(Patterns::bGlobal::ProcessEvent, Masks::bGlobal::ProcessEvent);
 		VALIDATE_ADDRESS(ProcessEventAdd, XOR("Failed to find ProcessEvent Address."));
 
 		ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
 
 		gProcessEventAdd = ProcessEventAdd;
+
+		//Process Event Hooking.
+		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
+		MH_EnableHook(reinterpret_cast<void*>(ProcessEventAdd));
 
 		//Used for Camera Hooking.
 		//Tested from 12.41 to latest
@@ -267,36 +283,23 @@ namespace Hooks
 
 		StaticLoadObject = decltype(StaticLoadObject)(SLOIAdd);
 
-		//Used for mostly everything.
-		//Tested from 12.41 to latest
-		auto GEngineAdd = Util::FindPattern(Patterns::bGlobal::GEngine, Masks::bGlobal::GEngine);
-		VALIDATE_ADDRESS(GEngineAdd, XOR("Failed to find GEngine Address."));
-
-		GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 7 + *reinterpret_cast<int32_t*>(GEngineAdd + 3));
-
-
-		//Used to find objects, dump them, mostly works as an alternative for the ObjectFinder.
-		auto GObjectsAdd = Util::FindPattern(Patterns::bGlobal::GObjects, Masks::bGlobal::GObjects);
-		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
-
-		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
-
 
 		auto AbilityPatchAdd = Util::FindPattern(Patterns::bGlobal::AbilityPatch, Masks::bGlobal::AbilityPatch);
 		VALIDATE_ADDRESS(AbilityPatchAdd, XOR("Failed to find AbilityPatch Address."));
-		/*
+		
 		//Patches fortnite ability ownership checks, work on everysingle fortnite version.
 		//Author: @nyamimi
 		reinterpret_cast<uint8_t*>(AbilityPatchAdd)[2] = 0x85;
-		reinterpret_cast<uint8_t*>(AbilityPatchAdd)[11] = 0x8D;
-
-		//Process Event Hooking.
-		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
-		MH_EnableHook(reinterpret_cast<void*>(ProcessEventAdd));
+		reinterpret_cast<uint8_t*>(AbilityPatchAdd)[11] = 0x8D;		
 
 		//GetViewPoint Hooking.
-		MH_CreateHook(reinterpret_cast<void*>(GetViewPointAdd), GetViewPointDetour, reinterpret_cast<void**>(&GetViewPoint));
+		/*MH_CreateHook(reinterpret_cast<void*>(GetViewPointAdd), GetViewPointDetour, reinterpret_cast<void**>(&GetViewPoint));
 		MH_EnableHook(reinterpret_cast<void*>(GetViewPointAdd));*/
+
+		auto Map = APOLLO_TERRAIN;
+
+		gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+		//Start(Map);
 
 		return true;
 	}

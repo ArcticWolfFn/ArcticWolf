@@ -36,7 +36,7 @@ VOID WINAPI Main()
 				printfc(FOREGROUND_GREEN, "Hit Hooks:Misc()!");
 				hit = true;
 			}
-			if (Hooks::Misc())
+			if (Hooks::Misc() && Console::Unlock())
 			{
 				break;
 			}

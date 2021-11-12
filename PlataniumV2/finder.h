@@ -3,6 +3,7 @@
 #include "structs.h"
 #include "ue4.h"
 #include "util.h"
+#include "ue4.h"
 
 namespace Offsets
 {
@@ -202,7 +203,7 @@ public:
 			{
 				//printf("\n[Actor %i] %ls, Class : %ls\n", i, GetObjectFullName(pActor).c_str(), GetObjectFullName(pActor->Class).c_str());
 
-				if (GetObjectFullName(pActor).starts_with(name))
+				if (UE4::GetObjectFullName(pActor).starts_with(name))
 				{
 					if (toSkip > 0)
 					{
@@ -240,9 +241,9 @@ public:
 			{
 				//printf("\n[Actor %i] %ls, Class : %ls\n", i, GetObjectFullName(pActor).c_str(), GetObjectFullName(pActor->Class).c_str());
 
-				if (GetObjectFullName(pActor).starts_with(name))
+				if (UE4::GetObjectFullName(pActor).starts_with(name))
 				{
-					auto fn = FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
+					auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
 
 					ProcessEvent(pActor, fn, nullptr);
 					printf("\n[NeoRoyale] %ls was destroyed!.\n", name.c_str());
