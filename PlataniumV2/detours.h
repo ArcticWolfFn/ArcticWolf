@@ -18,10 +18,10 @@ inline bool bIsFlying;
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
-	auto nObj = UE4::GetObjectFirstName(pObj);
-	auto nFunc = UE4::GetObjectFirstName(pFunc);
+	/*auto nObj = UE4::GetObjectName(pObj);
+	auto nFunc = UE4::GetObjectName(pFunc);
 
-	printfc(FOREGROUND_GREEN, "%s has been called on %s", nFunc.c_str(), nObj.c_str());
+	printfc(FOREGROUND_GREEN, "%s has been called on %s", nFunc.c_str(), nObj.c_str());*/
 
 	//If the game requested matchmaking we open the game mode
 	/*if (gUrl.find(XOR("matchmakingservice")) != std::string::npos)

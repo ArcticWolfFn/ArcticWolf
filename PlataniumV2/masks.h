@@ -13,6 +13,14 @@ namespace Masks
 		constexpr const char* CurlSetOpt = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 	}
 
+	namespace New
+	{
+		constexpr const char* GEngine = "xxx????xxxxxxxxx";
+		constexpr const char* FNameToString = "xxxxxx????";
+		constexpr const char* ProcessEvent = "x?xxxxxxxxxx????xxxx";
+		constexpr const char* GONI = "x????xxxxxxxxx";
+	}
+
 	namespace bGlobal
 	{
 		constexpr const char* GEngine = "xxx????xxxx????xx";

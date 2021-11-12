@@ -9,7 +9,7 @@
 
 inline void* (*ProcessEvent)(void*, void*, void*);
 inline int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE);
-inline FString(*GetObjectNameInternal)(PVOID);
+inline FString(*GetObjectNameInternal)(const UObject* Object);
 inline UObject* (*SpawnActor)(UObject* UWorld, UClass* Class, FTransform const* UserTransformPtr, const FActorSpawnParameters& SpawnParameters);
 inline void (*GetFullName)(FField* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
 inline void (*GetObjectFullNameInternal)(UObject* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
@@ -60,70 +60,6 @@ namespace UE4
 		std::free(buffer);
 	}
 
-	//Find any entity inside the UGlobalObjects array aka. GObjects.
-	template <typename T>
-	static T FindObject(wchar_t const* name, bool ends_with = false, bool to_lower = false, int toSkip = 0)
-	{
-		for (auto i = 0x0; i < GObjs->NumElements; ++i)
-		{
-			auto object = GObjs->GetByIndex(i);
-			if (object == nullptr)
-			{
-				continue;
-			}
-
-			auto objectFullName = UE4::GetObjectFullName(object);
-
-			if (to_lower)
-			{
-				std::transform(objectFullName.begin(), objectFullName.end(), objectFullName.begin(),
-					[](const unsigned char c) { return std::tolower(c); });
-			}
-
-			if (!ends_with)
-			{
-				if (objectFullName.starts_with(name))
-				{
-					if (toSkip > 0)
-					{
-						toSkip--;
-					}
-					else
-					{
-						return reinterpret_cast<T>(object);
-					}
-				}
-			}
-			else
-			{
-				if (objectFullName.ends_with(name))
-				{
-					return reinterpret_cast<T>(object);
-				}
-			}
-		}
-		return nullptr;
-	}
-
-	inline void DumpGObjects()
-	{
-		std::wofstream log("GObjects.log");
-
-		for (auto i = 0x0; i < GObjs->NumElements; ++i)
-		{
-			auto object = GObjs->GetByIndex(i);
-			if (object == nullptr)
-			{
-				continue;
-			}
-			std::wstring className = GetObjectName(static_cast<UObject*>(object->Class)).c_str();
-			std::wstring objectName = GetObjectFullName(object).c_str();
-			std::wstring item = L"\n[" + std::to_wstring(i) + L"] Object:[" + objectName + L"] Class:[" + className + L"]\n";
-			log << item;
-		}
-		log.flush();
-	}
-
 	//The same as above but for FFields.
 	inline std::wstring GetFirstName(FField* object)
 	{
@@ -147,12 +83,13 @@ namespace UE4
 	inline std::wstring GetObjectFirstName(UObject* object)
 	{
 		const FString internalName = GetObjectNameInternal(object);
-		if (!internalName.ToWString()) return L"";
+		if (!internalName.ToWString()) {
+			return L"";
+		}
 
 		std::wstring name(internalName.ToWString());
 
-		// not working (breaks game)
-		//Free((void*)internalName.ToWString());
+		Free((void*)internalName.ToWString());
 
 		return name;
 	}
@@ -217,5 +154,69 @@ namespace UE4
 			}
 		}
 		log.flush();
+	}
+
+	inline void DumpGObjects()
+	{
+		std::wofstream log("GObjects.log");
+
+		for (auto i = 0x0; i < GObjs->NumElements; ++i)
+		{
+			auto object = GObjs->GetByIndex(i);
+			if (object == nullptr)
+			{
+				continue;
+			}
+			std::wstring className = GetObjectName(static_cast<UObject*>(object->Class)).c_str();
+			std::wstring objectName = GetObjectFullName(object).c_str();
+			std::wstring item = L"\n[" + std::to_wstring(i) + L"] Object:[" + objectName + L"] Class:[" + className + L"]\n";
+			log << item;
+		}
+		log.flush();
+	}
+
+	//Find any entity inside the UGlobalObjects array aka. GObjects.
+	template <typename T>
+	static T FindObject(wchar_t const* name, bool ends_with = false, bool to_lower = false, int toSkip = 0)
+	{
+		for (auto i = 0x0; i < GObjs->NumElements; ++i)
+		{
+			auto object = GObjs->GetByIndex(i);
+			if (object == nullptr)
+			{
+				continue;
+			}
+
+			auto objectFullName = GetObjectFullName(object);
+
+			if (to_lower)
+			{
+				std::transform(objectFullName.begin(), objectFullName.end(), objectFullName.begin(),
+					[](const unsigned char c) { return std::tolower(c); });
+			}
+
+			if (!ends_with)
+			{
+				if (objectFullName.starts_with(name))
+				{
+					if (toSkip > 0)
+					{
+						toSkip--;
+					}
+					else
+					{
+						return reinterpret_cast<T>(object);
+					}
+				}
+			}
+			else
+			{
+				if (objectFullName.ends_with(name))
+				{
+					return reinterpret_cast<T>(object);
+				}
+			}
+		}
+		return nullptr;
 	}
 }

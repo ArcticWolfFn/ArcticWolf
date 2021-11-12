@@ -204,6 +204,18 @@ namespace Hooks
 
 		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 
+		/*printfc(FOREGROUND_BLUE, "Getting add");
+
+		auto FNameToStringAdd = Util::FindPattern(Patterns::New::FNameToString, Masks::New::FNameToString);
+		VALIDATE_ADDRESS(FNameToStringAdd, XOR("Failed to find FNameToStringAdd Address."));
+
+		auto offset = *reinterpret_cast<int32_t*>(FNameToStringAdd + 6);
+		FNameToStringAdd = FNameToStringAdd + 10 + offset;
+
+		FNameToString = decltype(FNameToString)(FNameToStringAdd);
+
+		printfc(FOREGROUND_BLUE, "Got add");*/
+
 		//Used for mostly everything.
 		//Tested from 12.41 to latest
 		auto GEngineAdd = Util::FindPattern(Patterns::bGlobal::GEngine, Masks::bGlobal::GEngine);
@@ -219,10 +231,6 @@ namespace Hooks
 
 		gProcessEventAdd = ProcessEventAdd;
 
-		//Process Event Hooking.
-		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
-		MH_EnableHook(reinterpret_cast<void*>(ProcessEventAdd));
-
 		//Used for Camera Hooking.
 		//Tested from 12.41 to latest
 		auto GetViewPointAdd = Util::FindPattern(Patterns::bGlobal::GetViewPoint, Masks::bGlobal::GetViewPoint);
@@ -234,6 +242,7 @@ namespace Hooks
 		//Tested from 12.41 to latest
 		auto GONIAdd = Util::FindPattern(Patterns::bGlobal::GONI, Masks::bGlobal::GONI);
 		VALIDATE_ADDRESS(GONIAdd, XOR("Failed to find GetObjectName Address."));
+		printfc(FOREGROUND_BLUE, "Got address %s", GONIAdd);
 
 		GetObjectNameInternal = decltype(GetObjectNameInternal)(GONIAdd);
 
@@ -291,6 +300,10 @@ namespace Hooks
 		//Author: @nyamimi
 		reinterpret_cast<uint8_t*>(AbilityPatchAdd)[2] = 0x85;
 		reinterpret_cast<uint8_t*>(AbilityPatchAdd)[11] = 0x8D;		
+
+		//Process Event Hooking.
+		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
+		MH_EnableHook(reinterpret_cast<void*>(ProcessEventAdd));
 
 		//GetViewPoint Hooking.
 		/*MH_CreateHook(reinterpret_cast<void*>(GetViewPointAdd), GetViewPointDetour, reinterpret_cast<void**>(&GetViewPoint));
