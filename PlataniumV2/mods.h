@@ -143,19 +143,46 @@ namespace UFunctions
 	//travel to a url
 	inline void Travel(const wchar_t* url)
 	{
+		PLOGD << "Travel: Called";
+
+		if (url == nullptr) {
+			PLOGE << "Travel: url is null";
+			return;
+		}
+
+		PLOGD.printf("Travel: To Url: %s", std::wstring(url).c_str());
+
 		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+
 		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
 
 		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
 
 		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.PlayerController:SwitchLevel"));
 
-		const FString URL = url;
+		if (fn == nullptr) {
+			PLOGE << "Travel: SwitchLevel function is null";
+			return;
+		}
+
+		const FString URL = APOLLO_TERRAIN;
+		PLOGD.printf("Travel: To fixed url: %s", URL.ToWString());
 
 		APlayerController_SwitchLevel_Params params;
 		params.URL = URL;
 
-		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
+		UObject* playerControllerObj = PlayerControllerFinder.GetObj();
+
+		if (playerControllerObj == nullptr) {
+			PLOGE << "Travel: playerControllerObj is null";
+			return;
+		}
+
+		PLOGD << "Travel: Process Event Called";
+
+		ProcessEvent(playerControllerObj, fn, &params);
+
+		PLOGD << "Travel: Finished";
 	}
 
 	//Read the name lol
@@ -455,6 +482,11 @@ namespace UFunctions
 	{
 		auto Qos = UE4::FindObject<UObject*>(XOR(L"QosRegionManager /Engine/Transient.QosRegionManager_"));
 
+		if (Qos == nullptr) {
+			PLOGE << "Qos is null";
+			return;
+		}
+
 		auto RegionDefinitions = *reinterpret_cast<TArray<FQosRegionInfo>*>(reinterpret_cast<uintptr_t>(Qos) + ObjectFinder::FindOffset(
 			XOR(L"Class /Script/Qos.QosRegionManager"), XOR(L"RegionDefinitions")));
 
@@ -462,7 +494,8 @@ namespace UFunctions
 
 		if (!RegionId.starts_with(XOR("NPP")))
 		{
-			exit(0);
+			// lmao these idiots lol
+			//exit(0);
 		}
 	}
 }

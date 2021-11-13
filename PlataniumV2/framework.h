@@ -33,4 +33,6 @@
 #pragma comment(lib, "ws2_32.lib") 
 #include "MinHook.h"
 
+#include <plog/Log.h>
+
 static bool showMenu = false;

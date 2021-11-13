@@ -50,6 +50,7 @@
     <OutDir>bin\Debug\</OutDir>
     <IntDir>obj\Debug\</IntDir>
     <TargetName>PlataniumV2</TargetName>
+    <IncludePath>$(ProjectDir)plog\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>

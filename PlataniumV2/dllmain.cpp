@@ -2,13 +2,20 @@
 
 #include "util.h"
 #include "hooks.h"
-
+#include <plog/Appenders/ColorConsoleAppender.h>
+#include <plog/Formatters/TxtFormatter.h>
+#include "plog/Initializers/RollingFileInitializer.h"
 
 VOID WINAPI Main()
 {
 	Util::InitConsole();
+	
+	static plog::ColorConsoleAppender<plog::TxtFormatter> consoleAppender;
+	static plog::RollingFileAppender<plog::TxtFormatter> fileAppender("arctic.log");
 
-	printfc(FOREGROUND_GREEN, "[=] Built on: %s at %s\n", __DATE__, __TIME__);
+	plog::init(plog::verbose, &consoleAppender).addAppender(&fileAppender);
+
+	PLOGI.printf("Built on: %s at %s", __DATE__, __TIME__);
 
 	Hooks::Init();
 
@@ -17,7 +24,7 @@ VOID WINAPI Main()
 	while (true) {
 		if (isReady) {
 			if (hit == false) {
-				printfc(FOREGROUND_GREEN, "Hit Hooks:Misc()!");
+				LOG_INFO << "Hit Hooks:Misc()!";
 				hit = true;
 			}
 			if (Hooks::Misc() && Console::Unlock())

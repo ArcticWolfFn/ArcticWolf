@@ -23,9 +23,9 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 
 	//If the game requested matchmaking we open the game mode
-	if (wcsstr(nFunc.c_str(), XOR(L"BP_OnClicked")) && wcsstr(nObj.c_str(), XOR(L"Button_Play")))
+	if (wcsstr(nFunc.c_str(), XOR(L"OnSetPlayButtonText")) && wcsstr(nObj.c_str(), XOR(L"Matchmaking_AthenaLegacy")) && !bIsStarted)
 	{
-		printf(XOR("\n\n[NeoRoyale] Start!"));
+		PLOGI << XOR("[NeoRoyale] Start!");
 
 		auto Playlist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
 		gPlaylist = Playlist;
@@ -37,25 +37,28 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	
 	if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
 	{
-		printf(XOR("\n[NeoRoyale] Init!\n"));
-		//Init();
+		PLOGI << XOR("ReadyToStartMatch called");
+		Init();
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
 	{
+		PLOGD << "DynamicHandleLoadingScreenVisibilityChanged called";
 		if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
 		UFunctions::RegionCheck();
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && bIsInit && bIsStarted)
 	{
+		PLOGD << "ServerLoadingScreenDropped called";
 		/*if (gVersion > 14.30f)
 		{*/
-			UFunctions::SetupCustomInventory();
+			// disabled because it crashes the game
+			// UFunctions::SetupCustomInventory();
 		//}
 
 		UFunctions::PlayCustomPlayPhaseAlert();
-		LoadMoreClasses();
+		// LoadMoreClasses();
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
@@ -411,7 +414,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	}
 
 	//Logging
-	if (true) {
+	if (false) {
 		if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
 			!wcsstr(nFunc.c_str(), L"Tick") &&
 			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
@@ -446,7 +449,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 		{
-			printfc(FOREGROUND_BLUE, XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), UE4::GetObjectFullName(static_cast<UObject*>(pObj)->Class).c_str());
+			PLOGV.printf(XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), UE4::GetObjectFullName(static_cast<UObject*>(pObj)->Class).c_str());
 		}
 	}
 

@@ -101,6 +101,8 @@ namespace NeoRoyale
 
 	inline void Thread()
 	{
+		PLOGD << "Game Thread started";
+
 		//NOTE (kemo): i know this isn't the best practice but it does the job on another thread so it's not a frezzing call
 		while (true)
 		{
@@ -160,6 +162,8 @@ namespace NeoRoyale
 
 	inline void Init()
 	{
+		PLOGI << "Init Match";
+
 		Console::CheatManager();
 
 		UFunctions::DestroyAllHLODs();
@@ -167,6 +171,10 @@ namespace NeoRoyale
 		NeoPlayer.Summon(XOR(L"PlayerPawn_Athena_C"));
 
 		NeoPlayer.Pawn = ObjectFinder::FindActor(XOR(L"PlayerPawn_Athena_C"));
+
+		if (NeoPlayer.Pawn == nullptr) {
+			PLOGE << "Player Pawn is null";
+		}
 
 		NeoPlayer.Authorize();
 
@@ -228,5 +236,7 @@ namespace NeoRoyale
 
 			bIsInit = !bIsInit;
 		}
+
+		PLOGI << "Finished Init Match";
 	}
 }
