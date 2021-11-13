@@ -1,11 +1,11 @@
 ﻿#pragma once
 #include "mods.h"
 #include "server.h"
+#include "sdk.h"
 
 inline std::vector<std::wstring> gWeapons;
 inline std::vector<std::wstring> gBlueprints;
 inline std::vector<std::wstring> gMeshes;
-inline std::vector<Player> Bots;
 
 namespace NeoRoyale
 {
@@ -38,9 +38,7 @@ namespace NeoRoyale
 		NeoPlayer.Pawn = nullptr;
 		NeoPlayer.Mesh = nullptr;
 		NeoPlayer.AnimInstance = nullptr;
-		Bots.clear();
 		gPlaylist = nullptr;
-		gNeoniteLogoTexture = nullptr;
 	}
 
 	inline void LoadMoreClasses()
@@ -66,6 +64,34 @@ namespace NeoRoyale
 		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Retro.PP_Retro_C"));
 		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Sepia.PP_Sepia_C"));
 		UFunctions::StaticLoadObjectEasy(BPGClass, XOR(L"/Game/Creative/PostProcess/PP_Spooky.PP_Spooky_C"));
+
+		// show main menu
+
+		auto HasServerFinishedLoadingOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"bHasServerFinishedLoading"));
+
+		auto bHasServerFinishedLoading = reinterpret_cast<bool*>(reinterpret_cast<uintptr_t>(NeoPlayer.Controller) + HasServerFinishedLoadingOffset);
+
+		if (Util::IsBadReadPtr(bHasServerFinishedLoading)) {
+			PLOGE << "bHasServerFinishedLoading is null";
+		}
+		else {
+			*bHasServerFinishedLoading = true;
+
+			auto ServerSetClientHasFinishedLoadingOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"ServerSetClientHasFinishedLoading"));
+
+			auto ServerSetClientHasFinishedLoading = reinterpret_cast<bool*>(reinterpret_cast<uintptr_t>(NeoPlayer.Controller) + ServerSetClientHasFinishedLoadingOffset);
+
+			if (!Util::IsBadReadPtr(ServerSetClientHasFinishedLoading)) {
+				bool HasFinishedLoading = true;
+
+				ProcessEvent(NeoPlayer.Controller, ServerSetClientHasFinishedLoading, &HasFinishedLoading);
+			}
+			else {
+				PLOGE << "ServerSetClientHasFinishedLoading is null";
+			}
+		}
+
+		NeoPlayer.Setup();
 	}
 
 	inline void InitCombos()
@@ -106,6 +132,7 @@ namespace NeoRoyale
 		//NOTE (kemo): i know this isn't the best practice but it does the job on another thread so it's not a frezzing call
 		while (true)
 		{
+			// ToDo: fix this because it causes low fps temporary
 			if (NeoPlayer.Pawn && GetAsyncKeyState(VK_SPACE))
 			{
 				if (!bHasJumped)

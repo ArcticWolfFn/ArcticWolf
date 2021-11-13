@@ -115,6 +115,7 @@ xcopy "$(TargetPath)" "$(SolutionDir)Build\" /F /I /R /Y</Command>
     <ClInclude Include="neoroyale.h" />
     <ClInclude Include="patterns.h" />
     <ClInclude Include="player.h" />
+    <ClInclude Include="sdk.h" />
     <ClInclude Include="server.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="system.h" />

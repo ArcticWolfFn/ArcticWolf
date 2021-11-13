@@ -1,6 +1,7 @@
 #pragma once
 #include "structs.h"
 #include "finder.h"
+#include "sdk.h"
 
 class Player
 {
@@ -10,6 +11,58 @@ public:
 	UObject* Mesh;
 	UObject* AnimInstance;;
 	std::wstring SkinOverride;
+
+	// Cached Functions
+	UFunction* JumpFunction;
+
+	void Setup() {
+		// cache object pointers, they shouldn't change during the match (I hope)
+		JumpFunction = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:Jump"));
+	}
+
+	// not working in season 15
+	void SetupAbilities() {
+		if (!Util::IsBadReadPtr(Pawn)) {
+			UObject* jumpAbility = UE4::FindObject<UObject*>(L"Class /Script/FortniteGame.FortGameplayAbility_Jump");
+			if (!Util::IsBadReadPtr(jumpAbility)) {
+				SDK::GrantGameplayAbility(Pawn, jumpAbility);
+				PLOGD << "Granted Jump Ability";
+			}
+			else {
+				PLOGE << "jumpAbility is null";
+			}
+
+			UObject* sprintAbility = UE4::FindObject<UObject*>(L"Class /Script/FortniteGame.FortGameplayAbility_Sprint");
+			if (!Util::IsBadReadPtr(sprintAbility)) {
+				SDK::GrantGameplayAbility(Pawn, sprintAbility);
+				PLOGD << "Granted Sprint Ability";
+			}
+			else {
+				PLOGE << "sprintAbility is null";
+			}
+
+			UObject* interactAbility = UE4::FindObject<UObject*>(L"BlueprintGeneratedClass /Game/Abilities/Player/Generic/Traits/DefaultPlayer/GA_DefaultPlayer_InteractUse.GA_DefaultPlayer_InteractUse_C");
+			if (!Util::IsBadReadPtr(interactAbility)) {
+				SDK::GrantGameplayAbility(Pawn, interactAbility);
+				PLOGD << "Granted Interact Ability";
+			}
+			else {
+				PLOGE << "interactAbility is null";
+			}
+
+			UObject* searchAbility = UE4::FindObject<UObject*>(L"BlueprintGeneratedClass /Game/Abilities/Player/Generic/Traits/DefaultPlayer/GA_DefaultPlayer_InteractSearch.GA_DefaultPlayer_InteractSearch_C");
+			if (!Util::IsBadReadPtr(searchAbility)) {
+				SDK::GrantGameplayAbility(Pawn, searchAbility);
+				PLOGD << "Granted Search Ability";
+			}
+			else {
+				PLOGE << "searchAbility is null";
+			}
+		}
+		else {
+			PLOGE << "Pawn is null";
+		}
+	}
 
 	void UpdatePlayerController()
 	{
@@ -208,11 +261,9 @@ public:
 
 	auto Jump()
 	{
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:Jump"));
-
 		Empty_Params params;
 
-		ProcessEvent(this->Pawn, fn, &params);
+		ProcessEvent(this->Pawn, JumpFunction, &params);
 	}
 
 	auto SetSkeletalMesh(const wchar_t* meshname)

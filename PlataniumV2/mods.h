@@ -7,7 +7,6 @@
 #include "ue4.h"
 
 inline UObject* gPlaylist;
-inline UObject* gNeoniteLogoTexture;
 
 inline bool ForceSettings()
 {
@@ -461,11 +460,24 @@ namespace UFunctions
 	{
 		const auto Widget = UE4::FindObject<UObject*>(XOR(L"HousepartyMicToast_C /Engine/Transient.FortEngine_"));
 
-		auto WidgetFinder = ObjectFinder::EntryPoint(uintptr_t(Widget));
+		if (Util::IsBadReadPtr(Widget)) {
+			PLOGE << "Widget is null";
+			return;
+		}
 
 		const auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteUI.AthenaHUDMenu:SetInventoryPanelOverride"));
 
+		if (Util::IsBadReadPtr(fn)) {
+			PLOGE << "SetInventoryPanelOverride is null";
+			return;
+		}
+
 		const auto Hud = UE4::FindObject<UObject*>(XOR(L"AthenaHUDMenu_C /Engine/Transient.FortEngine_"));
+
+		if (Util::IsBadReadPtr(Hud)) {
+			PLOGE << "AthenaHUDMenu_C is null";
+			return;
+		}
 
 		SetInventoryPanelOverride_Params SetInventoryPanelOverrideParams;
 		SetInventoryPanelOverrideParams.InInventoryPanelOverride = Widget;

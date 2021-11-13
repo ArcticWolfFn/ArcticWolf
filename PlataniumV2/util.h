@@ -56,6 +56,10 @@ public:
 	{
 		AllocConsole();
 
+		FILE* pFile;
+		freopen_s(&pFile, "CONOUT$", "w", stdout);
+		freopen_s(&pFile, "CONIN$", "r", stdin);
+
 		/* REPLACED BY PLOG
 		// file logging
 		if (true) {

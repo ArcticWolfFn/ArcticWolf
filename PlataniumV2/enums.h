@@ -164,6 +164,11 @@ enum class EAthenaGamePhaseStep
 	EAthenaGamePhaseStep_MAX,
 };
 
+enum class EGameplayEffectDurationType : uint8_t
+{
+	Instant, Infinite, HasDuration, EGameplayEffectDurationType_MAX
+};
+
 enum class ECameraProjectionMode : uint8_t
 {
 	Perspective = 0,

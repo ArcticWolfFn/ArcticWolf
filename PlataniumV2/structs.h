@@ -509,9 +509,37 @@ struct FUObjectItem
 	DWORD SerialNumber2;
 };
 
+struct FGameplayAbilitySpecDef
+{
+	UObject* Ability;
+	unsigned char Unk00[0x90];
+};
+
 struct PreFUObjectItem
 {
-	FUObjectItem* FUObject[10];
+	FUObjectItem* Objects[10];
+};
+
+struct FGameplayEffectContextHandle
+{
+	char UnknownData_0[0x30]; // 0x00(0x18)
+};
+
+struct FActiveGameplayEffectHandle
+{
+	int Handle; // 0x00(0x04)
+	bool bPassedFiltersAndWasExecuted; // 0x04(0x01)
+	char UnknownData_5[0x3]; // 0x05(0x03)
+};
+
+
+// This struct is used on 4.20 and below. Not used on any future builds.
+// We will call it TUObjectArray to prevent conflict.
+struct TUObjectArray
+{
+	uint8_t* Objects;
+	uint32_t MaxElements;
+	uint32_t NumElements;
 };
 
 struct GObjects
@@ -529,7 +557,7 @@ struct GObjects
 		{
 			while (true)
 			{
-				if (ObjectArray->FUObject[cStart] == nullptr)
+				if (ObjectArray->Objects[cStart] == nullptr)
 				{
 					cStart++;
 				}
@@ -542,7 +570,7 @@ struct GObjects
 			cEnd = cStart;
 			while (true)
 			{
-				if (ObjectArray->FUObject[cEnd] == nullptr)
+				if (ObjectArray->Objects[cEnd] == nullptr)
 				{
 					break;
 				}
@@ -572,7 +600,7 @@ struct GObjects
 		chunkPos = cStart + chunkIndex;
 		if (chunkPos < cEnd)
 		{
-			Object = ObjectArray->FUObject[chunkPos] + (index - chunkSize * chunkIndex);
+			Object = ObjectArray->Objects[chunkPos] + (index - chunkSize * chunkIndex);
 			if (!Object) { return nullptr; }
 
 			return Object->Object;

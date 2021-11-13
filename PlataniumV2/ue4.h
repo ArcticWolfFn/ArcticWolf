@@ -125,6 +125,10 @@ namespace UE4
 	//Return FULL Object name including it's type.
 	inline std::wstring GetObjectFullName(UObject* object)
 	{
+		if (Util::IsBadReadPtr(object)) {
+			return L"";
+		}
+
 		FString s;
 		GetObjectFullNameInternal(object, s, nullptr, EObjectFullNameFlags::None);
 		std::wstring objectNameW = s.ToWString();

@@ -16,6 +16,10 @@ namespace Offsets
 
 class GameObject;
 
+inline TUObjectArray* ObjObjects;
+
+inline GObjects* GlobalObjects;
+
 class GameClass
 {
 public:

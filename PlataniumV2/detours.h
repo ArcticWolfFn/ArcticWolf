@@ -6,6 +6,7 @@
 #include "player.h"
 //#include "hwid.h"
 //#include "kismet.h"
+#include <thread>
 
 #ifndef PROD
 //#define LOGGING
@@ -15,6 +16,10 @@ using namespace NeoRoyale;
 
 inline bool bIsDebugCamera;
 inline bool bIsFlying;
+
+inline void LogThread (std::wstring nObj, std::wstring nFunc, std::wstring nObjClass) {
+	PLOGV.printf(XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), nObjClass.c_str());
+}
 
 inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 {
@@ -41,24 +46,27 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		Init();
 	}
 
-	if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
+	// we don't need this
+	/*if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
 	{
 		PLOGD << "DynamicHandleLoadingScreenVisibilityChanged called";
 		if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
 		UFunctions::RegionCheck();
-	}
+	}*/
 
 	if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && bIsInit && bIsStarted)
 	{
 		PLOGD << "ServerLoadingScreenDropped called";
+
+		UFunctions::PlayCustomPlayPhaseAlert();
+
 		/*if (gVersion > 14.30f)
 		{*/
 			// disabled because it crashes the game
-			// UFunctions::SetupCustomInventory();
+			UFunctions::SetupCustomInventory();
 		//}
 
-		UFunctions::PlayCustomPlayPhaseAlert();
-		// LoadMoreClasses();
+		LoadMoreClasses();
 	}
 
 	if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
@@ -85,6 +93,53 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		NeoPlayer.Respawn();
 		auto currentLocation = NeoPlayer.GetLocation();
 		UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
+	}
+
+	// interact with object (for example open/close door)
+	if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptInteract")))
+	{
+		struct ServerAttemptInteract
+		{
+			UObject* ReceivingActor;
+			UObject* InteractComponent;
+			byte InteractType;
+		};
+
+		auto CurrentParams = (ServerAttemptInteract*)pParams;
+
+		struct BitField
+		{
+			char bAlwaysShowContainer : 1; // 0xeb9(0x01)
+			char bAlwaysMaintainLoot : 1; // 0xeb9(0x01)
+			char bDestroyContainerOnSearch : 1; // 0xeb9(0x01)
+			char bAlreadySearched : 1; // 0xeb9(0x01)
+		};
+
+		auto ContainerBitField = reinterpret_cast<BitField*>(__int64(CurrentParams->ReceivingActor) + __int64(ObjectFinder::FindOffset(L"Class /Script/FortniteGame.BuildingContainer", L"bAlreadySearched")));
+		
+		PLOGI.printf("Player wants to interact with %s", UE4::GetObjectFullName(CurrentParams->ReceivingActor).c_str());
+		PLOGI.printf("Interactable object Class: %s", UE4::GetObjectFullName(CurrentParams->ReceivingActor->Class).c_str());
+		PLOGI.printf("InteractComponent: %s", UE4::GetObjectFullName(CurrentParams->InteractComponent).c_str());
+		PLOGI.printf("InteractComponent Class: %s", UE4::GetObjectFullName(CurrentParams->InteractComponent->Class).c_str());
+
+		if (!Util::IsBadReadPtr(ContainerBitField)) {
+			ContainerBitField->bAlreadySearched = true;
+			/*Player::OnRep_bAlreadySearched(CurrentParams->ReceivingActor);
+
+			auto ContainerLocation = AActor::GetLocation(CurrentParams->ReceivingActor);
+
+			if (CurrentParams->ReceivingActor->GetFName().starts_with(L"Tiered_Chest"))
+			{
+				Player::ClientPlaySoundAtLocation(Globals::Controller, Globals::ChestsSound, ContainerLocation, 1, 1);
+			}
+			else if (CurrentParams->ReceivingActor->GetFullName().starts_with(L"Tiered_Ammo"))
+			{
+				Player::ClientPlaySoundAtLocation(Globals::Controller, Globals::AmmoBoxSound, ContainerLocation, 1, 1);
+			}*/
+		}
+		else {
+			PLOGE << "ContainerBitField is nullptr";
+		}
 	}
 
 	if (bIsInit)
@@ -148,42 +203,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			if (LastEmotePlayed && !Util::IsBadReadPtr(LastEmotePlayed))
 			{
 				NeoPlayer.Emote(LastEmotePlayed);
-				for (auto i = 0; i < Bots.size(); i++)
-				{
-					auto Bot = Bots[i];
-					if (Bot.Pawn)
-					{
-						Bot.Emote(LastEmotePlayed);
-					}
-				}
 			}
-		}
-	}
-
-	if (wcsstr(nFunc.c_str(), XOR(L"ReceiveHit")) && nObj.starts_with(XOR(L"Prj_Athena_FrenchYedoc_JWFriendly_C")))
-	{
-		Player Bot;
-		const auto Params = static_cast<AActor_ReceiveHit_Params*>(pParams);
-		auto HitLocation = Params->HitLocation;
-
-		NeoPlayer.Summon(XOR(L"BP_PlayerPawn_Athena_Phoebe_C"));
-		Bot.Pawn = ObjectFinder::FindActor(XOR(L"BP_PlayerPawn_Athena_Phoebe_C"), Bots.size());
-
-		if (Bot.Pawn)
-		{
-			HitLocation.Z = HitLocation.Z + 200;
-
-			FRotator Rotation;
-			Rotation.Yaw = 0;
-			Rotation.Roll = 0;
-			Rotation.Pitch = 0;
-
-			Bot.TeleportTo(HitLocation, Rotation);
-
-			Bot.SetSkeletalMesh(XOR(L"SK_M_MALE_Base"));
-			Bot.Emote(UE4::FindObject<UObject*>(XOR(L"EID_HightowerSquash.EID_HightowerSquash"), true));
-
-			Bots.push_back(Bot);
 		}
 	}
 
@@ -196,6 +216,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
 	{
 		FString ScriptNameF = static_cast<UCheatManager_CheatScript_Params*>(pParams)->ScriptName;
+
+		PLOGI.printf("Called script %s", ScriptNameF.ToWString());
 
 		if (ScriptNameF.IsValid())
 		{
@@ -391,6 +413,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			case RESPAWN:
 			{
 				NeoPlayer.Respawn();
+				break;
 			}
 
 			case LOADBPC:
@@ -405,6 +428,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				{
 					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
+				break;
 			}
 
 			default:
@@ -446,10 +470,39 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			!wcsstr(nFunc.c_str(), L"OnCurrentTextStyleChanged") &&
 			!wcsstr(nFunc.c_str(), L"OnButtonUnhovered") &&
 			!wcsstr(nFunc.c_str(), L"OnButtonHovered") &&
+			!wcsstr(nFunc.c_str(), L"OnRemovedFromFocusPath") &&
+			!wcsstr(nFunc.c_str(), L"OnFocusLost") &&
+			!wcsstr(nFunc.c_str(), L"OnUpdateNameplateVis") &&
+
+			// Loading stuff
+			!wcsstr(nFunc.c_str(), L"OnBuildingActorInitialized") &&
+			!wcsstr(nFunc.c_str(), L"OnReady") &&
+			!wcsstr(nFunc.c_str(), L"ReceiveBeginPlay") &&
+			!wcsstr(nFunc.c_str(), L"Construct") &&
+			!wcsstr(nFunc.c_str(), L"FortClientSettingsRecord") &&
+
+			// ingame
+			!wcsstr(nFunc.c_str(), L"BlueprintGetInteractionTime") &&
+			!wcsstr(nFunc.c_str(), L"BGA_IslandPortal_C.CheckShouldDisplayUI") &&
+			!wcsstr(nFunc.c_str(), L"PortalInfoPlate_C.OnUpdateNameplateVis") &&
+			!wcsstr(nFunc.c_str(), L"FlopperSpawn") &&
+			!wcsstr(nFunc.c_str(), L"SetRuntimeStats") &&
+			!wcsstr(nFunc.c_str(), L"HandleSimulatingComponentHit") &&
+			!wcsstr(nFunc.c_str(), L"ReceiveHit") &&
+			!wcsstr(nFunc.c_str(), L"BGA_SuperSilkyWolf_C") &&
+			!wcsstr(nFunc.c_str(), L"ServerFireAIDirectorEvent") &&
+			!wcsstr(nFunc.c_str(), L"AnimNotify_FootStep") &&
+			!wcsstr(nFunc.c_str(), L"ReceiveDestroyed") &&
+			!wcsstr(nFunc.c_str(), L"AnimNotify") &&
+
+			//ingame ui
+			!wcsstr(nFunc.c_str(), L"PopupCenterMessageWidget_C.UpdateStateEvent") &&
+
 
 			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 		{
-			PLOGV.printf(XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), UE4::GetObjectFullName(static_cast<UObject*>(pObj)->Class).c_str());
+			std::thread log(LogThread, nObj, nFunc, UE4::GetObjectFullName(static_cast<UObject*>(pObj)->Class));
+			log.detach();
 		}
 	}
 
