@@ -38,23 +38,15 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 		Start(Map);
 	}
-
-	
-	if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
+	else if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
 	{
 		PLOGI << XOR("ReadyToStartMatch called");
 		Init();
 	}
-
-	// we don't need this
-	/*if (wcsstr(nFunc.c_str(), XOR(L"DynamicHandleLoadingScreenVisibilityChanged")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby")))
-	{
-		PLOGD << "DynamicHandleLoadingScreenVisibilityChanged called";
-		if (bIsDebugCamera) bIsDebugCamera = !bIsDebugCamera;
-		UFunctions::RegionCheck();
-	}*/
-
-	if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && bIsInit && bIsStarted)
+	else if (wcsstr(nFunc.c_str(), XOR(L"Character:Jump"))) {
+		PLOGD << "Jump event called";
+	}
+	else if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && bIsInit && bIsStarted)
 	{
 		PLOGD << "ServerLoadingScreenDropped called";
 
@@ -68,26 +60,22 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 		LoadMoreClasses();
 	}
-
-	if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
+	else if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
 	{
 		return nullptr;
 	}
-
-	if (wcsstr(nFunc.c_str(), XOR(L"SetFullscreenMode")))
+	else if (wcsstr(nFunc.c_str(), XOR(L"SetFullscreenMode")))
 	{
 		return nullptr;
 	}
-
 	//Toggle our fly function on "fly" command.
-	if (wcsstr(nFunc.c_str(), XOR(L"Fly")) && nObj.starts_with(XOR(L"CheatManager_")))
+	else if (wcsstr(nFunc.c_str(), XOR(L"Fly")) && nObj.starts_with(XOR(L"CheatManager_")))
 	{
 		NeoPlayer.Fly(bIsFlying);
 		bIsFlying = !bIsFlying;
 	}
-
 	// NOTE: (irma) This is better.
-	if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
+	else if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
 	{
 		NeoPlayer.ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
 		NeoPlayer.Respawn();
@@ -96,7 +84,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	}
 
 	// interact with object (for example open/close door)
-	if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptInteract")))
+	else if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptInteract")))
 	{
 		struct ServerAttemptInteract
 		{
@@ -160,7 +148,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		}
 	}
 
-	if (bIsInit)
+	else if (bIsInit)
 	{
 		if (bWantsToJump)
 		{
@@ -187,12 +175,12 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		}
 	}
 
-	if (wcsstr(nFunc.c_str(), XOR(L"EnableCheats")))
+	else if (wcsstr(nFunc.c_str(), XOR(L"EnableCheats")))
 	{
 		Console::CheatManager();
 	}
 
-	if (wcsstr(nFunc.c_str(), XOR(L"OnWeaponEquipped")))
+	else if (wcsstr(nFunc.c_str(), XOR(L"OnWeaponEquipped")))
 	{
 		auto params = static_cast<AFortPawn_OnWeaponEquipped_Params*>(pParams);
 
@@ -205,7 +193,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		}
 	}
 
-	if (wcsstr(nFunc.c_str(), XOR(L"BP_OnDeactivated")) && wcsstr(nObj.c_str(), XOR(L"PickerOverlay_EmoteWheel")))
+	else if (wcsstr(nFunc.c_str(), XOR(L"BP_OnDeactivated")) && wcsstr(nObj.c_str(), XOR(L"PickerOverlay_EmoteWheel")))
 	{
 		if (NeoPlayer.Pawn)
 		{
@@ -225,13 +213,13 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		}
 	}
 
-	if (wcsstr(nFunc.c_str(), XOR(L"BlueprintOnInteract")) && nObj.starts_with(XOR(L"BGA_FireExtinguisher_Pickup_C_")))
+	else if (wcsstr(nFunc.c_str(), XOR(L"BlueprintOnInteract")) && nObj.starts_with(XOR(L"BGA_FireExtinguisher_Pickup_C_")))
 	{
 		NeoPlayer.EquipWeapon(XOR(L"WID_FireExtinguisher_Spray"));
 	}
 
 
-	if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
+	else if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
 	{
 		FString ScriptNameF = static_cast<UCheatManager_CheatScript_Params*>(pParams)->ScriptName;
 

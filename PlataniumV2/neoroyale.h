@@ -132,7 +132,6 @@ namespace NeoRoyale
 		//NOTE (kemo): i know this isn't the best practice but it does the job on another thread so it's not a frezzing call
 		while (true)
 		{
-			// ToDo: fix this because it causes low fps temporary
 			if (NeoPlayer.Pawn && GetAsyncKeyState(VK_SPACE))
 			{
 				if (!bHasJumped)
@@ -140,20 +139,24 @@ namespace NeoRoyale
 					bHasJumped = !bHasJumped;
 					if (!NeoPlayer.IsInAircraft())
 					{
-						if (NeoPlayer.IsSkydiving() && !NeoPlayer.IsParachuteOpen() && !NeoPlayer.IsParachuteForcedOpen())
-						{
-							bWantsToOpenGlider = true;
+						bool isSkydiving = NeoPlayer.IsSkydiving();
+
+						if (isSkydiving) {
+							bool isParachuteOpen = NeoPlayer.IsParachuteOpen();
+							bool isParachuteForcedOpen = NeoPlayer.IsParachuteForcedOpen();
+
+							if (!isParachuteOpen && !isParachuteForcedOpen)
+							{
+								bWantsToOpenGlider = true;
+							}
+							else if (isParachuteOpen && !isParachuteForcedOpen)
+							{
+								bWantsToSkydive = true;
+							}
 						}
-
-
-						else if (NeoPlayer.IsSkydiving() && NeoPlayer.IsParachuteOpen() && !NeoPlayer.IsParachuteForcedOpen())
-						{
-							bWantsToSkydive = true;
-						}
-
-
 						else if (!NeoPlayer.IsJumpProvidingForce())
 						{
+							PLOGD << "Player want to jump";
 							bWantsToJump = true;
 						}
 					}

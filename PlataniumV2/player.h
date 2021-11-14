@@ -13,11 +13,21 @@ public:
 	std::wstring SkinOverride;
 
 	// Cached Functions
-	UFunction* JumpFunction;
+	UFunction* JumpFn;
+	UFunction* IsInAircraftFn;
+	UFunction* IsSkydivingFn;
+	UFunction* IsParachuteOpenFn;
+	UFunction* IsParachuteForcedOpenFn;
+	UFunction* IsJumpProvidingForceFn;
 
 	void Setup() {
 		// cache object pointers, they shouldn't change during the match (I hope)
-		JumpFunction = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:Jump"));
+		JumpFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:Jump"));
+		IsInAircraftFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerController:IsInAircraft"));
+		IsSkydivingFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsSkydiving"));
+		IsParachuteOpenFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteOpen"));
+		IsParachuteForcedOpenFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteForcedOpen"));
+		IsJumpProvidingForceFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:IsJumpProvidingForce"));
 	}
 
 	// not working in season 15
@@ -187,13 +197,16 @@ public:
 		printf("\nSkydiving!, Redeploying at %fm.\n", height);
 	}
 
-	auto IsJumpProvidingForce()
+	bool IsJumpProvidingForce()
 	{
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:IsJumpProvidingForce"));
+		if (Util::IsBadReadPtr(IsInAircraftFn)) {
+			PLOGE << "Failed to check if jump is providing force: Function is nullptr";
+			return NULL;
+		}
 
 		ACharacter_IsJumpProvidingForce_Params params;
 
-		ProcessEvent(this->Pawn, fn, &params);
+		ProcessEvent(this->Pawn, IsJumpProvidingForceFn, &params);
 
 		return params.ReturnValue;
 	}
@@ -226,44 +239,59 @@ public:
 		}
 	}
 
-	auto IsSkydiving()
+	bool IsSkydiving()
 	{
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsSkydiving"));
+		if (Util::IsBadReadPtr(IsInAircraftFn)) {
+			PLOGE << "Failed to check if player is in aircraft: Function is nullptr";
+			return NULL;
+		}
 
 		ACharacter_IsSkydiving_Params params;
 
-		ProcessEvent(this->Pawn, fn, &params);
+		ProcessEvent(this->Pawn, IsSkydivingFn, &params);
 
 		return params.ReturnValue;
 	}
 
-	auto IsParachuteOpen()
+	bool IsParachuteOpen()
 	{
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteOpen"));
+		if (Util::IsBadReadPtr(IsParachuteOpenFn)) {
+			PLOGE << "Failed to check if parachute is open: Function is nullptr";
+			return NULL;
+		}
 
 		ACharacter_IsParachuteOpen_Params params;
 
-		ProcessEvent(this->Pawn, fn, &params);
+		ProcessEvent(this->Pawn, IsParachuteOpenFn, &params);
 
 		return params.ReturnValue;
 	}
 
-	auto IsParachuteForcedOpen()
+	bool IsParachuteForcedOpen()
 	{
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteForcedOpen"));
+		if (Util::IsBadReadPtr(IsParachuteForcedOpenFn)) {
+			PLOGE << "Failed to check if parachute is forced open: Function is nullptr";
+			return NULL;
+		}
 
 		ACharacter_IsParachuteForcedOpen_Params params;
 
-		ProcessEvent(this->Pawn, fn, &params);
+		ProcessEvent(this->Pawn, IsParachuteForcedOpenFn, &params);
 
 		return params.ReturnValue;
 	}
 
 	auto Jump()
 	{
+		if (Util::IsBadReadPtr(JumpFn)) {
+			PLOGE << "Failed to jump: Jump function is nullptr";
+			return;
+		}
+
+		PLOGD << "Executed jump event";
 		Empty_Params params;
 
-		ProcessEvent(this->Pawn, JumpFunction, &params);
+		ProcessEvent(this->Pawn, JumpFn, &params);
 	}
 
 	auto SetSkeletalMesh(const wchar_t* meshname)
@@ -628,17 +656,21 @@ public:
 		this->SetMovementMode(EMovementMode::MOVE_Custom, 3);
 	}
 
-	auto IsInAircraft()
+	bool IsInAircraft()
 	{
 		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
 		{
 			UpdatePlayerController();
 		}
 
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerController:IsInAircraft"));
+		if (Util::IsBadReadPtr(IsInAircraftFn)) {
+			PLOGE << "Failed to check if player is in aircraft: Function is nullptr";
+			return NULL;
+		}
+
 		ACharacter_IsInAircraft_Params params;
 
-		ProcessEvent(this->Controller, fn, &params);
+		ProcessEvent(this->Controller, IsInAircraftFn, &params);
 		return params.ReturnValue;
 	}
 
