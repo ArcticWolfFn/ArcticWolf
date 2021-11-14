@@ -52,12 +52,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 		UFunctions::PlayCustomPlayPhaseAlert();
 
-		/*if (gVersion > 14.30f)
-		{*/
-			// disabled because it crashes the game
-			UFunctions::SetupCustomInventory();
-		//}
-
 		LoadMoreClasses();
 	}
 	else if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
@@ -444,7 +438,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	}
 
 	//Logging
-	if (false) {
+	if (true) {
 		if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
 			!wcsstr(nFunc.c_str(), L"Tick") &&
 			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
@@ -503,6 +497,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			//ingame ui
 			!wcsstr(nFunc.c_str(), L"PopupCenterMessageWidget_C.UpdateStateEvent") &&
+			!wcsstr(nFunc.c_str(), L"FortInteractInterface.GetFocusedSocketLocation") &&
 
 
 			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))

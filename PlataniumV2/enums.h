@@ -121,6 +121,16 @@ enum EObjectFlags
 	RF_WillBeLoaded = 0x08000000,
 };
 
+// Enum UMG.ESlateVisibility
+enum class ESlateVisibility : uint8_t {
+	Visible,
+	Collapsed,
+	Hidden,
+	HitTestInvisible,
+	SelfHitTestInvisible,
+	ESlateVisibility_MAX,
+};
+
 enum EInternalObjectFlags
 {
 	None = 0,

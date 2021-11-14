@@ -19,6 +19,13 @@ public:
 	UFunction* IsParachuteOpenFn;
 	UFunction* IsParachuteForcedOpenFn;
 	UFunction* IsJumpProvidingForceFn;
+	UFunction* SetVisibityFn;
+
+	// Cached Objects
+	UObject* Hud;
+
+	// Cached Offsets
+	int DualBladeMenuOffset;
 
 	void Setup() {
 		// cache object pointers, they shouldn't change during the match (I hope)
@@ -28,6 +35,38 @@ public:
 		IsParachuteOpenFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteOpen"));
 		IsParachuteForcedOpenFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteForcedOpen"));
 		IsJumpProvidingForceFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:IsJumpProvidingForce"));
+		SetVisibityFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/CommonUI.CommonActivatableWidget:ActivateWidget"));
+
+		Hud = UE4::FindObject<UObject*>(XOR(L"AthenaHUDMenu_C /Engine/Transient.FortEngine_"));
+
+		DualBladeMenuOffset = ObjectFinder::FindOffset(L"AthenaHUDMenu_C /Engine/Transient.FortEngine_", L"DualBladeMenu.BladeMenu_MainMenu");
+	}
+
+	inline void OpenMenu()
+	{
+		if (Util::IsBadReadPtr(Hud)) {
+			PLOGE << "AthenaHUDMenu_C is nullptr";
+			return;
+		}
+
+		auto DualBladeMenu = reinterpret_cast<UObject*>(reinterpret_cast<uintptr_t>(Hud) + DualBladeMenuOffset);
+
+		if (Util::IsBadReadPtr(DualBladeMenu)) {
+			PLOGE << "DualBladeMenu is nullptr";
+			return;
+		}
+
+		if (Util::IsBadReadPtr(SetVisibityFn)) {
+			PLOGE << "SetVisibityFn is nullptr";
+			return;
+		}
+
+		// maybe use UCommonActivatableWidget::ActivateWidget() instead
+
+		Empty_Params Params;
+
+		ProcessEvent(DualBladeMenu, SetVisibityFn, &Params);
+		PLOGV << "InGame menu should be visible now";
 	}
 
 	// not working in season 15

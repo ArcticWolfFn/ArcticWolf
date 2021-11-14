@@ -2,6 +2,7 @@
 #include "mods.h"
 #include "server.h"
 #include "sdk.h"
+#include "mods.h"
 
 inline std::vector<std::wstring> gWeapons;
 inline std::vector<std::wstring> gBlueprints;
@@ -184,6 +185,10 @@ namespace NeoRoyale
 			{
 				Stop();
 				break;
+			}
+
+			if (NeoPlayer.Pawn && GetAsyncKeyState(VK_ESCAPE)) { // ToDo:: only execute once
+				NeoPlayer.OpenMenu();
 			}
 
 			Sleep(1000 / 30);

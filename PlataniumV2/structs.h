@@ -331,6 +331,11 @@ struct K2_OnMovementModeChanged_Params
 	char NewCustomMode;
 };
 
+struct SetVisibility_Params
+{
+	ESlateVisibility InVisibility;
+};
+
 struct UFortKismetLibrary_ApplyCharacterCosmetics_Params
 {
 	UObject* WorldContextObject;
