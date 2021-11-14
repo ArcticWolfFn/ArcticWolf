@@ -81,6 +81,7 @@ inline CURLcode CurlEasySetOptHook(struct Curl_easy* data, CURLoption tag, ...)
 
 		if (uri.Host.ends_with("ol.epicgames.com")
 			|| uri.Host.ends_with(".akamaized.net")
+			|| uri.Host.ends_with(".epicgames.dev")
 			|| uri.Host.ends_with("on.epicgames.com"))
 		{
 			//printf("LogURL: %s\n", url.c_str());

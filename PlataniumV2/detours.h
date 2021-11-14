@@ -118,16 +118,26 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		auto ContainerBitField = reinterpret_cast<BitField*>(__int64(CurrentParams->ReceivingActor) + __int64(ObjectFinder::FindOffset(L"Class /Script/FortniteGame.BuildingContainer", L"bAlreadySearched")));
 		
 		// ToDo: names are invalid
-		PLOGI.printf("Player wants to interact with %s", UE4::GetObjectFullName(CurrentParams->ReceivingActor).c_str());
+		if (!Util::IsBadReadPtr(CurrentParams->ReceivingActor)) {
+			PLOGI.printf("Player wants to interact with %s", UE4::GetObjectFullName(CurrentParams->ReceivingActor).c_str());
 
-		if (!Util::IsBadReadPtr(CurrentParams->InteractComponent->Class)) {
-			PLOGI.printf("Interactable object Class: %s", UE4::GetObjectFullName(CurrentParams->ReceivingActor->Class).c_str());
+			if (!Util::IsBadReadPtr(CurrentParams->ReceivingActor->Class)) {
+				PLOGI.printf("Interactable object Class: %s", UE4::GetObjectFullName(CurrentParams->ReceivingActor->Class).c_str());
+			}
+		}
+		else {
+			PLOGE << "ServerAttemptInteract: CurrentParams->ReceivingActor is nullptr";
 		}
 
-		PLOGI.printf("InteractComponent: %s", UE4::GetObjectFullName(CurrentParams->InteractComponent).c_str());
+		if (!Util::IsBadReadPtr(CurrentParams->InteractComponent)) {
+			PLOGI.printf("InteractComponent: %s", UE4::GetObjectFullName(CurrentParams->InteractComponent).c_str());
 
-		if (!Util::IsBadReadPtr(CurrentParams->InteractComponent->Class)) {
-			PLOGI.printf("InteractComponent Class: %s", UE4::GetObjectFullName(CurrentParams->InteractComponent->Class).c_str());
+			if (!Util::IsBadReadPtr(CurrentParams->InteractComponent->Class)) {
+				PLOGI.printf("InteractComponent Class: %s", UE4::GetObjectFullName(CurrentParams->InteractComponent->Class).c_str());
+			}
+		}
+		else {
+			PLOGE << "ServerAttemptInteract: CurrentParams->InteractComponent is nullptr";
 		}
 
 		if (!Util::IsBadReadPtr(ContainerBitField)) {

@@ -456,6 +456,7 @@ namespace UFunctions
 		ProcessEvent(AGPCW, PlayIntroAnim, &PlayIntroAnimParams);
 	}
 
+	// broken
 	inline void SetupCustomInventory()
 	{
 		const auto Widget = UE4::FindObject<UObject*>(XOR(L"HousepartyMicToast_C /Engine/Transient.FortEngine_"));
@@ -473,6 +474,8 @@ namespace UFunctions
 		}
 
 		const auto Hud = UE4::FindObject<UObject*>(XOR(L"AthenaHUDMenu_C /Engine/Transient.FortEngine_"));
+
+		// hud should have DualBladeMenu
 
 		if (Util::IsBadReadPtr(Hud)) {
 			PLOGE << "AthenaHUDMenu_C is null";
