@@ -1,5 +1,6 @@
 ﻿
 using ArcticWolf.DataMiner.Common.Http;
+using ArcticWolf.DataMiner.Common.Json;
 using ArcticWolf.DataMiner.Extensions;
 using ArcticWolf.DataMiner.Models;
 using ArcticWolf.DataMiner.Models.Apis.Nitestats;
@@ -46,11 +47,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                 return;
             }
 
-            CalendarResponse calendarResponse = JsonConvert.DeserializeObject<CalendarResponse>(response.Content, new JsonSerializerSettings
-            {
-                MissingMemberHandling = MissingMemberHandling.Error,
-                Error = ErrorHandler,
-            });
+            CalendarResponse calendarResponse = JsonDeserializer.Deserialize<CalendarResponse>(response.Content);
 
             if (_cachedLastCalendarResponse != null)
             {
@@ -128,7 +125,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
             ChatHistory chatHistory;
             try
             {
-                chatHistory = JsonConvert.DeserializeObject<ChatHistory>(jsonData);
+                chatHistory = JsonDeserializer.Deserialize<ChatHistory>(jsonData);
             }
             catch (Exception ex)
             {

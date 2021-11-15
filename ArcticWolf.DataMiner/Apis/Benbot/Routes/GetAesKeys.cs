@@ -1,4 +1,5 @@
 ﻿using ArcticWolf.DataMiner.Common.Http;
+using ArcticWolf.DataMiner.Common.Json;
 using ArcticWolf.DataMiner.Models.Apis.Benbot;
 using Newtonsoft.Json;
 using System;
@@ -40,7 +41,7 @@ namespace ArcticWolf.DataMiner.Apis.Benbot.Routes
                 return null;
             }
 
-            AesResponse aesResponse = JsonConvert.DeserializeObject<AesResponse>(response.Content);
+            AesResponse aesResponse = JsonDeserializer.Deserialize<AesResponse>(response.Content);
 
             return aesResponse;
         }

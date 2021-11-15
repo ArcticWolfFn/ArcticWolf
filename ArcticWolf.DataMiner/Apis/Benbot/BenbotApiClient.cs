@@ -1,5 +1,6 @@
 ﻿using ArcticWolf.DataMiner.Apis.Benbot.Routes;
 using ArcticWolf.DataMiner.Common.Http;
+using ArcticWolf.DataMiner.Common.Json;
 using ArcticWolf.DataMiner.Models.Apis.Benbot;
 using ArcticWolf.Storage;
 using Microsoft.EntityFrameworkCore;
@@ -53,7 +54,7 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
                 return;
             }
 
-            StatusResponse statusResponse = JsonConvert.DeserializeObject<StatusResponse>(response.Content);
+            StatusResponse statusResponse = JsonDeserializer.Deserialize<StatusResponse>(response.Content);
 
             if (Program.Configuration.LastCheckedFnVersion != statusResponse.CurrentCdnVersionNumber || !Program.DbContext.FnVersions.Where(x => x.Version == statusResponse.CurrentFortniteVersionNumber).Any())
             {
