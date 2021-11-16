@@ -1,6 +1,7 @@
 ﻿using ArcticWolf.DataMiner.Apis.Benbot.Routes;
 using ArcticWolf.DataMiner.Common.Http;
 using ArcticWolf.DataMiner.Common.Json;
+using ArcticWolf.DataMiner.Events;
 using ArcticWolf.DataMiner.Models.Apis.Benbot;
 using ArcticWolf.Storage;
 using Microsoft.EntityFrameworkCore;
@@ -25,6 +26,8 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
         /// </summary>
         private bool isBenbotUpdatePending = false;
 
+        private bool isNewUpdateAvailable = false;
+
         private HttpClient _client;
         private static readonly WebHeaderCollection defaultHeaders = new()
         {
@@ -34,6 +37,10 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
         // Routes
         public GetAesKeys GetAesKeys;
 
+        public delegate void NewUpdateAvailableEventHandler(object sender, NewUpdateAvailableEventArgs e);
+
+        public event NewUpdateAvailableEventHandler NewUpdateAvailable;
+
         public BenbotApiClient()
         {
             Log.Information("Initialising...", LOG_PREFIX);
@@ -41,22 +48,28 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
 
             GetAesKeys = new(_client);
 
-            GetStatus();
+            StatusResponse statusResponse = GetStatus();
+
+            if (statusResponse != null)
+            {
+                Log.Information("Current FN CDN version is " + statusResponse.CurrentCdnVersion, LOG_PREFIX);
+                Log.Information("Current FN version is " + statusResponse.CurrentCdnVersionNumber, LOG_PREFIX);
+            }
         }
 
-        public void GetStatus()
+        public StatusResponse GetStatus()
         {
             HttpResponse response = _client.Request("https://benbot.app/api/v1/status");
 
             if (!response.Success)
             {
                 Log.Error("Request to retrieve status data was not successful!", LOG_PREFIX);
-                return;
+                return null;
             }
 
             StatusResponse statusResponse = JsonDeserializer.Deserialize<StatusResponse>(response.Content);
 
-            if (Program.Configuration.LastCheckedFnVersion != statusResponse.CurrentCdnVersionNumber || !Program.DbContext.FnVersions.Where(x => x.Version == statusResponse.CurrentFortniteVersionNumber).Any())
+            if (Program.Configuration.LastCheckedFnVersion != statusResponse.CurrentCdnVersionNumber || !Program.DbContext.FnVersions.Any(x => x.Version == statusResponse.CurrentFortniteVersionNumber))
             {
                 if (Program.Configuration.LastCheckedFnVersion == 0)
                 {
@@ -64,14 +77,16 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
                 }
 
                 Log.Information($"Detected a new Fn version: {$"{Program.Configuration.LastCheckedFnVersion:F}"} -> {$"{statusResponse.CurrentCdnVersionNumber:F}"}");
-                
-                if (!Program.DbContext.FnVersions.Where(x => x.Version == statusResponse.CurrentCdnVersionNumber).Any())
+
+                if (!Program.DbContext.FnVersions.Any(x => x.Version == statusResponse.CurrentCdnVersionNumber))
                 {
                     FnVersion newVersion = new();
                     newVersion.Version = statusResponse.CurrentCdnVersionNumber;
                     newVersion.VersionString = statusResponse.CurrentCdnVersion;
                     Program.DbContext.FnVersions.Add(newVersion);
                     Program.DbContext.SaveChanges();
+
+                    isNewUpdateAvailable = true;
                 }
                 else
                 {
@@ -86,6 +101,15 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
                 {
                     AnalyseStatusResponse(statusResponse);
                     isBenbotUpdatePending = false;
+
+                    if (isNewUpdateAvailable)
+                    {
+                        NewUpdateAvailable(this, new NewUpdateAvailableEventArgs()
+                        {
+                            UpdateVersion = Program.DbContext.FnVersions.First(x => x.Version == statusResponse.CurrentCdnVersionNumber),
+                        });
+                        isNewUpdateAvailable = false;
+                    }
                 }
 
                 Program.Configuration.LastCheckedFnVersion = statusResponse.CurrentCdnVersionNumber;
@@ -97,16 +121,24 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
                 {
                     AnalyseStatusResponse(statusResponse);
                     isBenbotUpdatePending = false;
+
+                    if (isNewUpdateAvailable)
+                    {
+                        NewUpdateAvailable(this, new NewUpdateAvailableEventArgs()
+                        {
+                            UpdateVersion = Program.DbContext.FnVersions.First(x => x.Version == statusResponse.CurrentCdnVersionNumber),
+                        });
+                        isNewUpdateAvailable = false;
+                    }
                 }
             }
 
-            Log.Information("Current FN CDN version is " + statusResponse.CurrentCdnVersion, LOG_PREFIX);
-            Log.Information("Current FN version is " + statusResponse.CurrentCdnVersionNumber, LOG_PREFIX);
+            return statusResponse;
         }
 
         public static void AnalyseStatusResponse(StatusResponse response)
         {
-            FnVersion currentVersion = Program.DbContext.FnVersions.Where(x => x.Version == response.CurrentFortniteVersionNumber).Include(x => x.PakFiles).First();
+            FnVersion currentVersion = Program.DbContext.FnVersions.Include(x => x.PakFiles).First(x => x.Version == response.CurrentFortniteVersionNumber);
 
             // find already existing db pak files for current version
             ICollection<PakFile> dbPakFiles = currentVersion.PakFiles;

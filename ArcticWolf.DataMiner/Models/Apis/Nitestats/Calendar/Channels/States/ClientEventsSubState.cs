@@ -17,7 +17,7 @@ namespace ArcticWolf.DataMiner.Models.Apis.Nitestats.Calendar.Channels.States
         public EventNamedWeights EventNamedWeights { get; set; }
 
         [JsonProperty("activeEvents")]
-        public List<Event> ActiveEvents { get; set; }
+        public List<EventDetailed> ActiveEvents { get; set; }
 
         [JsonProperty("seasonNumber")]
         public int SeasonNumber { get; set; }

@@ -16,7 +16,7 @@ namespace ArcticWolf.DataMiner.Models.Apis.Nitestats.Calendar.Channels.States
         ///     Type is unknown yet.
         /// </summary>
         [JsonProperty("activeEvents")]
-        public List<object> ActiveEvents { get; set; }
+        public List<Event> ActiveEvents { get; set; }
 
         [JsonProperty("state")]
         public SubStateType SubState { get; set; }

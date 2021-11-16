@@ -28,11 +28,13 @@ namespace ArcticWolf.DataMiner.Managers
             {
                 AnalyseVersion(version);
             }
+
+            Log.Information("(AnalyseVersions): Finished analysing older versions!");
         }
 
         public static void AnalyseVersion(decimal version)
         {
-            IEnumerable<FnVersion> foundVersions = Program.DbContext.FnVersions.Where(x => x.Version == version);
+            IEnumerable<FnVersion> foundVersions = Program.DbContext.FnVersions.AsQueryable().Where(x => x.Version == version);
 
             if (!foundVersions.Any())
             {
@@ -51,7 +53,7 @@ namespace ArcticWolf.DataMiner.Managers
                 Program.DbContext.SaveChanges();
             }
 
-            AesManager.AnalyseAesForVersion(version);
+            CurrentVersionMonitor.AnalyseAesForVersion(version);
         }
     }
 }

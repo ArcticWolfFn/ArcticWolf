@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\ArcticWolf.Storage\ArcticWolf.Storage.csproj" />
+    <ProjectReference Include="..\Discord\FNitePlusBot\FNitePlusBot.csproj" />
   </ItemGroup>
 
 </Project>

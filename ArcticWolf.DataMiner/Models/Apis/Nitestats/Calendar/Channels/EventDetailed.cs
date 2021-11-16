@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace ArcticWolf.DataMiner.Models.Apis.Nitestats.Calendar.Channels
 {
-    public class Event
+    public class EventDetailed
     {
         [JsonProperty("eventType")]
         public string EventType { get; set; }
@@ -17,5 +17,20 @@ namespace ArcticWolf.DataMiner.Models.Apis.Nitestats.Calendar.Channels
 
         [JsonProperty("activeSince")]
         public DateTime ActiveSince { get; set; }
+
+        [JsonProperty("instanceId")]
+        public string InstanceId { get; set; }
+
+        [JsonProperty("devName")]
+        public string DevName { get; set; }
+
+        [JsonProperty("eventName")]
+        public string EventName { get; set; }
+
+        [JsonProperty("eventStart")]
+        public DateTime EventStart { get; set; }
+
+        [JsonProperty("eventEnd")]
+        public DateTime EventEnd { get; set; }
     }
 }

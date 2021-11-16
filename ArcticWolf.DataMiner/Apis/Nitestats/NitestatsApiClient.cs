@@ -4,6 +4,7 @@ using ArcticWolf.DataMiner.Common.Json;
 using ArcticWolf.DataMiner.Extensions;
 using ArcticWolf.DataMiner.Models;
 using ArcticWolf.DataMiner.Models.Apis.Nitestats;
+using ArcticWolf.DataMiner.Models.Apis.Nitestats.Calendar.Channels;
 using ArcticWolf.DataMiner.Models.Apis.Nitestats.Calendar.Channels.States;
 using ArcticWolf.DataMiner.Models.Discord;
 using ArcticWolf.Storage;
@@ -26,6 +27,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
     {
         private const string LOG_PREFIX = "NiteStatsApi";
         private const string DATA_PARSER_LOG_PREFIX = "NiteStatsApi|DataParser";
+        private const string CALENDAR_LOG_PREFIX = "NiteStatsApi|Calendar";
 
         private const string EVENT_FLAGS_DISCORD_BOT = "eventflag-updates";
 
@@ -43,11 +45,13 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
             if (!response.Success)
             {
-                Log.Error("Request to retrieve calendar data was not successful!", LOG_PREFIX);
+                Log.Error("Request to retrieve calendar data was not successful!", CALENDAR_LOG_PREFIX);
                 return;
             }
 
             CalendarResponse calendarResponse = JsonDeserializer.Deserialize<CalendarResponse>(response.Content);
+
+            Program.DbContext.FnEventFlags.Load();
 
             if (_cachedLastCalendarResponse != null)
             {
@@ -77,13 +81,81 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
             {
                 // got data for first time
 
-                // process ClientMatchmaking channel
-                foreach (State<TkSubState> currentState in calendarResponse.Channels.Tk.States)
+                // process ClientEvents channel
+                foreach (State<ClientEventsSubState> currentState in calendarResponse.Channels.ClientEvents.States)
                 {
-                    TkSubState currentSubState = currentState.SubState;
+                    foreach (Event activeEvent in currentState.ActiveEvents)
+                    {
+                        IQueryable<FnEventFlag> foundFlags = Program.DbContext.FnEventFlags.Include(x => x.TimeSpans).Where(x => x.Event == activeEvent.EventType);
 
-                    //currentSubState.K;
+                        if (foundFlags.Count() > 0)
+                        {
+                            FnEventFlag flag = foundFlags.First();
+                            // flag exists so check if it has been modified or readded
+
+                            Log.Verbose($"Found flag {flag.Event}", CALENDAR_LOG_PREFIX);
+                            Log.Verbose($"Flag has {flag.TimeSpans.Count} time spans", CALENDAR_LOG_PREFIX);
+
+                            IEnumerable<FnEventFlagTimeSpan> foundTimeSpans = flag.TimeSpans.Where(x => x.StartTime == activeEvent.ActiveSince || x.EndTime == activeEvent.ActiveUntil);
+
+                            if (foundTimeSpans.Count() > 0)
+                            {
+                                // time span was modified
+                                // make sure to modify the time span that will end last
+                                FnEventFlagTimeSpan timeSpan = foundTimeSpans.OrderByDescending(x => x.EndTime).First();
+
+                                if (timeSpan.EndTime != activeEvent.ActiveUntil || timeSpan.StartTime != activeEvent.ActiveSince)
+                                {
+                                    Log.Information($"Flag {activeEvent.EventType}: Modified timespan", CALENDAR_LOG_PREFIX);
+                                    Log.Information($"Flag {activeEvent.EventType}: Start: {timeSpan.StartTime}' -> '{activeEvent.ActiveSince}'", CALENDAR_LOG_PREFIX);
+                                    Log.Information($"Flag {activeEvent.EventType}: End: {timeSpan.EndTime}' -> '{activeEvent.ActiveUntil}'", CALENDAR_LOG_PREFIX);
+
+                                    FnEventFlagModification modification = new();
+                                    modification.ModifiedTimeSpan = timeSpan;
+                                    modification.NewStartTime = activeEvent.ActiveSince;
+                                    modification.NewEndTime = activeEvent.ActiveUntil;
+                                    modification.OverriddenStartTime = timeSpan.StartTime;
+                                    modification.OverriddenEndTime = timeSpan.EndTime;
+                                    flag.Modifications.Add(modification);
+
+                                    timeSpan.StartTime = activeEvent.ActiveSince;
+                                    timeSpan.EndTime = activeEvent.ActiveUntil;
+                                    continue;
+                                }
+                            }
+
+                            // time span already exists
+                            if (flag.TimeSpans.Where(x => x.StartTime == activeEvent.ActiveSince && x.EndTime == activeEvent.ActiveUntil).Any())
+                            {
+                                continue;
+                            }
+
+                            // new time span was added
+                            FnEventFlagTimeSpan newTimeSpan = new();
+                            newTimeSpan.StartTime = activeEvent.ActiveSince;
+                            newTimeSpan.EndTime = activeEvent.ActiveUntil;
+                            flag.TimeSpans.Add(newTimeSpan);
+                            Log.Information($"Flag {activeEvent.EventType}: Added new time span: Start: {newTimeSpan.StartTime} | End: {newTimeSpan.EndTime}", CALENDAR_LOG_PREFIX);
+                        }
+                        else
+                        {
+                            // flag doesn't exist so create it
+                            Log.Information($"Adding new flag {activeEvent.EventType}", CALENDAR_LOG_PREFIX);
+
+                            FnEventFlag flag = new();
+                            flag.Event = activeEvent.EventType;
+                            
+                            FnEventFlagTimeSpan newTimeSpan = new();
+                            newTimeSpan.StartTime = activeEvent.ActiveSince;
+                            newTimeSpan.EndTime = activeEvent.ActiveUntil;
+                            flag.TimeSpans.Add(newTimeSpan);
+
+                            Program.DbContext.FnEventFlags.Add(flag);
+                        }
+                    }
                 }
+
+                _ = Program.DbContext.SaveChanges();
             }
         }
 
@@ -214,8 +286,14 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                     if (Program.DbContext.FnEventFlags.Local.Any(x => x.Event == eventTypeField.Value))
                     {
                         eventFlag = Program.DbContext.FnEventFlags.Local.First(x => x.Event == eventTypeField.Value);
-                        Program.DbContext.Entry(eventFlag).Collection(x => x.TimeSpans).Load();
-                        Program.DbContext.Entry(eventFlag).Collection(x => x.Modifications).Load();
+                        if (!Program.DbContext.Entry(eventFlag).Collection(x => x.TimeSpans).IsLoaded)
+                        {
+                            Program.DbContext.Entry(eventFlag).Collection(x => x.TimeSpans).Load();
+                        }
+                        if (!Program.DbContext.Entry(eventFlag).Collection(x => x.Modifications).IsLoaded)
+                        {
+                            Program.DbContext.Entry(eventFlag).Collection(x => x.Modifications).Load();
+                        }
                     }
                     else
                     {

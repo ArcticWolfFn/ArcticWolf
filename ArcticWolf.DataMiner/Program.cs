@@ -48,8 +48,10 @@ namespace ArcticWolf.DataMiner
             }, new System.Collections.Generic.Dictionary<string, Common.Logging.LogLevel>
             {
                 {"Http", Common.Logging.LogLevel.Information },
-                {"AesManager", Common.Logging.LogLevel.Debug },
-                {"NiteStatsApi", Common.Logging.LogLevel.Information }
+                {"CurrentVersionMonitor", Common.Logging.LogLevel.Debug },
+                {"NiteStatsApi", Common.Logging.LogLevel.Information },
+                {"NiteStatsApi|Calendar", Common.Logging.LogLevel.Information },
+                {CurrentVersionMonitor.AES_LOG_PREFIX, Common.Logging.LogLevel.Information }
             }
             );
 
@@ -57,8 +59,10 @@ namespace ArcticWolf.DataMiner
             NitestatsApiClient = new NitestatsApiClient();
             FnDotNetApiClient = new FnDotNetApiClient();
 
-            AesManager.Init();
+            CurrentVersionMonitor.Init();
             OldVersionsManager.Init();
+
+            DiscordManager.Init();
 
             /*FnEventFlag flag = DbContext.FnEventFlags.Find("EventFlag.Anniversary.EnableEnemyVariants");
             DbContext.Entry(flag).Collection(x => x.TimeSpans).Load();
