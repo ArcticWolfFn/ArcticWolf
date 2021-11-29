@@ -187,10 +187,6 @@ namespace NeoRoyale
 				break;
 			}
 
-			if (NeoPlayer.Pawn && GetAsyncKeyState(VK_ESCAPE)) { // ToDo:: only execute once
-				NeoPlayer.OpenMenu();
-			}
-
 			Sleep(1000 / 30);
 		}
 	}
