@@ -14,9 +14,18 @@ namespace ArcticWolfLauncher.Services
         private static Process _fnLauncherProcess = null;
         private static Process _fnAntiCheatProcess = null;
         private static Process _fortniteProcess = null;
+        private static bool _launched = false;
 
         public static void LaunchGame()
         {
+            if (_launched)
+            {
+                MessageBox.Show("Game is already running");
+                return;
+            }
+
+            _launched = true;
+
             Task.Run(() =>
             {
                 string gamePath = Path.Join(AppSettings.Default.FNPath, @"\FortniteGame\Binaries\Win64\FortniteClient-Win64-Shipping.exe");
@@ -91,6 +100,15 @@ namespace ArcticWolfLauncher.Services
         {
             _fnLauncherProcess?.Kill();
             _fnAntiCheatProcess?.Kill();
+            _launched = false;
+        }
+
+        public static void KillGameProcesses()
+        {
+            _fortniteProcess?.Kill();
+
+            // just to make sure the other processes are killed too
+            FortniteProcess_Exited(null, null);
         }
 
         public static void InjectDll(int processId, string path)
