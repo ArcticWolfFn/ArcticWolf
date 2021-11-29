@@ -245,7 +245,6 @@ namespace Hooks
 		//Tested from 12.41 to latest
 		auto GONIAdd = Util::FindPattern(Patterns::bGlobal::GONI, Masks::bGlobal::GONI);
 		VALIDATE_ADDRESS(GONIAdd, XOR("Failed to find GetObjectName Address."));
-		printfc(FOREGROUND_BLUE, "Got address %s", GONIAdd);
 
 		GetObjectNameInternal = decltype(GetObjectNameInternal)(GONIAdd);
 

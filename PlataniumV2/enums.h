@@ -131,6 +131,13 @@ enum class ESlateVisibility : uint8_t {
 	ESlateVisibility_MAX,
 };
 
+enum class EInteractionBeingAttempted : uint8_t {
+	FirstInteraction,
+	SecondInteraction,
+	AllInteraction,
+	EInteractionBeingAttempted_MAX,
+};
+
 enum EInternalObjectFlags
 {
 	None = 0,

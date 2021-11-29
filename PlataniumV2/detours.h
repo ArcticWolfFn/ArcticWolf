@@ -85,19 +85,12 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			UObject* ReceivingActor;
 			UObject* InteractComponent;
 			byte InteractType;
+			struct UObject* OptionalObjectData;
+			EInteractionBeingAttempted InteractionBeingAttempted;
+			int32_t RequestID;
 		};
 
 		auto CurrentParams = (ServerAttemptInteract*)pParams;
-
-		struct BitField
-		{
-			char bAlwaysShowContainer : 1; // 0xeb9(0x01)
-			char bAlwaysMaintainLoot : 1; // 0xeb9(0x01)
-			char bDestroyContainerOnSearch : 1; // 0xeb9(0x01)
-			char bAlreadySearched : 1; // 0xeb9(0x01)
-		};
-
-		auto ContainerBitField = reinterpret_cast<BitField*>(__int64(CurrentParams->ReceivingActor) + __int64(ObjectFinder::FindOffset(L"Class /Script/FortniteGame.BuildingContainer", L"bAlreadySearched")));
 		
 		// ToDo: names are invalid
 		if (!Util::IsBadReadPtr(CurrentParams->ReceivingActor)) {
@@ -120,25 +113,6 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		}
 		else {
 			PLOGE << "ServerAttemptInteract: CurrentParams->InteractComponent is nullptr";
-		}
-
-		if (!Util::IsBadReadPtr(ContainerBitField)) {
-			ContainerBitField->bAlreadySearched = true;
-			/*Player::OnRep_bAlreadySearched(CurrentParams->ReceivingActor);
-
-			auto ContainerLocation = AActor::GetLocation(CurrentParams->ReceivingActor);
-
-			if (CurrentParams->ReceivingActor->GetFName().starts_with(L"Tiered_Chest"))
-			{
-				Player::ClientPlaySoundAtLocation(Globals::Controller, Globals::ChestsSound, ContainerLocation, 1, 1);
-			}
-			else if (CurrentParams->ReceivingActor->GetFullName().starts_with(L"Tiered_Ammo"))
-			{
-				Player::ClientPlaySoundAtLocation(Globals::Controller, Globals::AmmoBoxSound, ContainerLocation, 1, 1);
-			}*/
-		}
-		else {
-			PLOGE << "ContainerBitField is nullptr";
 		}
 	}
 
@@ -477,6 +451,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			!wcsstr(nFunc.c_str(), L"OnUpdateNameplateVis") &&
 			!wcsstr(nFunc.c_str(), L"/Script/UMG.Border.SetBrushColor") &&
 			!wcsstr(nFunc.c_str(), L"AthenaMOTDTeaserWidget.AthenaMOTDTeaserWidget_C.HandleEntryWidgetHoveredChanged") &&
+			!wcsstr(nFunc.c_str(), L"/Script/UMG.UserWidget.Destruct") &&
 
 			// Camera
 			!wcsstr(nFunc.c_str(), L"OnFrontEndCameraChanged") &&
@@ -506,9 +481,9 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			// Player
 			!wcsstr(nFunc.c_str(), L"/Script/Engine.Character.CanJumpInternal") &&
 
-			// Consumables / Interaction
-			!wcsstr(nFunc.c_str(), L"ConsumableBGAs/CBGA_Parent.CBGA_Parent_C.BlueprintCanInteract") &&
-			!wcsstr(nFunc.c_str(), L"ConsumableBGAs/CBGA_Parent.CBGA_Parent_C.BlueprintGetInteractionString") &&
+			// Interaction
+			!wcsstr(nFunc.c_str(), L"BlueprintCanInteract") &&
+			!wcsstr(nFunc.c_str(), L"BlueprintGetInteractionString") &&
 
 			//ingame ui
 			!wcsstr(nFunc.c_str(), L"PopupCenterMessageWidget_C.UpdateStateEvent") &&
@@ -521,6 +496,9 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			// ToDo: I think this gets called if it shows a music pack, but music is muted
 			!wcsstr(nFunc.c_str(), L"B_MusicPackPreviewDisplay_C.UpdateMuteSetting") &&
+
+			// Shutdown
+			!wcsstr(nFunc.c_str(), L"/Script/Engine.ActorComponent.ReceiveEndPlay") &&
 
 			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 		{
