@@ -3,6 +3,7 @@ using ArcticWolf.Storage;
 using ArcticWolf.Storage.Constants;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Threading;
 
@@ -14,7 +15,7 @@ namespace ArcticWolf.DataMiner.Managers
 
         public static void Init()
         {
-            Thread analyseOldVersionThread = new Thread(AnalyseOldVersions);
+            Thread analyseOldVersionThread = new(AnalyseOldVersions);
             analyseOldVersionThread.Start();
         }
 
@@ -34,11 +35,13 @@ namespace ArcticWolf.DataMiner.Managers
 
         public static void AnalyseVersion(decimal version)
         {
-            IEnumerable<FnVersion> foundVersions = Program.DbContext.FnVersions.AsQueryable().Where(x => x.Version == version);
+            DatabaseContext dbContext = Program.DbContext;
+
+            IEnumerable<FnVersion> foundVersions = dbContext.FnVersions.AsQueryable().Where(x => x.Version == version);
 
             if (!foundVersions.Any())
             {
-                AesResponse aesResponse = Program.BenbotApiClient.GetAesKeys.Get(version.ToString());
+                AesResponse aesResponse = Program.BenbotApiClient.GetAesKeys.Get(version.ToString(CultureInfo.InvariantCulture));
 
                 if (aesResponse == null)
                 {
@@ -49,8 +52,8 @@ namespace ArcticWolf.DataMiner.Managers
                 FnVersion newVersion = new();
                 newVersion.Version = aesResponse.VersionNumber;
                 newVersion.VersionString = aesResponse.Version;
-                Program.DbContext.FnVersions.Add(newVersion);
-                Program.DbContext.SaveChanges();
+                _ = dbContext.FnVersions.Add(newVersion);
+                _ = dbContext.SaveChanges();
             }
 
             CurrentVersionMonitor.AnalyseAesForVersion(version);

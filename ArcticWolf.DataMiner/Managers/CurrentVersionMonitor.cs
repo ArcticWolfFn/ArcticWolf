@@ -25,11 +25,16 @@ namespace ArcticWolf.DataMiner.Managers
             _updateAesTimer.Elapsed += _updateAesTimer_Elapsed;
             _updateAesTimer.Start();
 
-            _updateAesTimer.AutoReset = true;
-            _updateAesTimer.Elapsed += _updateAesTimer_Elapsed;
-            _updateAesTimer.Start();
+            _updateStatusTimer.AutoReset = true;
+            _updateStatusTimer.Elapsed += _updateStatusTimer_Elapsed; ;
+            _updateStatusTimer.Start();
 
             Program.BenbotApiClient.NewUpdateAvailable += BenbotApiClient_NewUpdateAvailable;
+        }
+
+        private static void _updateStatusTimer_Elapsed(object sender, ElapsedEventArgs e)
+        {
+            Program.BenbotApiClient.GetStatus();
         }
 
         private static void BenbotApiClient_NewUpdateAvailable(object sender, Events.NewUpdateAvailableEventArgs e)
@@ -46,6 +51,8 @@ namespace ArcticWolf.DataMiner.Managers
 
         public static void AnalyseAesForVersion(decimal version)
         {
+            DatabaseContext dbContext = Program.DbContext;
+
             Log.Debug($"(Aes): Analsing keys for v{version:F}", AES_LOG_PREFIX);
 
             AesResponse aesResponse = Program.BenbotApiClient.GetAesKeys.Get(version.ToString());
@@ -56,7 +63,7 @@ namespace ArcticWolf.DataMiner.Managers
                 return;
             }
 
-            IEnumerable<FnVersion> foundVersions = Program.DbContext.FnVersions.AsQueryable().Where(x => x.Version == aesResponse.VersionNumber);
+            IEnumerable<FnVersion> foundVersions = dbContext.FnVersions.AsQueryable().Where(x => x.Version == aesResponse.VersionNumber);
 
             if (!foundVersions.Any())
             {
@@ -72,7 +79,7 @@ namespace ArcticWolf.DataMiner.Managers
                 Log.Information($"(Aes): Set MainKey for '{currentVersion.Version:F}' to '{aesResponse.MainKey}'", AES_LOG_PREFIX);
             }
 
-            Program.DbContext.Entry(currentVersion).Collection(x => x.PakFiles).Load();
+            dbContext.Entry(currentVersion).Collection(x => x.PakFiles).Load();
 
             foreach (KeyValuePair<string, string> entry in aesResponse.DynamicKeys)
             {
@@ -99,6 +106,8 @@ namespace ArcticWolf.DataMiner.Managers
                 Log.Information($"(Aes): Detected new key '{entry.Value}' for pak file '{entry.Key}' for v{currentVersion.Version:F}", AES_LOG_PREFIX);
                 pakFile.AesKey = entry.Value;
             }
+
+            dbContext.SaveChanges();
         }
     }
 }

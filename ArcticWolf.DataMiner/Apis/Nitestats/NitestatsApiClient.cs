@@ -41,6 +41,8 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
         private void GetCalendarData()
         {
+            DatabaseContext dbContext = Program.DbContext;
+
             HttpResponse response = new HttpClient().Request("https://api.nitestats.com/v1/epic/modes");
 
             if (!response.Success)
@@ -51,7 +53,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
             CalendarResponse calendarResponse = JsonDeserializer.Deserialize<CalendarResponse>(response.Content);
 
-            Program.DbContext.FnEventFlags.Load();
+            dbContext.FnEventFlags.Load();
 
             if (_cachedLastCalendarResponse != null)
             {
@@ -86,7 +88,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                 {
                     foreach (Event activeEvent in currentState.ActiveEvents)
                     {
-                        IQueryable<FnEventFlag> foundFlags = Program.DbContext.FnEventFlags.Include(x => x.TimeSpans).Where(x => x.Event == activeEvent.EventType);
+                        IQueryable<FnEventFlag> foundFlags = dbContext.FnEventFlags.Include(x => x.TimeSpans).Where(x => x.Event == activeEvent.EventType);
 
                         if (foundFlags.Count() > 0)
                         {
@@ -150,12 +152,12 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             newTimeSpan.EndTime = activeEvent.ActiveUntil;
                             flag.TimeSpans.Add(newTimeSpan);
 
-                            Program.DbContext.FnEventFlags.Add(flag);
+                            dbContext.FnEventFlags.Add(flag);
                         }
                     }
                 }
 
-                _ = Program.DbContext.SaveChanges();
+                _ = dbContext.SaveChanges();
             }
         }
 
@@ -175,6 +177,8 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
         public void LoadEventFlagsFromMessages()
         {
+            DatabaseContext dbContext = Program.DbContext;
+
             Log.Information("(EventFlagsLoader): Loading data...", LOG_PREFIX);
 
             string jsonData;
@@ -207,7 +211,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
             Log.Information($"(EventFlagsLoader): Parsing event flags from '{chatHistory.Guild.Name} - {chatHistory.Channel.Name}'...", LOG_PREFIX);
 
-            Program.DbContext.FnEventFlags.Load();
+            dbContext.FnEventFlags.Load();
 
             foreach (Message message in chatHistory.Messages)
             {
@@ -283,23 +287,23 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                     // find or create the event flag
                     FnEventFlag eventFlag;
 
-                    if (Program.DbContext.FnEventFlags.Local.Any(x => x.Event == eventTypeField.Value))
+                    if (dbContext.FnEventFlags.Local.Any(x => x.Event == eventTypeField.Value))
                     {
-                        eventFlag = Program.DbContext.FnEventFlags.Local.First(x => x.Event == eventTypeField.Value);
-                        if (!Program.DbContext.Entry(eventFlag).Collection(x => x.TimeSpans).IsLoaded)
+                        eventFlag = dbContext.FnEventFlags.Local.First(x => x.Event == eventTypeField.Value);
+                        if (!dbContext.Entry(eventFlag).Collection(x => x.TimeSpans).IsLoaded)
                         {
-                            Program.DbContext.Entry(eventFlag).Collection(x => x.TimeSpans).Load();
+                            dbContext.Entry(eventFlag).Collection(x => x.TimeSpans).Load();
                         }
-                        if (!Program.DbContext.Entry(eventFlag).Collection(x => x.Modifications).IsLoaded)
+                        if (!dbContext.Entry(eventFlag).Collection(x => x.Modifications).IsLoaded)
                         {
-                            Program.DbContext.Entry(eventFlag).Collection(x => x.Modifications).Load();
+                            dbContext.Entry(eventFlag).Collection(x => x.Modifications).Load();
                         }
                     }
                     else
                     {
                         eventFlag = new();
                         eventFlag.Event = eventTypeField.Value;
-                        Program.DbContext.FnEventFlags.Add(eventFlag);
+                        _ = dbContext.FnEventFlags.Add(eventFlag);
                     }
 
 
@@ -467,17 +471,17 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                 }
             }
 
-            int modifiedItemsCount = Program.DbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Modified && x.Entity.GetType().Name == nameof(FnEventFlag));
-            int addedItemsCount = Program.DbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Added && x.Entity.GetType().Name == nameof(FnEventFlag));
+            int modifiedItemsCount = dbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Modified && x.Entity.GetType().Name == nameof(FnEventFlag));
+            int addedItemsCount = dbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Added && x.Entity.GetType().Name == nameof(FnEventFlag));
 
             Log.Information($"(EventFlagsLoader): Added {addedItemsCount} items and modified {modifiedItemsCount} items.");
 
-            int modifiedTSItemsCount = Program.DbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Modified && x.Entity.GetType().Name == nameof(FnEventFlagTimeSpan));
-            int addedTSItemsCount = Program.DbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Added && x.Entity.GetType().Name == nameof(FnEventFlagTimeSpan));
+            int modifiedTSItemsCount = dbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Modified && x.Entity.GetType().Name == nameof(FnEventFlagTimeSpan));
+            int addedTSItemsCount = dbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Added && x.Entity.GetType().Name == nameof(FnEventFlagTimeSpan));
 
             Log.Information($"(EventFlagsLoader): Added {addedTSItemsCount} TS items and modified {modifiedTSItemsCount} TS items.");
 
-            Program.DbContext.SaveChanges();
+            dbContext.SaveChanges();
 
             // ToDo: do validation: No duplicate time spans for each flag
         }

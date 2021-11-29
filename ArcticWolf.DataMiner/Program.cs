@@ -16,7 +16,15 @@ namespace ArcticWolf.DataMiner
 {
     class Program
     {
-        public static DatabaseContext DbContext { get; set; }
+        public static DatabaseContext DbContext
+        {
+            get
+            {
+                DatabaseContext DbContext = new DatabaseContext(Program.Configuration.DatabasePath);
+                DbContext.Database.Migrate();
+                return DbContext;
+            }
+        }
         public static IAppConfig Configuration { get; private set; }
         public static BenbotApiClient BenbotApiClient { get; private set; }
         public static NitestatsApiClient NitestatsApiClient { get; private set; }
@@ -36,9 +44,6 @@ namespace ArcticWolf.DataMiner
             }
 
             Configuration = new ConfigurationBuilder<IAppConfig>().UseIniFile("app.ini").Build();
-
-            DbContext = new DatabaseContext(Program.Configuration.DatabasePath);
-            DbContext.Database.Migrate();
 
             // DbContext.FnEventFlags.Include(x => x.TimeSpans).Include(x => x.Modifications);
 
