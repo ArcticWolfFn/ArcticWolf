@@ -103,6 +103,14 @@ namespace ArcticWolfLauncher.Services
             _launched = false;
         }
 
+        public static void KillGameProcesses()
+        {
+            _fortniteProcess?.Kill();
+
+            // just to make sure the other processes are killed too
+            FortniteProcess_Exited(null, null);
+        }
+
         public static void InjectDll(int processId, string path)
         {
             if (!File.Exists(path))

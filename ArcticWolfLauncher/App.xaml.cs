@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ArcticWolfLauncher.Services;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -21,6 +22,7 @@ namespace ArcticWolfLauncher
         private void App_Exit(object sender, ExitEventArgs e)
         {
             AppSettings.Default.Save();
+            LauncherService.KillGameProcesses();
         }
     }
 }
