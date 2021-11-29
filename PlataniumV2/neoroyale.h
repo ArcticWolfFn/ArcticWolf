@@ -78,17 +78,17 @@ namespace NeoRoyale
 		else {
 			*bHasServerFinishedLoading = true;
 
-			auto ServerSetClientHasFinishedLoadingOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"ServerSetClientHasFinishedLoading"));
+			auto bHasClientFinishedLoadingOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"bHasClientFinishedLoading"));
 
-			auto ServerSetClientHasFinishedLoading = reinterpret_cast<bool*>(reinterpret_cast<uintptr_t>(NeoPlayer.Controller) + ServerSetClientHasFinishedLoadingOffset);
+			auto bHasClientFinishedLoading = reinterpret_cast<bool*>(reinterpret_cast<uintptr_t>(NeoPlayer.Controller) + bHasClientFinishedLoadingOffset);
 
-			if (!Util::IsBadReadPtr(ServerSetClientHasFinishedLoading)) {
+			if (!Util::IsBadReadPtr(bHasClientFinishedLoading)) {
 				bool HasFinishedLoading = true;
 
-				ProcessEvent(NeoPlayer.Controller, ServerSetClientHasFinishedLoading, &HasFinishedLoading);
+				*bHasClientFinishedLoading = true;
 			}
 			else {
-				PLOGE << "ServerSetClientHasFinishedLoading is null";
+				PLOGE << "bHasClientFinishedLoading is null";
 			}
 		}
 
