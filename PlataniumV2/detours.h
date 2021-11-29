@@ -462,7 +462,9 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			!wcsstr(nFunc.c_str(), L"OnAnimationFinished") &&
 			!wcsstr(nFunc.c_str(), L"OnAnimationStarted") &&
 			!wcsstr(nFunc.c_str(), L"SetColorAndOpacity") &&
+			!wcsstr(nFunc.c_str(), L"OnHover") &&
 			!wcsstr(nFunc.c_str(), L"OnHovered") &&
+			!wcsstr(nFunc.c_str(), L"OnUnhover") &&
 			!wcsstr(nFunc.c_str(), L"OnUnhovered") &&
 			!wcsstr(nFunc.c_str(), L"HandleButtonReleased") &&
 			!wcsstr(nFunc.c_str(), L"HandleButtonClicked") &&
@@ -473,6 +475,12 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			!wcsstr(nFunc.c_str(), L"OnRemovedFromFocusPath") &&
 			!wcsstr(nFunc.c_str(), L"OnFocusLost") &&
 			!wcsstr(nFunc.c_str(), L"OnUpdateNameplateVis") &&
+			!wcsstr(nFunc.c_str(), L"/Script/UMG.Border.SetBrushColor") &&
+			!wcsstr(nFunc.c_str(), L"AthenaMOTDTeaserWidget.AthenaMOTDTeaserWidget_C.HandleEntryWidgetHoveredChanged") &&
+
+			// Camera
+			!wcsstr(nFunc.c_str(), L"OnFrontEndCameraChanged") &&
+			!wcsstr(nFunc.c_str(), L"FrontEndCameraSwitchFadeAthena__UpdateFunc") &&
 
 			// Loading stuff
 			!wcsstr(nFunc.c_str(), L"OnBuildingActorInitialized") &&
@@ -495,10 +503,24 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			!wcsstr(nFunc.c_str(), L"ReceiveDestroyed") &&
 			!wcsstr(nFunc.c_str(), L"AnimNotify") &&
 
+			// Player
+			!wcsstr(nFunc.c_str(), L"/Script/Engine.Character.CanJumpInternal") &&
+
+			// Consumables / Interaction
+			!wcsstr(nFunc.c_str(), L"ConsumableBGAs/CBGA_Parent.CBGA_Parent_C.BlueprintCanInteract") &&
+			!wcsstr(nFunc.c_str(), L"ConsumableBGAs/CBGA_Parent.CBGA_Parent_C.BlueprintGetInteractionString") &&
+
 			//ingame ui
 			!wcsstr(nFunc.c_str(), L"PopupCenterMessageWidget_C.UpdateStateEvent") &&
 			!wcsstr(nFunc.c_str(), L"FortInteractInterface.GetFocusedSocketLocation") &&
 
+			// BattlePass UI
+
+			// Called when a new item is sliding in
+			!wcsstr(nFunc.c_str(), L"BattlePassVaultWorld_C.Floor-Visibility__UpdateFunc") &&
+
+			// ToDo: I think this gets called if it shows a music pack, but music is muted
+			!wcsstr(nFunc.c_str(), L"B_MusicPackPreviewDisplay_C.UpdateMuteSetting") &&
 
 			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 		{

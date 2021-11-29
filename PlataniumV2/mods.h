@@ -443,10 +443,14 @@ namespace UFunctions
 
 	inline void PlayCustomPlayPhaseAlert()
 	{
+		// ToDo: this shit is not working
+		return;
+
 		auto AGPCW = UE4::FindObject<UObject*>(XOR(L"AthenaGamePhaseChangeWidget_C /Engine/Transient.FortEngine_"));
 
 		auto AGPCWFinder = ObjectFinder::EntryPoint(uintptr_t(AGPCW));
 
+		// this things causes an error because UE4::FindObject<UObject *>() line 199 ->  UE4::GetObjectFullName() line 135 fails and crashes the game
 		auto PlayIntroAnim = UE4::FindObject<UObject*>(XOR(L"Function /Game/Athena/HUD/Phase/AthenaGamePhaseChangeWidget.AthenaGamePhaseChangeWidget_C:PlayIntroAnimation"));
 
 		PlayIntroAnim_Params PlayIntroAnimParams;
