@@ -17,7 +17,7 @@ namespace BotCord.Managers
     /// </summary>
     public static class CommandsManager
     {
-        private static readonly string LOG_PREFIX = $"[{ nameof(CommandsManager) }] ";
+        public static readonly string LOG_PREFIX = nameof(CommandsManager);
 
         /// <summary>
         /// Stores all controllers of this application for managing them.
