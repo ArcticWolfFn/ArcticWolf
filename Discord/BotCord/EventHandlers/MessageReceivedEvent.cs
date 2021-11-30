@@ -11,7 +11,7 @@ namespace BotCord.EventHandlers
 {
     public static class MessageReceivedEvent
     {
-        private static readonly string LogPrefix = $"[{nameof(MessageReceivedEvent)}] ";
+        public static readonly string LogPrefix = nameof(MessageReceivedEvent);
         public static Task Handle(SocketMessage msg)
         {
             Log.Debug("New message (\"" + msg.Content + "\") from " + msg.Author.Username, LogPrefix);

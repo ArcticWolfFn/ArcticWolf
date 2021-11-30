@@ -16,7 +16,7 @@ namespace BotCord.Controllers
     public class DiscordController : ControllerBase
     {
         // Logging
-        private readonly string LOG_PREFIX = $"[{nameof(DiscordController)}] ";
+        private readonly string LOG_PREFIX = nameof(DiscordController);
 
         // Discord
         public static DiscordSocketClient DiscordClient;
