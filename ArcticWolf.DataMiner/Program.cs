@@ -54,10 +54,10 @@ namespace ArcticWolf.DataMiner
             }, new Dictionary<string, LogLevel>
             {
                 {"Http", LogLevel.Information },
-                {"CurrentVersionMonitor", LogLevel.Debug },
                 {"NiteStatsApi", LogLevel.Information },
                 {"NiteStatsApi|Calendar", LogLevel.Information },
-                {CurrentVersionMonitor.AES_LOG_PREFIX, LogLevel.Information }
+                {CurrentVersionMonitor.AES_LOG_PREFIX, LogLevel.Debug },
+                {CurrentVersionMonitor.LOG_PREFIX, LogLevel.Debug }
             }
             );
 

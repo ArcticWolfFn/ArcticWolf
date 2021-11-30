@@ -6,10 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Models\Apis\Nitestats\zzy1xrek.ryh~" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="AnyDiff" Version="1.0.88" />
     <PackageReference Include="Config.Net" Version="4.17.0" />
     <PackageReference Include="FortniteDotNet" Version="1.0.5.1" />

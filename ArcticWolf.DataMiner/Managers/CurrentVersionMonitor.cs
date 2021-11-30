@@ -4,35 +4,41 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
-using System.Timers;
 
 namespace ArcticWolf.DataMiner.Managers
 {
     public static class CurrentVersionMonitor
     {
-        private const string LOG_PREFIX = "CurrentVersionMonitor";
+        public const string LOG_PREFIX = "CurrentVersionMonitor";
         public const string AES_LOG_PREFIX = "AesAnalyser";
 
-        private static Timer _updateAesTimer = new(10 * 1000);
-        private static Timer _updateStatusTimer = new(10 * 1000);
+        private static Timer _updateAesTimer;
+        private static Timer _updateStagingServersTimer;
+        private static Timer _updateStatusTimer;
 
         public static void Init()
         {
             AnalyseAesForVersion(Program.Configuration.LastCheckedFnVersion);
 
-            _updateAesTimer.AutoReset = true;
-            _updateAesTimer.Elapsed += _updateAesTimer_Elapsed;
-            _updateAesTimer.Start();
+            _updateAesTimer = new(_updateAesTimer_Elapsed, new AutoResetEvent(true), 0, 1000 * 10);
 
-            _updateStatusTimer.AutoReset = true;
-            _updateStatusTimer.Elapsed += _updateStatusTimer_Elapsed; ;
-            _updateStatusTimer.Start();
+            _updateStagingServersTimer = new Timer(_updateStagingServersTimer_Elapsed, new AutoResetEvent(true), 0, 1000 * 10);
+
+            _updateStatusTimer = new Timer(_updateStatusTimer_Elapsed, new AutoResetEvent(true), 0, 1000 * 10);
 
             Program.BenbotApiClient.NewUpdateAvailable += BenbotApiClient_NewUpdateAvailable;
         }
 
-        private static void _updateStatusTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private static void _updateStagingServersTimer_Elapsed(object state)
+        {
+            var response = Program.NitestatsApiClient.GetStagingServers();
+            Log.Information($"Response contains {response.Count} elements", AES_LOG_PREFIX);
+            FNitePlusBot.Cache.StagingServers = response;
+        }
+
+        private static void _updateStatusTimer_Elapsed(object state)
         {
             Program.BenbotApiClient.GetStatus();
         }
@@ -44,7 +50,7 @@ namespace ArcticWolf.DataMiner.Managers
             AnalyseAesForVersion(e.UpdateVersion.Version);
         }
 
-        private static void _updateAesTimer_Elapsed(object sender, ElapsedEventArgs e)
+        private static void _updateAesTimer_Elapsed(object state)
         {
             AnalyseAesForVersion(Program.Configuration.LastCheckedFnVersion);
         }

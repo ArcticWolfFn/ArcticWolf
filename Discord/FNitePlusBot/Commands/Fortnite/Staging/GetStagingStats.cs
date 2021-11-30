@@ -1,4 +1,5 @@
-﻿using BotCord.Commands;
+﻿using ArcticWolf.DataMiner.Models.Apis.Nitestats.Staging;
+using BotCord.Commands;
 using BotCord.Controllers;
 using BotCord.Extensions;
 using BotCord.Models.Enums;
@@ -20,29 +21,25 @@ namespace FNitePlusBot.Commands.Fortnite.Staging
 
         public override void Handle(SocketMessage msg, string[] msg_args)
         {
-            HttpClient client = new HttpClient();
-            HttpResponseMessage response = new HttpResponseMessage();
-            try
+            Dictionary<string, uint> versionCounts = new();
+
+            foreach (var serverEntry in Cache.StagingServers)
             {
-                response = client.GetAsync("http://localhost:8000/api/staging/stats").Result;
-            }
-            catch (Exception ex)
-            {
-                Log.Error("An error occured while getting the staging data: " + ex.Message, LOG_PREFIX);
-                msg.Reply("An error occured while fetching the server statistics (Error message: " + ex.Message + ")");
-                return;
+                Server server = serverEntry.Value;
+                if (!versionCounts.ContainsKey(server.Version))
+                {
+                    versionCounts.Add(server.Version, 1);
+                }
+                else
+                {
+                    var versionCount = versionCounts.First(x => x.Key == server.Version);
+                    versionCounts.Remove(versionCount.Key);
+                    versionCounts.Add(versionCount.Key, versionCount.Value + 1);
+                }
+                
             }
 
-            if (response.IsSuccessStatusCode)
-            {
-                string data = response.Content.ReadAsStringAsync().Result;
-                var stats = JsonConvert.DeserializeObject<Dictionary<string, int>>(data);
-                msg.Reply(null, false, StatsMessage.GetMessage(stats));
-            }
-            else
-            {
-                msg.Reply("An error occured while fetching the server statistics (Response code: " + response.StatusCode + ")");
-            }
+            msg.Reply(null, false, StatsMessage.GetMessage(versionCounts));
         }
 
         public override StatusReport Init()

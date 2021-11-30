@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\ArcticWolf.DataMiner.Models\ArcticWolf.DataMiner.Models.csproj" />
     <ProjectReference Include="..\BotCord\BotCord.csproj" />
   </ItemGroup>
 

@@ -6,6 +6,7 @@ using ArcticWolf.DataMiner.Models;
 using ArcticWolf.DataMiner.Models.Apis.Nitestats;
 using ArcticWolf.DataMiner.Models.Apis.Nitestats.Calendar.Channels;
 using ArcticWolf.DataMiner.Models.Apis.Nitestats.Calendar.Channels.States;
+using ArcticWolf.DataMiner.Models.Apis.Nitestats.Staging;
 using ArcticWolf.DataMiner.Models.Discord;
 using ArcticWolf.Storage;
 using ArcticWolf.Storage.Constants;
@@ -158,20 +159,6 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                 }
 
                 _ = dbContext.SaveChanges();
-            }
-        }
-
-        private void ErrorHandler(object sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
-        {
-            if (e.ErrorContext.Error.Message.StartsWith("Could not find member "))
-            {
-                // do something...
-                Log.Error($"(NewMemeber) Detected a new member '{e.ErrorContext.Member}'", DATA_PARSER_LOG_PREFIX);
-                Log.Error($"(NewMemeber) Path: '{e.ErrorContext.Path}'", DATA_PARSER_LOG_PREFIX);
-                Log.Error($"(NewMemeber) Error Message: '{e.ErrorContext.Error.Message}'", DATA_PARSER_LOG_PREFIX);
-
-                // hide the error
-                e.ErrorContext.Handled = true;
             }
         }
 
@@ -484,6 +471,19 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
             dbContext.SaveChanges();
 
             // ToDo: do validation: No duplicate time spans for each flag
+        }
+
+        public Dictionary<string, Server> GetStagingServers()
+        {
+            HttpResponse response = new HttpClient().Request("https://api.nitestats.com/v1/epic/staging/fortnite");
+
+            if (!response.Success)
+            {
+                Log.Error("Request to retrieve staging data was not successful!", CALENDAR_LOG_PREFIX);
+                return new Dictionary<string, Server>();
+            }
+
+            return JsonDeserializer.Deserialize<Dictionary<string, Server>>(response.Content);
         }
     }
 }

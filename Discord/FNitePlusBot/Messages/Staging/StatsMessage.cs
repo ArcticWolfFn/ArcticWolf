@@ -9,7 +9,7 @@ namespace FNitePlusBot.Messages.Staging
 {
     public class StatsMessage
     {
-        public static Embed GetMessage(Dictionary<string, int> stats)
+        public static Embed GetMessage(Dictionary<string, uint> stats)
         {
             EmbedBuilder embedBuilder = new()
             {
@@ -17,7 +17,7 @@ namespace FNitePlusBot.Messages.Staging
                 Color = Color.DarkBlue
             };
 
-            foreach (KeyValuePair<string, int> entry in stats)
+            foreach (KeyValuePair<string, uint> entry in stats)
             {
                 embedBuilder.AddField(entry.Key, entry.Value, true);
             }
