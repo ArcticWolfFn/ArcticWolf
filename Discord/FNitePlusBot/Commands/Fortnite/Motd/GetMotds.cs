@@ -20,6 +20,8 @@ namespace FNitePlusBot.Commands.Fortnite.Motd
 {
     public class GetMotds : CommandBase
     {
+        public const string LOG_PREFIX = "GetMotdsCommand";
+
         public override void Handle(SocketMessage msg, string[] msg_args)
         {
             HttpClient httpClient = new HttpClient();
@@ -30,7 +32,7 @@ namespace FNitePlusBot.Commands.Fortnite.Motd
             }
             catch (Exception ex)
             {
-                LogController.WriteLine("An error occured while getting the motd data: " + ex.Message, LogController.LogType.Error);
+                Log.Error("An error occured while getting the motd data: " + ex.Message, LOG_PREFIX);
                 msg.Reply("An error occured while fetching the motd data (Error message: " + ex.Message + ")");
                 return;
             }

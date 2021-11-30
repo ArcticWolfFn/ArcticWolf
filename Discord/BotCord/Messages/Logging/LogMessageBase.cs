@@ -16,7 +16,7 @@ namespace BotCord.Messages.Logging
         {
             if (DiscordController.DiscordClient.ConnectionState != ConnectionState.Connected)
             {
-                LogController.WriteLine("[Discord/Logging] Couldn't send log message because the bot is not connected!", LogController.LogType.Error);
+                Log.Error("Couldn't send log message because the bot is not connected!", "Discord|Logging");
                 return false;
             }
 

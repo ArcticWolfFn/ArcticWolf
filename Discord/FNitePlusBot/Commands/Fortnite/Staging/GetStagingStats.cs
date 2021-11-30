@@ -16,6 +16,8 @@ namespace FNitePlusBot.Commands.Fortnite.Staging
 {
     public class GetStagingStats : CommandBase
     {
+        public const string LOG_PREFIX = "GetStagingStatsCommand";
+
         public override void Handle(SocketMessage msg, string[] msg_args)
         {
             HttpClient client = new HttpClient();
@@ -26,7 +28,7 @@ namespace FNitePlusBot.Commands.Fortnite.Staging
             }
             catch (Exception ex)
             {
-                LogController.WriteLine("An error occured while getting the staging data: " + ex.Message, LogController.LogType.Error);
+                Log.Error("An error occured while getting the staging data: " + ex.Message, LOG_PREFIX);
                 msg.Reply("An error occured while fetching the server statistics (Error message: " + ex.Message + ")");
                 return;
             }

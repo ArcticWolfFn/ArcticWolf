@@ -1,11 +1,6 @@
-﻿using ArcticWolf.DataMiner.Common.Logging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System;
 
-namespace ArcticWolf.DataMiner.Extensions
+namespace Logging.Extensions
 {
     public static class LogLevelExtension
     {

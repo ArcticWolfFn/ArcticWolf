@@ -10,7 +10,8 @@ namespace BotCord
 
         public static void Initalize(string[] args)
         {
-            LogController.WriteLine("Booting the bot...");
+            Log.Initalize(new System.Collections.Generic.List<LogVisibility> { LogVisibility.Console }, new System.Collections.Generic.Dictionary<string, LogLevel>());
+            Log.Information("Booting the bot...");
 
             ControllerManager.ParseArguments(args);
             ControllerManager.InitControllers();

@@ -8,6 +8,7 @@ using Config.Net;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading;
@@ -47,16 +48,16 @@ namespace ArcticWolf.DataMiner
 
             // DbContext.FnEventFlags.Include(x => x.TimeSpans).Include(x => x.Modifications);
 
-            Log.Initalize(new System.Collections.Generic.List<Common.Logging.LogVisibility> 
-            { 
-                Common.Logging.LogVisibility.Console 
-            }, new System.Collections.Generic.Dictionary<string, Common.Logging.LogLevel>
+            Log.Initalize(new List<LogVisibility>
             {
-                {"Http", Common.Logging.LogLevel.Information },
-                {"CurrentVersionMonitor", Common.Logging.LogLevel.Debug },
-                {"NiteStatsApi", Common.Logging.LogLevel.Information },
-                {"NiteStatsApi|Calendar", Common.Logging.LogLevel.Information },
-                {CurrentVersionMonitor.AES_LOG_PREFIX, Common.Logging.LogLevel.Information }
+                LogVisibility.Console 
+            }, new Dictionary<string, LogLevel>
+            {
+                {"Http", LogLevel.Information },
+                {"CurrentVersionMonitor", LogLevel.Debug },
+                {"NiteStatsApi", LogLevel.Information },
+                {"NiteStatsApi|Calendar", LogLevel.Information },
+                {CurrentVersionMonitor.AES_LOG_PREFIX, LogLevel.Information }
             }
             );
 

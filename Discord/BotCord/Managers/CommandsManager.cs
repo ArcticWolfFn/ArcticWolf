@@ -43,31 +43,31 @@ namespace BotCord.Managers
 
         public static void InitCommands()
         {
-            LogController.WriteLine(LOG_PREFIX + "Init Commands...");
+            Log.Information("Init Commands...", LOG_PREFIX);
 
             foreach (CommandInfo commandInfo in CommandsList.OrderBy(x => x.InitPriority))
             {
                 InitCommand(commandInfo);
             }
 
-            LogController.WriteLine(LOG_PREFIX + "Init Commands done");
+            Log.Information("Init Commands done", LOG_PREFIX);
         }
 
         private static void InitCommand(CommandInfo commandInfo)
         {
             string commandName = commandInfo.Command.GetClassName();
 
-            LogController.WriteLine(LOG_PREFIX + $"Initialising { commandName } ...", LogController.LogType.Debug);
+            Log.Debug($"Initialising { commandName } ...", LOG_PREFIX);
 
             StatusReport controllerStatusResponse = commandInfo.Command.Init();
 
             if (controllerStatusResponse != StatusReport.OK)
             {
-                LogController.WriteLine(LOG_PREFIX + $"{ commandName } returned " + controllerStatusResponse.ToString(), LogController.LogType.Error);
+                Log.Error($"{ commandName } returned " + controllerStatusResponse.ToString(), LOG_PREFIX);
             }
             else
             {
-                LogController.WriteLine(LOG_PREFIX + $"{ commandName } returned " + controllerStatusResponse.ToString(), LogController.LogType.Success);
+                Log.Information($"{ commandName } returned " + controllerStatusResponse.ToString(), LOG_PREFIX);
             }
         }
 
@@ -75,30 +75,30 @@ namespace BotCord.Managers
         {
             string commandName = commandInfo.Command.GetClassName();
 
-            LogController.WriteLine(LOG_PREFIX + $"Initialising { commandName } ...", LogController.LogType.Debug);
+            Log.Debug($"Initialising { commandName } ...", LOG_PREFIX);
 
             StatusReport controllerStatusResponse = commandInfo.Command.ShutDown();
 
             if (controllerStatusResponse != StatusReport.OK)
             {
-                LogController.WriteLine(LOG_PREFIX + $"{ commandName } returned " + controllerStatusResponse.ToString(), LogController.LogType.Error);
+                Log.Error($"{ commandName } returned " + controllerStatusResponse.ToString(), LOG_PREFIX);
             }
             else
             {
-                LogController.WriteLine(LOG_PREFIX + $"{ commandName } returned " + controllerStatusResponse.ToString(), LogController.LogType.Success);
+                Log.Information($"{ commandName } returned " + controllerStatusResponse.ToString(), LOG_PREFIX);
             }
         }
 
         public static void ShutDownCommands()
         {
-            LogController.WriteLine(LOG_PREFIX + "Shutdown Commands...");
+            Log.Information("Shutdown Commands...", LOG_PREFIX);
 
             foreach (CommandInfo commandInfo in CommandsList.OrderBy(x => x.ShutDownPriority))
             {
                 ShutDownCommand(commandInfo);
             }
 
-            LogController.WriteLine(LOG_PREFIX + "Shutdown Commands done");
+            Log.Information("Shutdown Commands done", LOG_PREFIX);
         }
     }
 }

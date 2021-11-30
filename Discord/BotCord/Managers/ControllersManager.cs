@@ -24,7 +24,6 @@ namespace BotCord.Managers
         /// </summary>
         public static readonly List<ControllerInfo> ControllersList = new()
         {
-            new ControllerInfo(controller: new LogController(), initPriority: 2, shutDownOnInitFail: true, shutDownPriority: 0),
             new ControllerInfo(controller: new ConfigController(), initPriority: 2, shutDownOnInitFail: true, shutDownPriority: 1),
             new ControllerInfo(controller: new DiscordController(), initPriority: 1, shutDownOnInitFail: true, shutDownPriority: 2),
         };
@@ -34,7 +33,7 @@ namespace BotCord.Managers
         /// </summary>
         public static void InitControllers()
         {
-            LogController.WriteLine(LOG_PREFIX + "Initialising controllers...", LogController.LogType.Info);
+            Log.Information("Initialising controllers...", LOG_PREFIX);
 
             foreach (ControllerInfo cInfoItem in ControllersList.OrderByDescending(x => x.InitPriority))
             {
@@ -43,7 +42,7 @@ namespace BotCord.Managers
 
             Console.CancelKeyPress += Console_CancelKeyPress;
 
-            LogController.WriteLine(LOG_PREFIX + "The initialization of the controllers has been completed!", LogController.LogType.Info);
+            Log.Information("The initialization of the controllers has been completed!", LOG_PREFIX);
         }
 
         public static void InitalizeController(ControllerInfo controllerInfo, bool isInitByDiscordController = false)
@@ -57,13 +56,13 @@ namespace BotCord.Managers
 
             string controllerName = controllerInfo.Controller.GetClassName();
 
-            LogController.WriteLine(LOG_PREFIX + $"Initialising { controllerName } ...", LogController.LogType.Debug);
+            Log.Debug($"Initialising { controllerName } ...", LOG_PREFIX);
 
             StatusReport controllerStatusResponse = controllerInfo.Controller.Init();
 
             if (controllerStatusResponse != StatusReport.OK)
             {
-                LogController.WriteLine(LOG_PREFIX + $"{ controllerName } returned " + controllerStatusResponse.ToString(), LogController.LogType.Error);
+                Log.Error($"{ controllerName } returned " + controllerStatusResponse.ToString(), LOG_PREFIX);
 
                 if (controllerInfo.ShutDownOnInitFail)
                 {
@@ -73,7 +72,7 @@ namespace BotCord.Managers
             }
             else
             {
-                LogController.WriteLine(LOG_PREFIX + $"{ controllerName } returned " + controllerStatusResponse.ToString(), LogController.LogType.Success);
+                Log.Information($"{ controllerName } returned " + controllerStatusResponse.ToString(), LOG_PREFIX);
             }
         }
 
@@ -81,11 +80,11 @@ namespace BotCord.Managers
         {
             string controllerName = controllerInfo.Controller.GetClassName();
 
-            LogController.WriteLine(LOG_PREFIX + $"Shutting down { controllerName }...", LogController.LogType.Debug);
+            Log.Debug($"Shutting down { controllerName }...", LOG_PREFIX);
 
             StatusReport controllerStatusResponse = controllerInfo.Controller.ShutDown();
 
-            LogController.WriteLine(LOG_PREFIX + $"{ controllerName } returned " + controllerStatusResponse.ToString(), LogController.LogType.Debug);
+            Log.Debug($"{ controllerName } returned " + controllerStatusResponse.ToString(), LOG_PREFIX);
         }
 
         private static void Console_CancelKeyPress(object sender, ConsoleCancelEventArgs e)
@@ -106,7 +105,7 @@ namespace BotCord.Managers
             {
             }
 
-            LogController.WriteLine(LOG_PREFIX + "Shutting down the controllers...", LogController.LogType.Info);
+            Log.Information("Shutting down the controllers...", LOG_PREFIX);
 
             foreach (ControllerInfo controllerInfo in ControllersList.OrderByDescending(x => x.ShutDownPriority))
             {
@@ -129,7 +128,7 @@ namespace BotCord.Managers
                 {
                     case "-debug":
                         Bot.Debug = true;
-                        LogController.WriteLine(LOG_PREFIX + "Debug mode activated", LogController.LogType.Debug);
+                        Log.Debug("Debug mode activated", LOG_PREFIX);
                         break;
                     default:
                         break;

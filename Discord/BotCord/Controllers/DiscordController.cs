@@ -29,7 +29,7 @@ namespace BotCord.Controllers
         {
             if (string.IsNullOrWhiteSpace(ConfigController.Config.DiscordBotToken))
             {
-                LogController.WriteLine(LOG_PREFIX + "The 'DiscordBotToken' in the config file is empty. It is required to start the Discord bot.", LogController.LogType.Error);
+                Log.Error("The 'DiscordBotToken' in the config file is empty. It is required to start the Discord bot.", LOG_PREFIX);
                 return StatusReport.FatalError;
             }
 
@@ -70,7 +70,7 @@ namespace BotCord.Controllers
 
         private void InitDiscordDependentControllers()
         {
-            LogController.WriteLine(LOG_PREFIX + "Init of discord-dependent controllers...");
+            Log.Information("Init of discord-dependent controllers...", LOG_PREFIX);
 
             foreach (ControllerInfo controllerInfo in ControllerManager.ControllersList.Where(x => x.CanOnlyRunIfConnectedToDiscord)
                 .OrderByDescending(x => x.InitPriority))
@@ -78,13 +78,13 @@ namespace BotCord.Controllers
                 ControllerManager.InitalizeController(controllerInfo, isInitByDiscordController: true);
             }
 
-            LogController.WriteLine(LOG_PREFIX + "Init of discord-dependent controllers done!");
+            Log.Information("Init of discord-dependent controllers done!", LOG_PREFIX);
 
         }
 
         private void ShutDownDiscordDependentControllers()
         {
-            LogController.WriteLine(LOG_PREFIX + "Shutdown of discord-dependent controllers...");
+            Log.Information("Shutdown of discord-dependent controllers...", LOG_PREFIX);
 
             foreach (ControllerInfo controllerInfo in ControllerManager.ControllersList.Where(x => x.CanOnlyRunIfConnectedToDiscord)
                 .OrderByDescending(x => x.ShutDownPriority))
@@ -92,12 +92,12 @@ namespace BotCord.Controllers
                 ControllerManager.ShutDownController(controllerInfo);
             }
 
-            LogController.WriteLine(LOG_PREFIX + "Shutdown of discord-dependent controllers done!");
+            Log.Information("Shutdown of discord-dependent controllers done!", LOG_PREFIX);
         }
 
         private Task DSclient_Log(Discord.LogMessage arg)
         {
-            LogController.WriteLine("[Discord] " + arg.Message);
+            Log.Information("[Discord] " + arg.Message);
             return Task.CompletedTask;
         }
 

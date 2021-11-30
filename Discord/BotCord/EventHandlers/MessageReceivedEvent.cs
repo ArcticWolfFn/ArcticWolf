@@ -14,7 +14,7 @@ namespace BotCord.EventHandlers
         private static readonly string LogPrefix = $"[{nameof(MessageReceivedEvent)}] ";
         public static Task Handle(SocketMessage msg)
         {
-            Controllers.LogController.WriteLine(LogPrefix + "New message (\"" + msg.Content + "\") from " + msg.Author.Username, Controllers.LogController.LogType.Debug);
+            Log.Debug("New message (\"" + msg.Content + "\") from " + msg.Author.Username, LogPrefix);
             if (msg.Content.StartsWith(Controllers.ConfigController.Config.BotPrefix))
             {
                 HandleCommand(msg);

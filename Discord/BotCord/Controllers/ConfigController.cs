@@ -35,7 +35,7 @@ namespace BotCord.Controllers
                 }
                 catch (Exception ex)
                 {
-                    LogController.WriteLine(LOG_PREFIX + "Couldn't create config file. Error: " + ex.Message, LogController.LogType.Error);
+                    Log.Error("Couldn't create config file. Error: " + ex.Message, LOG_PREFIX);
                     return StatusReport.FatalError;
                 }
             }
@@ -47,7 +47,7 @@ namespace BotCord.Controllers
             }
             catch (Exception ex)
             {
-                LogController.WriteLine(LOG_PREFIX + "Couldn't read config file. Error: " + ex.Message, LogController.LogType.Error);
+                Log.Error("Couldn't read config file. Error: " + ex.Message, LOG_PREFIX);
                 return StatusReport.FatalError;
             }
 
@@ -63,7 +63,7 @@ namespace BotCord.Controllers
                 }
                 catch (Exception ex)
                 {
-                    LogController.WriteLine(LOG_PREFIX + "Couldn't convert config file to JSON object. Error: " + ex.Message, LogController.LogType.Error);
+                    Log.Error("Couldn't convert config file to JSON object. Error: " + ex.Message, LOG_PREFIX);
                     return StatusReport.FatalError;
                 }
             }
@@ -75,7 +75,7 @@ namespace BotCord.Controllers
 
             if (Config.MainDiscordGuildID == 0)
             {
-                LogController.WriteLine(LOG_PREFIX + "MainDiscordGuildID can't be 0", LogController.LogType.Error);
+                Log.Error("MainDiscordGuildID can't be 0", LOG_PREFIX);
                 return StatusReport.FatalError;
             }
 
