@@ -137,12 +137,6 @@
     <ClCompile Include="veh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="game\GIObject.cpp">
-      <Filter>Source Files\game</Filter>
-    </ClCompile>
-    <ClCompile Include="game\Core\Character.cpp">
-      <Filter>Source Files\game\Core</Filter>
-    </ClCompile>
     <ClCompile Include="game\Fort\FortPlayerCharacter.cpp">
       <Filter>Source Files\game\Fort</Filter>
     </ClCompile>
