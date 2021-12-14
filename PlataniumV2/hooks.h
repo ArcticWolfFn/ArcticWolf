@@ -184,8 +184,8 @@ namespace Hooks
 		CurlSetOpt = decltype(CurlSetOpt)(CurlSetAddress);
 
 
-		if (VEH::Init()) {
-			printfc(FOREGROUND_GREEN, "Here we go\n");
+		if (VEH::Init()) 
+		{
 			VEH::AddHook(CurlEasySetOpt, CurlEasySetOptHook);
 		}
 		
@@ -207,20 +207,7 @@ namespace Hooks
 
 		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 
-		/*printfc(FOREGROUND_BLUE, "Getting add");
-
-		auto FNameToStringAdd = Util::FindPattern(Patterns::New::FNameToString, Masks::New::FNameToString);
-		VALIDATE_ADDRESS(FNameToStringAdd, XOR("Failed to find FNameToStringAdd Address."));
-
-		auto offset = *reinterpret_cast<int32_t*>(FNameToStringAdd + 6);
-		FNameToStringAdd = FNameToStringAdd + 10 + offset;
-
-		FNameToString = decltype(FNameToString)(FNameToStringAdd);
-
-		printfc(FOREGROUND_BLUE, "Got add");*/
-
-		//Used for mostly everything.
-		//Tested from 12.41 to latest
+		// Engine
 		auto GEngineAdd = Util::FindPattern(Patterns::bGlobal::GEngine, Masks::bGlobal::GEngine);
 		VALIDATE_ADDRESS(GEngineAdd, XOR("Failed to find GEngine Address."));
 
@@ -235,36 +222,22 @@ namespace Hooks
 		gProcessEventAdd = ProcessEventAdd;
 
 		//Used for Camera Hooking.
-		//Tested from 12.41 to latest
 		auto GetViewPointAdd = Util::FindPattern(Patterns::bGlobal::GetViewPoint, Masks::bGlobal::GetViewPoint);
 		VALIDATE_ADDRESS(GetViewPointAdd, XOR("Failed to find GetViewPoint Address."));
 
 		GetViewPoint = decltype(GetViewPoint)(GetViewPointAdd);
 
 		//Used for getting UObjects names.
-		//Tested from 12.41 to latest
 		auto GONIAdd = Util::FindPattern(Patterns::bGlobal::GONI, Masks::bGlobal::GONI);
 		VALIDATE_ADDRESS(GONIAdd, XOR("Failed to find GetObjectName Address."));
 
 		GetObjectNameInternal = decltype(GetObjectNameInternal)(GONIAdd);
 
 		//Used for getting UObjects full names.
-		/*if (gVersion < 14.30f)
-		{
-			//Tested only on 12.41 and 12.61.
-			auto GetObjectFullNameAdd = Util::FindPattern(Patterns::Oldies::bGlobal::GetObjectFullName, Masks::Oldies::bGlobal::GetObjectFullName);
-			VALIDATE_ADDRESS(GetObjectFullNameAdd, XOR("Failed to find GetObjectFullName Address."));
+		auto GetObjectFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetObjectFullName, Masks::bGlobal::GetObjectFullName);
+		VALIDATE_ADDRESS(GetObjectFullNameAdd, XOR("Failed to find GetObjectFullName Address."));
 
-			GetObjectFullNameInternal = decltype(GetObjectFullNameInternal)(GetObjectFullNameAdd);
-		}
-		else
-		{*/
-			//14.30^
-			auto GetObjectFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetObjectFullName, Masks::bGlobal::GetObjectFullName);
-			VALIDATE_ADDRESS(GetObjectFullNameAdd, XOR("Failed to find GetObjectFullName Address."));
-
-			GetObjectFullNameInternal = decltype(GetObjectFullNameInternal)(GetObjectFullNameAdd);
-		//}
+		GetObjectFullNameInternal = decltype(GetObjectFullNameInternal)(GetObjectFullNameAdd);
 
 		//Used for getting FFields full names.
 		auto GetFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetFullName, Masks::bGlobal::GetFullName);
@@ -281,14 +254,12 @@ namespace Hooks
 
 
 		//Used to construct objects, mostly used for console stuff.
-		//Tested from 12.41 to latest
 		auto SCOIAdd = Util::FindPattern(Patterns::bGlobal::SCOI, Masks::bGlobal::SCOI);
 		VALIDATE_ADDRESS(SCOIAdd, XOR("Failed to find SCOI Address."));
 
 		StaticConstructObject = decltype(StaticConstructObject)(SCOIAdd);
 
 		//Used to load objects.
-		//Tested from 12.41 to latest
 		auto SLOIAdd = Util::FindPattern(Patterns::bGlobal::SLOI, Masks::bGlobal::SLOI);
 		VALIDATE_ADDRESS(SLOIAdd, XOR("Failed to find SLOI Address."));
 
@@ -307,10 +278,6 @@ namespace Hooks
 		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
 		MH_EnableHook(reinterpret_cast<void*>(ProcessEventAdd));
 
-		//GetViewPoint Hooking.
-		/*MH_CreateHook(reinterpret_cast<void*>(GetViewPointAdd), GetViewPointDetour, reinterpret_cast<void**>(&GetViewPoint));
-		MH_EnableHook(reinterpret_cast<void*>(GetViewPointAdd));*/
-
 		auto Map = APOLLO_TERRAIN;
 
 		gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
@@ -321,7 +288,6 @@ namespace Hooks
 			auto nObj = UE4::GetObjectFullName(gPlaylist);
 			PLOGV.printf("Hooks: Playlist points to %s", nObj.c_str());
 		}
-		// Start(Map);
 
 		PLOGV << "End Hooks::Misc";
 

@@ -57,7 +57,6 @@ namespace UE4
 	inline void Free(void* buffer)
 	{
 		FreeInternal(buffer);
-		//std::free(buffer);
 	}
 
 	//The same as above but for FFields.

@@ -1,6 +1,5 @@
 ﻿#pragma once
 #include "mods.h"
-#include "server.h"
 #include "sdk.h"
 #include "mods.h"
 
@@ -72,10 +71,12 @@ namespace NeoRoyale
 
 		auto bHasServerFinishedLoading = reinterpret_cast<bool*>(reinterpret_cast<uintptr_t>(NeoPlayer.Controller) + HasServerFinishedLoadingOffset);
 
-		if (Util::IsBadReadPtr(bHasServerFinishedLoading)) {
+		if (Util::IsBadReadPtr(bHasServerFinishedLoading)) 
+		{
 			PLOGE << "bHasServerFinishedLoading is null";
 		}
-		else {
+		else 
+		{
 			*bHasServerFinishedLoading = true;
 
 			auto bHasClientFinishedLoadingOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"bHasClientFinishedLoading"));
@@ -219,8 +220,6 @@ namespace NeoRoyale
 
 			NeoPlayer.ToggleInfiniteAmmo();
 
-			NeoPlayer.ApplyOverride();
-
 			//LOL
 			NeoPlayer.ExecuteConsoleCommand(XOR(L"god"));
 			NeoPlayer.SetMovementSpeed(1.1);
@@ -233,25 +232,9 @@ namespace NeoRoyale
 				UFunctions::TeleportToSpawn();
 			}
 
-			/*if (gVersion > 14.60f)
-			{*/
-				UFunctions::SetPlaylist();
+			UFunctions::SetPlaylist();
 
-				UFunctions::SetGamePhase();
-			//}
-
-			/*if (gVersion == 14.60f)
-			{
-				UFunctions::LoadAndStreamInLevel(GALACTUS_EVENT_MAP);
-			}
-			else if (gVersion == 12.41f)
-			{
-				UFunctions::LoadAndStreamInLevel(JERKY_EVENT_MAP);
-			}
-			else if (gVersion == 12.61f)
-			{
-				UFunctions::LoadAndStreamInLevel(DEVICE_EVENT_MAP);
-			}*/
+			UFunctions::SetGamePhase();
 
 			InitCombos();
 
@@ -260,10 +243,6 @@ namespace NeoRoyale
 			UFunctions::ServerReadyToStartMatch();
 
 			CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&Thread), nullptr, NULL, nullptr);
-
-			UFunctions::ConsoleLog(XOR(L"\n\nWelcome to Neonite++\nMade with ♥ By Kemo (@xkem0x on twitter)."));
-
-			//ConnectServer();
 
 			bIsInit = !bIsInit;
 		}

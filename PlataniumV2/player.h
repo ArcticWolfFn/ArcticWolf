@@ -20,9 +20,21 @@ public:
 	UFunction* IsParachuteForcedOpenFn;
 	UFunction* IsJumpProvidingForceFn;
 	UFunction* SetVisibityFn;
+	UFunction* GetAnimInstance;
+	UFunction* K2_TeleportTo;
+	UFunction* K2_GetActorLocation;
+	UFunction* CM_Summon;
+	UFunction* PossessFn;
+	UFunction* TeleportToSkyDive;
+	UFunction* GetCurrentActiveMontage;
+	UFunction* Montage_Stop;
+	UFunction* SetSkeletalMeshFn;
+	UFunction* UpdatePlayerCustomCharacterPartsVisualization;
+	UFunction* SetMovementModeFn;
 
 	// Cached Objects
 	UObject* Hud;
+	UObject* KismetLib;
 
 	void Setup() {
 		// cache object pointers, they shouldn't change during the match (I hope)
@@ -33,11 +45,24 @@ public:
 		IsParachuteForcedOpenFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteForcedOpen"));
 		IsJumpProvidingForceFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:IsJumpProvidingForce"));
 		SetVisibityFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/CommonUI.CommonActivatableWidget:ActivateWidget"));
+		GetAnimInstance = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
+		K2_TeleportTo = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_TeleportTo"));
+		CM_Summon = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:Summon"));
+		PossessFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
+		TeleportToSkyDive = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawnAthena:TeleportToSkyDive"));
+		GetCurrentActiveMontage = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:GetCurrentActiveMontage"));
+		Montage_Stop = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:Montage_Stop"));
+		SetSkeletalMeshFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkinnedMeshComponent:SetSkeletalMesh"));
+		UpdatePlayerCustomCharacterPartsVisualization = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:UpdatePlayerCustomCharacterPartsVisualization"));
+		K2_GetActorLocation = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_GetActorLocation"));
+		SetMovementModeFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.CharacterMovementComponent:SetMovementMode"));
 
 		Hud = UE4::FindObject<UObject*>(XOR(L"AthenaHUDMenu_C /Engine/Transient.FortEngine_"));
+		KismetLib = UE4::FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
 	}
 
 	// not working in season 15
+	// idk what this does tbh
 	void SetupAbilities() {
 		if (!Util::IsBadReadPtr(Pawn)) {
 			UObject* jumpAbility = UE4::FindObject<UObject*>(L"Class /Script/FortniteGame.FortGameplayAbility_Jump");
@@ -105,11 +130,15 @@ public:
 			this->UpdateMesh();
 		}
 
-		auto FUNC_GetAnimInstance = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkeletalMeshComponent:GetAnimInstance"));
+		if (Util::IsBadReadPtr(GetAnimInstance))
+		{
+			PLOGE << "GetAnimInstance is nullptr";
+			return;
+		}
 
 		USkeletalMeshComponent_GetAnimInstance_Params GetAnimInstance_Params;
 
-		ProcessEvent(this->Mesh, FUNC_GetAnimInstance, &GetAnimInstance_Params);
+		ProcessEvent(this->Mesh, GetAnimInstance, &GetAnimInstance_Params);
 
 		this->AnimInstance = GetAnimInstance_Params.ReturnValue;
 	}
@@ -146,13 +175,11 @@ public:
 
 	void TeleportTo(FVector Location, FRotator Rotation)
 	{
-		const auto FUNC_K2_TeleportTo = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_TeleportTo"));
-
 		AActor_K2_TeleportTo_Params K2_TeleportTo_Params;
 		K2_TeleportTo_Params.DestLocation = Location;
 		K2_TeleportTo_Params.DestRotation = Rotation;
 
-		ProcessEvent(this->Pawn, FUNC_K2_TeleportTo, &K2_TeleportTo_Params);
+		ProcessEvent(this->Pawn, K2_TeleportTo, &K2_TeleportTo_Params);
 	}
 
 	void Summon(const wchar_t* ClassToSummon)
@@ -166,15 +193,14 @@ public:
 
 		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:Summon"));
-
 		const FString ClassName = ClassToSummon;
 
 		UCheatManager_Summon_Params params;
 		params.ClassName = ClassName;
 
-		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
-		printf("\n[NeoRoyale] %ls was summoned!\n", ClassToSummon);
+		ProcessEvent(CheatManagerFinder.GetObj(), CM_Summon, &params);
+
+		PLOGI.printf("%ls was summoned!", ClassToSummon);
 	}
 
 	void Possess()
@@ -184,33 +210,25 @@ public:
 			UpdatePlayerController();
 		}
 
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Controller:Possess"));
-
 		AController_Possess_Params params;
 		params.InPawn = this->Pawn;
 
-		ProcessEvent(this->Controller, fn, &params);
+		ProcessEvent(this->Controller, PossessFn, &params);
 		printf(XOR("\n[NeoRoyale] PlayerPawn was possessed!\n"));
 	}
 
 	auto StartSkydiving(float height)
 	{
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawnAthena:TeleportToSkyDive"));
-
 		AFortPlayerPawnAthena_TeleportToSkyDive_Params params;
 		params.HeightAboveGround = height;
 
-		ProcessEvent(this->Pawn, fn, &params);
-		printf("\nSkydiving!, Redeploying at %fm.\n", height);
+		ProcessEvent(this->Pawn, TeleportToSkyDive, &params);
+
+		PLOGI.printf("Skydiving!, Redeploying at %fm.", height);
 	}
 
 	bool IsJumpProvidingForce()
 	{
-		if (Util::IsBadReadPtr(IsInAircraftFn)) {
-			PLOGE << "Failed to check if jump is providing force: Function is nullptr";
-			return NULL;
-		}
-
 		ACharacter_IsJumpProvidingForce_Params params;
 
 		ProcessEvent(this->Pawn, IsJumpProvidingForceFn, &params);
@@ -226,23 +244,19 @@ public:
 			this->UpdateAnimInstance();
 		}
 
-		auto FUNC_GetCurrentActiveMontage = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:GetCurrentActiveMontage"));
-
 		UAnimInstance_GetCurrentActiveMontage_Params GetCurrentActiveMontage_Params;
 
-		ProcessEvent(this->AnimInstance, FUNC_GetCurrentActiveMontage, &GetCurrentActiveMontage_Params);
+		ProcessEvent(this->AnimInstance, GetCurrentActiveMontage, &GetCurrentActiveMontage_Params);
 
 		auto CurrentPlayingMontage = GetCurrentActiveMontage_Params.ReturnValue;
 
 		if (CurrentPlayingMontage && UE4::GetObjectFirstName(CurrentPlayingMontage).starts_with(XOR(L"Emote_")))
 		{
-			auto FUNC_Montage_Stop = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.AnimInstance:Montage_Stop"));
-
 			UAnimInstance_Montage_Stop_Params Montage_Stop_Params;
 			Montage_Stop_Params.InBlendOutTime = 0;
 			Montage_Stop_Params.Montage = CurrentPlayingMontage;
 
-			ProcessEvent(this->AnimInstance, FUNC_Montage_Stop, &Montage_Stop_Params);
+			ProcessEvent(this->AnimInstance, Montage_Stop, &Montage_Stop_Params);
 		}
 	}
 
@@ -308,8 +322,6 @@ public:
 			this->UpdateMesh();
 		}
 
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.SkinnedMeshComponent:SetSkeletalMesh"));
-
 		std::wstring MeshName = meshname;
 
 		std::wstring name = MeshName + L"." + MeshName;
@@ -322,65 +334,8 @@ public:
 			params.NewMesh = Mesh;
 			params.bReinitPose = false;
 
-			ProcessEvent(this->Mesh, fn, &params);
+			ProcessEvent(this->Mesh, SetSkeletalMeshFn, &params);
 		}
-	}
-
-	void ApplyOverride()
-	{
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
-		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
-		ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
-
-		auto Hero = UE4::FindObject<UObject*>(XOR(L"FortHero /Engine/Transient.FortHero_"));
-
-		/*
-		 * CharacterParts Array Indexes (typeof UCustomCharacterPart)
-		 * 0 - Body (e.g: CP_031_Athena_Body_Retro)
-		 * 1 - Head (e.g: M_Med_HIS_Diego_Head_01)
-		 * 2 - Hat (e.g: M_Med_HIS_Diego_Hat_02)
-		 * 3 - Charm (e.g: M_Commando_UR_01_Grenades)
-		 */
-
-		auto CharacterParts = reinterpret_cast<TArray<UObject*>*>(reinterpret_cast<uintptr_t>(Hero) + ObjectFinder::FindOffset(
-			XOR(L"Class /Script/FortniteGame.FortHero"), XOR(L"CharacterParts")));
-
-
-		if (SkinOverride == L"Thanos")
-		{
-			CharacterParts->operator[](1) = UE4::FindObject<UObject*>(XOR(L"CustomCharacterPart /Game/Athena/Heroes/Meshes/Heads/Dev_TestAsset_Head_M_XL.Dev_TestAsset_Head_M_XL"));
-			CharacterParts->operator[](0) = UE4::FindObject<UObject*>(XOR(L"CustomCharacterPart /Game/Athena/Heroes/Meshes/Bodies/Dev_TestAsset_Body_M_XL.Dev_TestAsset_Body_M_XL"));
-		}
-		else if (SkinOverride == L"Chituari")
-		{
-			CharacterParts->operator[](1) = UE4::FindObject<UObject*>(
-				XOR(L"CustomCharacterPart /Game/Characters/CharacterParts/Male/Medium/Heads/CP_Athena_Head_M_AshtonMilo.CP_Athena_Head_M_AshtonMilo"));
-			CharacterParts->operator[](0) = UE4::FindObject<UObject*>(XOR(L"CustomCharacterPart /Game/Athena/Heroes/Meshes/Bodies/CP_Athena_Body_M_AshtonMilo.CP_Athena_Body_M_AshtonMilo"));
-		}
-#ifndef PROD
-		else return;
-#else
-		else
-		{
-			CharacterParts->operator[](1) = FindObject<UObject*>(XOR(L"CustomCharacterPart /Game/Athena/Heroes/Meshes/Heads/Dev_TestAsset_Head_M_XL.Dev_TestAsset_Head_M_XL"));
-			CharacterParts->operator[](0) = FindObject<UObject*>(XOR(L"CustomCharacterPart /Game/Athena/Heroes/Meshes/Bodies/Dev_TestAsset_Body_M_XL.Dev_TestAsset_Body_M_XL"));
-		}
-
-#endif
-
-		auto KismetLib = UE4::FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:ApplyCharacterCosmetics"));
-
-		UFortKismetLibrary_ApplyCharacterCosmetics_Params params;
-		params.WorldContextObject = WorldFinder.GetObj();
-		params.CharacterParts = *CharacterParts;
-		params.PlayerState = PlayerStateFinder.GetObj();
-
-		ProcessEvent(KismetLib, fn, &params);
-
-		printf(XOR("\n[NeoRoyale] Character Part overrides were applied.\n"));
 	}
 
 	void ShowSkin()
@@ -388,14 +343,12 @@ public:
 		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
 		ObjectFinder PlayerStateFinder = PawnFinder.Find(XOR(L"PlayerState"));
 
-		auto KismetLib = UE4::FindObject<UObject*>(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"));
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:UpdatePlayerCustomCharacterPartsVisualization"));
-
 		UFortKismetLibrary_UpdatePlayerCustomCharacterPartsVisualization_Params params;
 		params.PlayerState = PlayerStateFinder.GetObj();
 
-		ProcessEvent(KismetLib, fn, &params);
-		printf(XOR("\n[NeoRoyale] Character Parts should be visible now!.\n"));
+		ProcessEvent(KismetLib, UpdatePlayerCustomCharacterPartsVisualization, &params);
+
+		PLOGI << "Character Parts should be visible now";
 	}
 
 	auto EquipWeapon(const wchar_t* weaponname, int guid = rand())
@@ -491,11 +444,9 @@ public:
 
 	auto GetLocation() -> FVector
 	{
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_GetActorLocation"));
-
 		AActor_K2_GetActorLocation_Params params;
 
-		ProcessEvent(this->Pawn, fn, &params);
+		ProcessEvent(this->Pawn, K2_GetActorLocation, &params);
 
 		return params.ReturnValue;
 	}
@@ -506,14 +457,12 @@ public:
 
 		ObjectFinder CharMovementFinder = PawnFinder.Find(XOR(L"CharacterMovement"));
 
-		auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.CharacterMovementComponent:SetMovementMode"));
-
 		UCharacterMovementComponent_SetMovementMode_Params params;
 
 		params.NewMovementMode = NewMode;
 		params.NewCustomMode = CustomMode;
 
-		ProcessEvent(CharMovementFinder.GetObj(), fn, &params);
+		ProcessEvent(CharMovementFinder.GetObj(), SetMovementModeFn, &params);
 	}
 
 	auto Fly(bool bIsFlying)
@@ -610,7 +559,7 @@ public:
 		PlayerControllerBools->bInfiniteAmmo = true;
 		PlayerControllerBools->bInfiniteMagazine = true;
 
-		printf(XOR("\n[NeoRoyale] You should have infinite ammo now!\n"));
+		PLOGD << "Applied infinite ammo";
 	}
 
 	auto ExecuteConsoleCommand(const wchar_t* command)
@@ -628,38 +577,16 @@ public:
 		params.SpecificPlayer = this->Controller;
 
 		ProcessEvent(KismetSysLib, fn, &params);
-		printf(XOR("\n[NeoRoyale] Executed a console command!\n"));
+		PLOGD << "Executed a console command";
 	}
 
 	auto Skydive()
 	{
-		/*
-		if (this->IsSkydiving())
-		{
-			auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:EndSkydiving"));
-
-			ProcessEvent(this->Pawn, fn, nullptr);
-		}*/
-
-		/*auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BeginSkydiving"));
-
-		AFortPlayerPawn_BeginSkydiving_Params params;
-		params.bFromBus = true;
-
-		ProcessEvent(this->Pawn, fn, &params);*/
-
 		this->SetMovementMode(EMovementMode::MOVE_Custom, 4);
 	}
 
 	auto ForceOpenParachute()
 	{
-		/*
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:BP_ForceOpenParachute"));
-
-		Empty_Params params;
-
-		ProcessEvent(this->Pawn, fn, &params);
-		*/
 		this->SetMovementMode(EMovementMode::MOVE_Custom, 3);
 	}
 
@@ -703,7 +630,7 @@ public:
 
 			this->EquipWeapon(Weapon.c_str());
 
-			printf(XOR("\n[NeoRoyale] Equipped the pickaxe!\n"));
+			PLOGI << "Equiped pickaxe";
 		}
 	}
 };

@@ -19,6 +19,9 @@
     <Filter Include="Header Files\minhook">
       <UniqueIdentifier>{9a328ea9-82a4-4863-b445-d19753761a54}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\curl">
+      <UniqueIdentifier>{3455e2a0-d580-44a3-a636-0098d0f27c13}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -43,15 +46,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="url.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="system.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="curlver.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="curl.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="patterns.h">
@@ -84,17 +78,20 @@
     <ClInclude Include="neoroyale.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="server.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="player.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="kismet.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="sdk.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="curl.h">
+      <Filter>Header Files\curl</Filter>
+    </ClInclude>
+    <ClInclude Include="curlver.h">
+      <Filter>Header Files\curl</Filter>
+    </ClInclude>
+    <ClInclude Include="system.h">
+      <Filter>Header Files\curl</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

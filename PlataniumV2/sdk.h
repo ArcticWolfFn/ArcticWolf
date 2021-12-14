@@ -36,29 +36,44 @@ namespace SDK {
 		ProcessEvent(AbilitySystemComponent, BP_ApplyGameplayEffectToSelf, &Params);
 	}
 
+	static UObject** AbilitySystemComponent = nullptr;
+	static UObject* DefaultGameplayEffect = nullptr;
+	static TArray<struct FGameplayAbilitySpecDef>* GrantedAbilities = nullptr;
+
 	inline static void GrantGameplayAbility(UObject* TargetPawn, UObject* GameplayAbilityClass)
 	{
-		UObject** AbilitySystemComponent = reinterpret_cast<UObject**>(__int64(TargetPawn) + static_cast<__int64>(ObjectFinder::FindOffset(L"Class /Script/FortniteGame.FortPawn", L"AbilitySystemComponent")));
+		if (Util::IsBadReadPtr(AbilitySystemComponent)) 
+		{
+			AbilitySystemComponent = reinterpret_cast<UObject**>(__int64(TargetPawn) + static_cast<__int64>(ObjectFinder::FindOffset(L"Class /Script/FortniteGame.FortPawn", L"AbilitySystemComponent")));
+		}
 		
 		if (Util::IsBadReadPtr(AbilitySystemComponent)) {
 			PLOGE << "AbilitySystemComponent is null";
 			return;
 		}
 
-		static UObject* DefaultGameplayEffect = UE4::FindObject<UObject*>(L"GE_Athena_PurpleStuff_C /Game/Athena/Items/Consumables/PurpleStuff/GE_Athena_PurpleStuff.Default__GE_Athena_PurpleStuff_C");
+		if (Util::IsBadReadPtr(DefaultGameplayEffect))
+		{
+			DefaultGameplayEffect = UE4::FindObject<UObject*>(L"GE_Athena_PurpleStuff_C /Game/Athena/Items/Consumables/PurpleStuff/GE_Athena_PurpleStuff.Default__GE_Athena_PurpleStuff_C");
+		}
+
 		if (!DefaultGameplayEffect)
 		{
 			DefaultGameplayEffect = UE4::FindObject<UObject*>(L"GE_Athena_PurpleStuff_Health_C /Game/Athena/Items/Consumables/PurpleStuff/GE_Athena_PurpleStuff_Health.Default__GE_Athena_PurpleStuff_Health_C");
 		}
 
-		if (Util::IsBadReadPtr(DefaultGameplayEffect)) {
+		if (Util::IsBadReadPtr(DefaultGameplayEffect)) 
+		{
 			PLOGE << "DefaultGameplayEffect is null";
 			return;
 		}
 
-		TArray<struct FGameplayAbilitySpecDef>* GrantedAbilities = reinterpret_cast<TArray<struct FGameplayAbilitySpecDef>*>(__int64(DefaultGameplayEffect) + static_cast<__int64>(ObjectFinder::FindOffset(L"Class /Script/GameplayAbilities.GameplayEffect", L"GrantedAbilities")));
+		if (Util::IsBadReadPtr(GrantedAbilities)) 
+		{
+			GrantedAbilities = reinterpret_cast<TArray<struct FGameplayAbilitySpecDef>*>(__int64(DefaultGameplayEffect) + static_cast<__int64>(ObjectFinder::FindOffset(L"Class /Script/GameplayAbilities.GameplayEffect", L"GrantedAbilities")));
+		}
 
-		if (Util::IsBadReadPtr(DefaultGameplayEffect)) {
+		if (Util::IsBadReadPtr(GrantedAbilities)) {
 			PLOGE << "GrantedAbilities is null";
 			return;
 		}

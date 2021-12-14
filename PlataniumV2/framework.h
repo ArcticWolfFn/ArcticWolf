@@ -34,5 +34,3 @@
 #include "MinHook.h"
 
 #include <plog/Log.h>
-
-static bool showMenu = false;

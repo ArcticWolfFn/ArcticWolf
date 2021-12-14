@@ -4,8 +4,6 @@
 #include "neoroyale.h"
 #include "ue4.h"
 #include "player.h"
-//#include "hwid.h"
-//#include "kismet.h"
 #include <thread>
 
 #ifndef PROD
@@ -38,14 +36,13 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 		Start(Map);
 	}
+
 	else if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
 	{
 		PLOGI << XOR("ReadyToStartMatch called");
 		Init();
 	}
-	else if (wcsstr(nFunc.c_str(), XOR(L"Character:Jump"))) {
-		PLOGD << "Jump event called";
-	}
+
 	else if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && bIsInit && bIsStarted)
 	{
 		PLOGD << "ServerLoadingScreenDropped called";
@@ -54,21 +51,24 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 		LoadMoreClasses();
 	}
+
 	else if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
 	{
 		return nullptr;
 	}
+
 	else if (wcsstr(nFunc.c_str(), XOR(L"SetFullscreenMode")))
 	{
 		return nullptr;
 	}
-	//Toggle our fly function on "fly" command.
+
+	// Fly Command
 	else if (wcsstr(nFunc.c_str(), XOR(L"Fly")) && nObj.starts_with(XOR(L"CheatManager_")))
 	{
 		NeoPlayer.Fly(bIsFlying);
 		bIsFlying = !bIsFlying;
 	}
-	// NOTE: (irma) This is better.
+
 	else if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
 	{
 		NeoPlayer.ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
@@ -77,7 +77,8 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
 	}
 
-	// interact with object (for example open/close door)
+	// Interact with a specific object (for example open/close door)
+	// This currently doesn't really work
 	else if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptInteract")))
 	{
 		struct ServerAttemptInteract

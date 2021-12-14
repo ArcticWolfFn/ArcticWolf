@@ -60,20 +60,6 @@ public:
 		freopen_s(&pFile, "CONOUT$", "w", stdout);
 		freopen_s(&pFile, "CONIN$", "r", stdin);
 
-		/* REPLACED BY PLOG
-		// file logging
-		if (true) {
-			freopen("output.txt", "w", stdout);
-			freopen("error.txt", "w", stderr);
-		}
-
-		// console logging
-		if (false) {
-			FILE* pFile;
-			freopen_s(&pFile, "CONOUT$", "w", stdout);
-			freopen_s(&pFile, "CONIN$", "r", stdin);
-		}*/
-
 		hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
 	}
 

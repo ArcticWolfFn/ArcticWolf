@@ -108,7 +108,6 @@ xcopy "$(TargetPath)" "$(SolutionDir)Build\" /F /I /R /Y</Command>
     <ClInclude Include="finder.h" />
     <ClInclude Include="hooks.h" />
     <ClInclude Include="framework.h" />
-    <ClInclude Include="kismet.h" />
     <ClInclude Include="masks.h" />
     <ClInclude Include="MinHook.h" />
     <ClInclude Include="mods.h" />
@@ -116,7 +115,6 @@ xcopy "$(TargetPath)" "$(SolutionDir)Build\" /F /I /R /Y</Command>
     <ClInclude Include="patterns.h" />
     <ClInclude Include="player.h" />
     <ClInclude Include="sdk.h" />
-    <ClInclude Include="server.h" />
     <ClInclude Include="structs.h" />
     <ClInclude Include="system.h" />
     <ClInclude Include="ue4.h" />

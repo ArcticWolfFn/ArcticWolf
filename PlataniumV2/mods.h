@@ -1,6 +1,5 @@
 #pragma once
 #include "finder.h"
-#include "kismet.h"
 #include "player.h"
 #include "framework.h"
 #include "structs.h"
@@ -136,7 +135,7 @@ namespace UFunctions
 		params.Class = HLODSMActor;
 
 		ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
-		printf(XOR("[NeoRoyale] HLODSM Actor was destroyed."));
+		PLOGD << "HLODSM Actor was destroyed.";
 	}
 
 	//travel to a url
@@ -191,10 +190,13 @@ namespace UFunctions
 		ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
 		ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
 		ObjectFinder GameModeFinder = WorldFinder.Find(L"AuthorityGameMode");
+
 		const auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameMode:StartMatch"));
 		Empty_Params params;
+
 		ProcessEvent(GameModeFinder.GetObj(), fn, &params);
-		printf("\n[Neoroyale] Match started!.\n");
+
+		PLOGI << "Match started!";
 	}
 
 	//Simulates the server telling the game that it's ready to start match
@@ -210,7 +212,7 @@ namespace UFunctions
 		Empty_Params params;
 
 		ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
-		printf(XOR("\n[NeoRoyale] Server is now ready to start match!\n"));
+		PLOGI << "Server is ready to start match";
 	}
 
 	inline void SetPlaylist()
@@ -233,7 +235,7 @@ namespace UFunctions
 
 		ProcessEvent(GameStateFinder.GetObj(), fn, &params);
 
-		printf(XOR("\n[NeoRoyale] Playlist was set!\n"));
+		PLOGD << "Playlist was set";
 	}
 
 	inline void SetGamePhase()
@@ -256,75 +258,8 @@ namespace UFunctions
 
 		ProcessEvent(GameStateFinder.GetObj(), fn, &params);
 
-		printf(XOR("\n[NeoRoyale] Game phase was set!\n"));
+		PLOGD << "Game phase was set";
 	}
-
-	/*
-	inline void AddItemToInventory(AFortInventory* ParentInventory, UObject* ItemToAdd, int ItemCount, FGuid withGUID)
-	{
-		auto fn = FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortInventory:HandleInventoryLocalUpdate"));
-
-		Empty_Params params;
-
-		ProcessEvent(Inventory, fn, &params);
-
-		//This will be used to edit it's entries to set it's GUID
-		UFortWorldItem* WorldItemInstance;
-
-		//This is the instance to be later used in for the Updated Item List. New WorldItems get added to this...
-		TArray<UFortItem*> InventoryItemInstances;
-
-		ParentInventory->HandleInventoryLocalUpdate();
-
-		struct FFortItemEntry TempItemEntry;
-
-		TArray<struct FFortItemEntry> Replicated_Entries;
-
-		TempItemEntry.Count = 1;
-		TempItemEntry.ItemDefiniton = ItemToAdd;
-		TempItemEntry.Durability = 3232.0000;
-		TempItemEntry.LoadedAmmo = 32;
-		TempItemEntry.ItemGUID = withGUID;
-
-
-		//Add the New Item Entry to the Replicated Entries custom variable which is to be later used in setting the ReplicatedEntries in the Inventory Structure...
-		Replicated_Entries.Add(TempItemEntry);
-
-		//Create a new FortItem which is to be casted to FortWorldItem later on so the Entry can be set for the GUID,Count,Level,Durability and etc...
-		WorldItemInstance = static_cast<UFortWorldItem*>(ItemToAdd->CreateTemporaryItemInstanceBP(ItemCount, 3));
-
-		//Set the World Item's Count...
-		WorldItemInstance -> ItemEntry.Count = 1;
-
-		//Set the GUID of the WorldItem, I don't know if you could generate a random GUID by calling a function... we might have to do this manually
-		WorldItemInstance -> ItemEntry.ItemGUID = withGUID;
-
-		//Add our new FortWorldItem to tne InventoryItemInstances variable which will then be used as the ItemInstances for the updated ItemList of the Inventory...
-		InventoryItemInstances.Add(WorldItemInstance);
-
-	   //Adds the FortWorldItem that we had created and set GUID and count to the the ItemInstances Array in the Inventory structure in the Parent Inventory.
-		ParentInventory -> Inventory.ItemInstances.Add(WorldItemInstance);
-
-		//Create a new struct to be later set as the Variable InventoryItemInstances
-		struct FFortItemList UpdatedItemList;
-		//which is then is later used to be the new ItemList for the inventory
-
-		//Finish updating the replicated entries by setting it to our newly updated one.
-		UpdatedItemList.ReplicatedEntries = ReplicatedEntries;
-
-		//Set the ItemInstances list to the newly created one.
-		UpdatedItemList.ItemInstances = InventoryItemInstances;
-
-		//Finish setting the Inventory struct (which is a FFortItemList) to our update ItemList;
-		ParentInventory -> Inventory = UpdatedItemList;
-
-		ParentInventory ->HandleInventoryLocalUpdate();
-		ParentInventory ->ClientForceWorldInventoryUpdate();
-		AFortPlayerState* PawnPlayerState -> static_cast<AFortPlayerState*>(Pawn->PlayerState);
-		PawnPlayerState -> OnRep_AccumulatedItems();
-		PawnPlayerState -> OnRep_QuickbarEquippedItems();
-
-	}*/
 
 	inline void LoadAndStreamInLevel(const wchar_t* EventSequenceMap)
 	{
@@ -399,48 +334,6 @@ namespace UFunctions
 		ProcessEvent(actor, fn, nullptr);
 	}
 
-	inline void SetBodyCustomTextureFromPng(const wchar_t* PngFileFullPath, bool bIsHead = false)
-	{
-		const auto SetTextureParameterValue = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.MaterialInstanceDynamic:SetTextureParameterValue"));
-
-		UMaterialInstanceDynamic_SetTextureParameterValue_Params params;
-		params.ParameterName = KismetFunctions::GetFName(XOR(L"Diffuse"));
-		params.Value = KismetFunctions::ImportPngAsTexture2D(PngFileFullPath);
-
-		for (auto i = 0; i < 6; i++)
-		{
-			auto MaterialInstanceDynamic = UE4::FindObject<UObject*>(
-				XOR(L"MaterialInstanceDynamic /Game/Athena/Apollo/Maps/Apollo_Terrain.Apollo_Terrain:PersistentLevel.PlayerPawn_Athena_C_"), false, false, i);
-			if (MaterialInstanceDynamic)
-			{
-				auto toFind = XOR(L"CharacterPartSkelMesh_Body");
-
-				if (bIsHead)
-				{
-					toFind = XOR(L"CharacterPartSkelMesh_Head");
-				}
-
-				if (UE4::GetObjectFullName(MaterialInstanceDynamic).find(toFind) != std::wstring::npos)
-				{
-					ProcessEvent(MaterialInstanceDynamic, SetTextureParameterValue, &params);
-					return;
-				}
-			}
-		}
-	}
-
-	inline void SetImageFromTexture(UObject* Image, UObject* Texture)
-	{
-		auto SetBrushFromTexture = UE4::FindObject<UFunction*>(XOR(L"Function /Script/UMG.Image:SetBrushFromTexture"));
-
-		SetBrushFromTextureParams SetBrushFromTexture_Params;
-
-		SetBrushFromTexture_Params.Texture = Texture;
-		SetBrushFromTexture_Params.bMatchSize = false;
-
-		ProcessEvent(Image, SetBrushFromTexture, &SetBrushFromTexture_Params);
-	}
-
 	inline void PlayCustomPlayPhaseAlert()
 	{
 		// ToDo: this shit is not working
@@ -463,27 +356,6 @@ namespace UFunctions
 	inline auto StaticLoadObjectEasy(UClass* inClass, const wchar_t* inName, UObject* inOuter = nullptr)
 	{
 		return StaticLoadObject(inClass, inOuter, inName, nullptr, 0, nullptr, false, nullptr);
-	}
-
-	inline void RegionCheck()
-	{
-		auto Qos = UE4::FindObject<UObject*>(XOR(L"QosRegionManager /Engine/Transient.QosRegionManager_"));
-
-		if (Qos == nullptr) {
-			PLOGE << "Qos is null";
-			return;
-		}
-
-		auto RegionDefinitions = *reinterpret_cast<TArray<FQosRegionInfo>*>(reinterpret_cast<uintptr_t>(Qos) + ObjectFinder::FindOffset(
-			XOR(L"Class /Script/Qos.QosRegionManager"), XOR(L"RegionDefinitions")));
-
-		auto RegionId = RegionDefinitions.operator[](0).RegionId.ToString();
-
-		if (!RegionId.starts_with(XOR("NPP")))
-		{
-			// lmao these idiots lol
-			//exit(0);
-		}
 	}
 }
 
@@ -520,7 +392,9 @@ namespace Console
 			);
 
 			pcCheatManager = CheatManager;
-			printf(XOR("[NeoRoyale] Player now has cheatmanager!"));
+
+			PLOGI << "Player now has cheatmanager";
+
 			return true;
 		}
 		return false;
