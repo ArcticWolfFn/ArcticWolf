@@ -92,8 +92,6 @@ namespace NeoRoyale
 				PLOGE << "bHasClientFinishedLoading is null";
 			}
 		}
-
-		NeoPlayer.Setup();
 	}
 
 	inline void InitCombos()
@@ -195,6 +193,8 @@ namespace NeoRoyale
 	inline void Init()
 	{
 		PLOGI << "Init Match";
+
+		NeoPlayer.Setup();
 
 		Console::CheatManager();
 
