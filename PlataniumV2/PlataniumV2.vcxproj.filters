@@ -22,6 +22,24 @@
     <Filter Include="Header Files\curl">
       <UniqueIdentifier>{3455e2a0-d580-44a3-a636-0098d0f27c13}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\game">
+      <UniqueIdentifier>{cfb9888e-aee9-43f4-ae15-385455862d7e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game">
+      <UniqueIdentifier>{b53ed70a-27bb-4b24-981d-e7cf62157e60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\game\Core">
+      <UniqueIdentifier>{4dc15c7a-be07-4f5f-8fe8-ab55d1da97df}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\game\Fort">
+      <UniqueIdentifier>{efeef1cb-8c14-4a17-aa3a-d9ab8240f289}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game\Core">
+      <UniqueIdentifier>{b96f5000-696b-4105-96aa-f66b0a42bc38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\game\Fort">
+      <UniqueIdentifier>{c57b2694-9279-4df5-954e-127f78b6d614}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -93,6 +111,21 @@
     <ClInclude Include="system.h">
       <Filter>Header Files\curl</Filter>
     </ClInclude>
+    <ClInclude Include="game\GIObject.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="game\Core\Character.h">
+      <Filter>Header Files\game\Core</Filter>
+    </ClInclude>
+    <ClInclude Include="game\Fort\FortPlayerCharacter.h">
+      <Filter>Header Files\game\Fort</Filter>
+    </ClInclude>
+    <ClInclude Include="game\FortniteGame.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="game\Engine.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -103,6 +136,21 @@
     </ClCompile>
     <ClCompile Include="veh.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="game\GIObject.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="game\Core\Character.cpp">
+      <Filter>Source Files\game\Core</Filter>
+    </ClCompile>
+    <ClCompile Include="game\Fort\FortPlayerCharacter.cpp">
+      <Filter>Source Files\game\Fort</Filter>
+    </ClCompile>
+    <ClCompile Include="game\FortniteGame.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="game\Engine.cpp">
+      <Filter>Source Files\game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

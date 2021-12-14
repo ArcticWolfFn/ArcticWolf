@@ -5,6 +5,7 @@
 #include "ue4.h"
 #include "player.h"
 #include <thread>
+#include "game/FortniteGame.h"
 
 #ifndef PROD
 //#define LOGGING
@@ -121,7 +122,7 @@ inline void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	{
 		if (bWantsToJump)
 		{
-			NeoPlayer.Jump();
+			FortniteGame::PlayerCharacter.Jump();
 			bWantsToJump = false;
 		}
 

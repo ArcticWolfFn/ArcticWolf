@@ -2,6 +2,7 @@
 #include "mods.h"
 #include "sdk.h"
 #include "mods.h"
+#include "game/FortniteGame.h"
 
 inline std::vector<std::wstring> gWeapons;
 inline std::vector<std::wstring> gBlueprints;
@@ -203,6 +204,8 @@ namespace NeoRoyale
 		NeoPlayer.Summon(XOR(L"PlayerPawn_Athena_C"));
 
 		NeoPlayer.Pawn = ObjectFinder::FindActor(XOR(L"PlayerPawn_Athena_C"));
+
+		FortniteGame::Setup();
 
 		if (NeoPlayer.Pawn == nullptr) {
 			PLOGE << "Player Pawn is null";

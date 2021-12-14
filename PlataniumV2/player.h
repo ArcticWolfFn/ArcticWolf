@@ -13,7 +13,6 @@ public:
 	std::wstring SkinOverride;
 
 	// Cached Functions
-	UFunction* JumpFn;
 	UFunction* IsInAircraftFn;
 	UFunction* IsSkydivingFn;
 	UFunction* IsParachuteOpenFn;
@@ -38,7 +37,6 @@ public:
 
 	void Setup() {
 		// cache object pointers, they shouldn't change during the match (I hope)
-		JumpFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Character:Jump"));
 		IsInAircraftFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerController:IsInAircraft"));
 		IsSkydivingFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsSkydiving"));
 		IsParachuteOpenFn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerPawn:IsParachuteOpen"));
@@ -300,19 +298,6 @@ public:
 		ProcessEvent(this->Pawn, IsParachuteForcedOpenFn, &params);
 
 		return params.ReturnValue;
-	}
-
-	auto Jump()
-	{
-		if (Util::IsBadReadPtr(JumpFn)) {
-			PLOGE << "Failed to jump: Jump function is nullptr";
-			return;
-		}
-
-		PLOGD << "Executed jump event";
-		Empty_Params params;
-
-		ProcessEvent(this->Pawn, JumpFn, &params);
 	}
 
 	auto SetSkeletalMesh(const wchar_t* meshname)

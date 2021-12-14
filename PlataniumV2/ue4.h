@@ -6,6 +6,7 @@
 
 #pragma once
 #include "structs.h"
+#include "util.h"
 
 inline void* (*ProcessEvent)(void*, void*, void*);
 inline int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE);

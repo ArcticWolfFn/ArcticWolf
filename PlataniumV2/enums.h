@@ -63,7 +63,7 @@ enum ECommands
 	NONE
 };
 
-auto str2enum(const std::wstring& str)
+static auto str2enum(const std::wstring& str)
 {
 	if (str.starts_with(L"event")) return EVENT;
 	else if (str.starts_with(L"help")) return HELP;
