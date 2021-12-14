@@ -214,7 +214,7 @@ public:
 		params.InPawn = this->Pawn;
 
 		ProcessEvent(this->Controller, PossessFn, &params);
-		printf(XOR("\n[NeoRoyale] PlayerPawn was possessed!\n"));
+		PLOGD << "PlayerPawn was possessed";
 	}
 
 	auto StartSkydiving(float height)
