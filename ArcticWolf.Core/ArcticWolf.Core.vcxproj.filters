@@ -52,6 +52,9 @@
     <Filter Include="Headerdateien\modules\xorstr">
       <UniqueIdentifier>{2f13b751-c918-4c56-8517-f8955db59e4d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\modules\curl">
+      <UniqueIdentifier>{1cc7ba6a-5350-4b25-aab8-cb568cb6b85c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -126,6 +129,15 @@
     <ClInclude Include="Util.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
+    <ClInclude Include="Hooks.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="curl.h">
+      <Filter>Headerdateien\modules\curl</Filter>
+    </ClInclude>
+    <ClInclude Include="curlver.h">
+      <Filter>Headerdateien\modules\curl</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -183,6 +195,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Util.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Hooks.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>

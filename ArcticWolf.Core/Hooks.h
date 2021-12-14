@@ -5,7 +5,6 @@
 
 #include "url.h"
 #include "curl.h"
-#include "defs.h"
 #include "veh.h"
 #include "patterns.h"
 #include "masks.h"
@@ -14,7 +13,11 @@
 #include "patterns.h"
 #include "patterns.h"
 #include "detours.h"
+#include "curl.h"
 
+const char* URL_PROTOCOL = "https";
+const char* URL_HOST = "localhost";
+const char* URL_PORT = "44366";
 
 //globals
 static void* UnsafeEnvironmentPopupAddress;

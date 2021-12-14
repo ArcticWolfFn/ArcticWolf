@@ -156,12 +156,15 @@
     <ClInclude Include="Array.h" />
     <ClInclude Include="CameraTypes.h" />
     <ClInclude Include="CoreNetTypes.h" />
+    <ClInclude Include="curl.h" />
+    <ClInclude Include="curlver.h" />
     <ClInclude Include="EngineTypes.h" />
     <ClInclude Include="EnumAsByte.h" />
     <ClInclude Include="Field.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GIObject.h" />
     <ClInclude Include="GObjects.h" />
+    <ClInclude Include="Hooks.h" />
     <ClInclude Include="NameTypes.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectMacros.h" />
@@ -187,6 +190,7 @@
     <ClCompile Include="Field.cpp" />
     <ClCompile Include="GIObject.cpp" />
     <ClCompile Include="GObjects.cpp" />
+    <ClCompile Include="Hooks.cpp" />
     <ClCompile Include="NameTypes.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="pch.cpp">
