@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../GIObject.h"
-#include "../../structs.h"
+#include "GIObject.h"
+#include "structs.h"
 
 
 namespace Game

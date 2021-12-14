@@ -2,7 +2,7 @@
 #include "mods.h"
 #include "sdk.h"
 #include "mods.h"
-#include "game/FortniteGame.h"
+#include "FortniteGame.h"
 
 inline std::vector<std::wstring> gWeapons;
 inline std::vector<std::wstring> gBlueprints;

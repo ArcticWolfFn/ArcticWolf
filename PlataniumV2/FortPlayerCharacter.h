@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../Core/Character.h"
+#include "Character.h"
 
 namespace Game
 {

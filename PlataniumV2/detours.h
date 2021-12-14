@@ -5,7 +5,7 @@
 #include "ue4.h"
 #include "player.h"
 #include <thread>
-#include "game/FortniteGame.h"
+#include "FortniteGame.h"
 
 #ifndef PROD
 //#define LOGGING

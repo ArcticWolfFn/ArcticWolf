@@ -2,7 +2,7 @@
 
 #include "GIObject.h"
 #include "FortniteGame.h"
-#include "Fort/FortPlayerCharacter.h"
+#include "FortPlayerCharacter.h"
 
 using namespace Game;
 

@@ -111,19 +111,19 @@
     <ClInclude Include="system.h">
       <Filter>Header Files\curl</Filter>
     </ClInclude>
-    <ClInclude Include="game\GIObject.h">
-      <Filter>Header Files\game</Filter>
-    </ClInclude>
-    <ClInclude Include="game\Core\Character.h">
+    <ClInclude Include="Character.h">
       <Filter>Header Files\game\Core</Filter>
     </ClInclude>
-    <ClInclude Include="game\Fort\FortPlayerCharacter.h">
-      <Filter>Header Files\game\Fort</Filter>
-    </ClInclude>
-    <ClInclude Include="game\FortniteGame.h">
+    <ClInclude Include="Engine.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
-    <ClInclude Include="game\Engine.h">
+    <ClInclude Include="FortniteGame.h">
+      <Filter>Header Files\game</Filter>
+    </ClInclude>
+    <ClInclude Include="FortPlayerCharacter.h">
+      <Filter>Header Files\game\Fort</Filter>
+    </ClInclude>
+    <ClInclude Include="GIObject.h">
       <Filter>Header Files\game</Filter>
     </ClInclude>
   </ItemGroup>
@@ -137,14 +137,20 @@
     <ClCompile Include="veh.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="game\Fort\FortPlayerCharacter.cpp">
+    <ClCompile Include="FortniteGame.cpp">
+      <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="FortPlayerCharacter.cpp">
       <Filter>Source Files\game\Fort</Filter>
     </ClCompile>
-    <ClCompile Include="game\FortniteGame.cpp">
+    <ClCompile Include="Engine.cpp">
       <Filter>Source Files\game</Filter>
     </ClCompile>
-    <ClCompile Include="game\Engine.cpp">
+    <ClCompile Include="GIObject.cpp">
       <Filter>Source Files\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>Source Files\game\Core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,195 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Quelldateien">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="Ressourcendateien">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Headerdateien\game">
+      <UniqueIdentifier>{25a6c0ad-291e-4028-8c5c-4e61272f3ca8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\game">
+      <UniqueIdentifier>{3bda069a-d02b-4aec-8e7b-9dae7b15b167}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\UnrealEngine">
+      <UniqueIdentifier>{99518f37-0f77-4ccf-aa6f-9698500b6326}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\UnrealEngine\Camera">
+      <UniqueIdentifier>{ea5c6367-fa1f-4738-b5d0-7a176b0eb16d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\UnrealEngine\Math">
+      <UniqueIdentifier>{db73103b-7a3d-4025-8395-8b0a19d29b32}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\UnrealEngine">
+      <UniqueIdentifier>{4fc678e0-b93b-4c52-9262-6db714c42f50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\UnrealEngine\Math">
+      <UniqueIdentifier>{856c5986-f3f3-4f8c-9262-a94868874724}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\UnrealEngine\Containers">
+      <UniqueIdentifier>{812f6e74-f63d-4b64-a412-ca533294f09b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\UnrealEngine\Containers">
+      <UniqueIdentifier>{94b7acd3-cd94-4891-93b9-97e283c46f1d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\UnrealEngine\UObject">
+      <UniqueIdentifier>{af7c4863-7c4a-45df-a066-c3efcf348b87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\UnrealEngine\UObject">
+      <UniqueIdentifier>{333b2b48-dc32-4699-806f-b49628119273}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\modules">
+      <UniqueIdentifier>{b19dbdf9-5d39-4c34-8571-766b74215393}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\modules\xorstr">
+      <UniqueIdentifier>{2f13b751-c918-4c56-8517-f8955db59e4d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="pch.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="GIObject.h">
+      <Filter>Headerdateien\game</Filter>
+    </ClInclude>
+    <ClInclude Include="UE4.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="CameraTypes.h">
+      <Filter>Headerdateien\UnrealEngine\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="Vector.h">
+      <Filter>Headerdateien\UnrealEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Rotator.h">
+      <Filter>Headerdateien\UnrealEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="UnrealString.h">
+      <Filter>Headerdateien\UnrealEngine\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Array.h">
+      <Filter>Headerdateien\UnrealEngine\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Headerdateien\UnrealEngine\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Class.h">
+      <Filter>Headerdateien\UnrealEngine\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="Field.h">
+      <Filter>Headerdateien\UnrealEngine\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="UnrealType.h">
+      <Filter>Headerdateien\UnrealEngine\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectMacros.h">
+      <Filter>Headerdateien\UnrealEngine\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="EnumAsByte.h">
+      <Filter>Headerdateien\UnrealEngine\Containers</Filter>
+    </ClInclude>
+    <ClInclude Include="CoreNetTypes.h">
+      <Filter>Headerdateien\UnrealEngine\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="NameTypes.h">
+      <Filter>Headerdateien\UnrealEngine\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="TransformNonVectorized.h">
+      <Filter>Headerdateien\UnrealEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="Quat.h">
+      <Filter>Headerdateien\UnrealEngine\Math</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Headerdateien\UnrealEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="EngineTypes.h">
+      <Filter>Headerdateien\UnrealEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="UObjectBaseUtility.h">
+      <Filter>Headerdateien\UnrealEngine\UObject</Filter>
+    </ClInclude>
+    <ClInclude Include="GObjects.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="xorstr.hpp">
+      <Filter>Headerdateien\modules\xorstr</Filter>
+    </ClInclude>
+    <ClInclude Include="Util.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="dllmain.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="pch.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="GIObject.cpp">
+      <Filter>Quelldateien\game</Filter>
+    </ClCompile>
+    <ClCompile Include="UE4.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Vector.cpp">
+      <Filter>Quelldateien\UnrealEngine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="Rotator.cpp">
+      <Filter>Quelldateien\UnrealEngine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="UnrealString.cpp">
+      <Filter>Quelldateien\UnrealEngine\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Array.cpp">
+      <Filter>Quelldateien\UnrealEngine\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="Object.cpp">
+      <Filter>Quelldateien\UnrealEngine\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Class.cpp">
+      <Filter>Quelldateien\UnrealEngine\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Field.cpp">
+      <Filter>Quelldateien\UnrealEngine\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="UnrealType.cpp">
+      <Filter>Quelldateien\UnrealEngine\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="CoreNetTypes.cpp">
+      <Filter>Quelldateien\UnrealEngine\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="EnumAsByte.cpp">
+      <Filter>Quelldateien\UnrealEngine\Containers</Filter>
+    </ClCompile>
+    <ClCompile Include="NameTypes.cpp">
+      <Filter>Quelldateien\UnrealEngine\UObject</Filter>
+    </ClCompile>
+    <ClCompile Include="Quat.cpp">
+      <Filter>Quelldateien\UnrealEngine\Math</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Quelldateien\UnrealEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="EngineTypes.cpp">
+      <Filter>Quelldateien\UnrealEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="GObjects.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Util.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
