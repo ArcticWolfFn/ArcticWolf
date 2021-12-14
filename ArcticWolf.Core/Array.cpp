@@ -31,12 +31,3 @@ bool TArray<T>::IsValidIndex(int i) const
 {
 	return i < Num();
 }
-
-int TArray::Add(UObject* NewItem)
-{
-	Count = Count + 1;
-	Max = Max + 1;
-	Data = static_cast<UObject**>(malloc(Count * sizeof(UObject*)));
-	Data[Count - 1] = NewItem;
-	return Count;
-}

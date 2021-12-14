@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Object.h"
-
 template <class T>
 class TArray
 {
@@ -22,6 +20,4 @@ public:
 	const T& operator[](int i) const;
 
 	bool IsValidIndex(int i) const;
-
-	int Add(UObject* NewItem);
 };
