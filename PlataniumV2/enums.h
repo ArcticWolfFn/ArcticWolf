@@ -18,7 +18,7 @@
 #define DEVICE_EVENT_PLAYER XOR(L"LevelSequencePlayer /Fritter/Level/FritterSequenceLevel_LevelInstance_1.FritterSequenceLevel.PersistentLevel.Fritter_2.AnimationPlayer")
 #define YOUGURT_EVENT_PLAYER XOR(L"LevelSequencePlayer /Yogurt/Levels/YogurtLoaderLevel.YogurtLoaderLevel.PersistentLevel.Yogurt_Master_2.AnimationPlayer")
 
-const wchar_t* CheatScriptHelp =
+static const wchar_t* CheatScriptHelp =
 LR"(
 Custom Cheatscript Commands
 ---------------------------

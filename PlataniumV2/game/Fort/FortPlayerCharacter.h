@@ -1,8 +1,6 @@
 #pragma once
 
 #include "../Core/Character.h"
-#include "../../structs.h"
-
 
 namespace Game
 {

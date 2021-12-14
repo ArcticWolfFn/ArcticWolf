@@ -134,7 +134,7 @@ private:
 
 struct FName;
 
-void (*FNameToString)(FName* pThis, FString& out);
+static void (*FNameToString)(FName* pThis, FString& out);
 
 struct FName
 {
