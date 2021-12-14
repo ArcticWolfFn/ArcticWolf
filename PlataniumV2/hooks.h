@@ -171,7 +171,7 @@ namespace Hooks
 {
 	inline bool Init()
 	{
-		printf("Init started \n");
+		PLOGD << "Init started";
 
 		CurlEasyAddress = Util::FindPattern(Patterns::CurlEasySetOpt.first, Patterns::CurlEasySetOpt.second);
 		VALIDATE_ADDRESS(CurlEasyAddress, "Curl easy pattern is outdated.")
@@ -188,8 +188,6 @@ namespace Hooks
 		{
 			VEH::AddHook(CurlEasySetOpt, CurlEasySetOptHook);
 		}
-		
-		printfc(FOREGROUND_GREEN, "[+] No errors were occurred, you can login now!.");
 	}
 
 	inline bool Misc() {
