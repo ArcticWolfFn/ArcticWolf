@@ -1,3 +1,6 @@
 [submodule "PlataniumV2/plog"]
 	path = PlataniumV2/plog
 	url = https://github.com/SergiusTheBest/plog
+[submodule "ArcticWolf.Core/plog/plog"]
+	path = ArcticWolf.Core/plog/plog
+	url = https://github.com/SergiusTheBest/plog.git

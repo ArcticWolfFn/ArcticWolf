@@ -146,7 +146,7 @@ enum EObjectFlags
 	RF_HasExternalPackage = 0x10000000,
 };
 
-enum EInternalObjectFlags
+enum class EInternalObjectFlags
 {
 	None = 0,
 	ReachableInCluster = 1 << 23,

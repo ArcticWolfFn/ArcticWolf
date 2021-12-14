@@ -1,5 +1,14 @@
 #pragma once
 #include "Vector.h"
+#include "Rotator.h"
+#include "EnumAsByte.h"
+
+enum class ECameraProjectionMode : uint8_t
+{
+	Perspective = 0,
+	Orthographic = 1,
+	ECameraProjectionMode_MAX = 2
+};
 
 struct FMinimalViewInfo
 {

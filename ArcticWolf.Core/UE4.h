@@ -14,6 +14,7 @@
 #include <fstream>
 #include <iostream>
 #include "Util.h"
+#include "Field.h"
 
 inline void* (*ProcessEvent)(void*, void*, void*);
 inline int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE);

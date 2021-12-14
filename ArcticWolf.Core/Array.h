@@ -7,11 +7,9 @@ class TArray
 
 public:
 
-	T* Data;
-	int32_t Count;
-	int32_t Max;
-
-	TArray();
+	T* Data = nullptr;
+	int32_t Count = 0;
+	int32_t Max = 0;
 
 	int Num() const;
 

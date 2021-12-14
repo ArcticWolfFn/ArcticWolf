@@ -1,4 +1,21 @@
 #pragma once
+
+#include "Object.h"
+
+struct FUObjectItem
+{
+	UObject* Object;
+	DWORD Flags;
+	DWORD ClusterIndex;
+	DWORD SerialNumber;
+	DWORD SerialNumber2;
+};
+
+struct PreFUObjectItem
+{
+	FUObjectItem* Objects[10];
+};
+
 struct GObjects
 {
 	PreFUObjectItem* ObjectArray;
@@ -9,19 +26,5 @@ struct GObjects
 	void NumChunks(int* start, int* end) const;
 
 	UObject* GetByIndex(int32_t index) const;
-};
-
-struct PreFUObjectItem
-{
-	FUObjectItem* Objects[10];
-};
-
-struct FUObjectItem
-{
-	UObject* Object;
-	DWORD Flags;
-	DWORD ClusterIndex;
-	DWORD SerialNumber;
-	DWORD SerialNumber2;
 };
 

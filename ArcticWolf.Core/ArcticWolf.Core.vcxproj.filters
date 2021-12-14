@@ -84,9 +84,6 @@
     <ClInclude Include="Object.h">
       <Filter>Headerdateien\UnrealEngine\UObject</Filter>
     </ClInclude>
-    <ClInclude Include="Class.h">
-      <Filter>Headerdateien\UnrealEngine\UObject</Filter>
-    </ClInclude>
     <ClInclude Include="Field.h">
       <Filter>Headerdateien\UnrealEngine\UObject</Filter>
     </ClInclude>
@@ -156,9 +153,6 @@
       <Filter>Quelldateien\UnrealEngine\Containers</Filter>
     </ClCompile>
     <ClCompile Include="Object.cpp">
-      <Filter>Quelldateien\UnrealEngine\UObject</Filter>
-    </ClCompile>
-    <ClCompile Include="Class.cpp">
       <Filter>Quelldateien\UnrealEngine\UObject</Filter>
     </ClCompile>
     <ClCompile Include="Field.cpp">

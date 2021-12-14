@@ -4,6 +4,7 @@
 
 FString::FString()
 {
+
 }
 
 FString::FString(const wchar_t* other)

@@ -1,6 +1,18 @@
 #pragma once
 
 #include "EngineTypes.h"
+#include "ObjectMacros.h"
+
+enum ESpawnActorNameMode : uint8_t
+{
+	Required_Fatal,
+
+	Required_ErrorAndReturnNull,
+
+	Required_ReturnNull,
+
+	Requested
+};
 
 struct FActorSpawnParameters
 {
@@ -37,16 +49,5 @@ public:
 	ESpawnActorNameMode NameMode;
 
 	EObjectFlags ObjectFlags;
-};
-
-enum ESpawnActorNameMode : uint8_t
-{
-	Required_Fatal,
-
-	Required_ErrorAndReturnNull,
-
-	Required_ReturnNull,
-
-	Requested
 };
 

@@ -2,13 +2,6 @@
 #include "Array.h"
 
 template<class T>
-TArray<T>::TArray()
-{
-	Data = nullptr;
-	Count = Max = 0;
-}
-
-template<class T>
 int TArray<T>::Num() const
 {
 	return Count;

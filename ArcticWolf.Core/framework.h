@@ -7,3 +7,5 @@
 #include <stdint.h>
 #include "Object.h"
 #include "xorstr.hpp"
+
+#include <plog/Log.h>
