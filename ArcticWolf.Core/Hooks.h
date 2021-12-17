@@ -10,7 +10,7 @@
 #include "Masks.h"
 #include "ue4.h"
 #include "util.h"
-#include "detours.h"
+#include "Detours.h"
 
 const char* URL_PROTOCOL = "https";
 const char* URL_HOST = "localhost";
