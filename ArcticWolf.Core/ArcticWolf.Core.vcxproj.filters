@@ -55,6 +55,15 @@
     <Filter Include="Headerdateien\modules\curl">
       <UniqueIdentifier>{1cc7ba6a-5350-4b25-aab8-cb568cb6b85c}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Headerdateien\hooking">
+      <UniqueIdentifier>{8b96cb2b-287a-4901-a226-8371f2aaa128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\hooking">
+      <UniqueIdentifier>{b39af4cf-de99-466c-ab2f-ebed13c08825}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\modules\MinHook">
+      <UniqueIdentifier>{6783a785-b08b-473f-8fd4-b729fc286147}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -129,9 +138,6 @@
     <ClInclude Include="Util.h">
       <Filter>Headerdateien</Filter>
     </ClInclude>
-    <ClInclude Include="Hooks.h">
-      <Filter>Headerdateien</Filter>
-    </ClInclude>
     <ClInclude Include="curl.h">
       <Filter>Headerdateien\modules\curl</Filter>
     </ClInclude>
@@ -143,6 +149,36 @@
     </ClInclude>
     <ClInclude Include="Url.h">
       <Filter>Headerdateien</Filter>
+    </ClInclude>
+    <ClInclude Include="Hooks.h">
+      <Filter>Headerdateien\hooking</Filter>
+    </ClInclude>
+    <ClInclude Include="Veh.h">
+      <Filter>Headerdateien\hooking</Filter>
+    </ClInclude>
+    <ClInclude Include="Patterns.h">
+      <Filter>Headerdateien\hooking</Filter>
+    </ClInclude>
+    <ClInclude Include="Masks.h">
+      <Filter>Headerdateien\hooking</Filter>
+    </ClInclude>
+    <ClInclude Include="Detours.h">
+      <Filter>Headerdateien\hooking</Filter>
+    </ClInclude>
+    <ClInclude Include="MinHook.h">
+      <Filter>Headerdateien\modules\MinHook</Filter>
+    </ClInclude>
+    <ClInclude Include="Match.h">
+      <Filter>Headerdateien\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Functions.h">
+      <Filter>Headerdateien\game</Filter>
+    </ClInclude>
+    <ClInclude Include="Finder.h">
+      <Filter>Headerdateien\game</Filter>
+    </ClInclude>
+    <ClInclude Include="UObjectArray.h">
+      <Filter>Headerdateien\UnrealEngine\UObject</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -203,11 +239,31 @@
     <ClCompile Include="Util.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
-    <ClCompile Include="Hooks.cpp">
-      <Filter>Quelldateien</Filter>
-    </ClCompile>
     <ClCompile Include="Url.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
+    <ClCompile Include="Hooks.cpp">
+      <Filter>Quelldateien\hooking</Filter>
+    </ClCompile>
+    <ClCompile Include="Veh.cpp">
+      <Filter>Quelldateien\hooking</Filter>
+    </ClCompile>
+    <ClCompile Include="Detours.cpp">
+      <Filter>Quelldateien\hooking</Filter>
+    </ClCompile>
+    <ClCompile Include="Match.cpp">
+      <Filter>Quelldateien\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Functions.cpp">
+      <Filter>Quelldateien\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Finder.cpp">
+      <Filter>Quelldateien\game</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\PlataniumV2\minhook.lib">
+      <Filter>Headerdateien\modules\MinHook</Filter>
+    </Library>
   </ItemGroup>
 </Project>

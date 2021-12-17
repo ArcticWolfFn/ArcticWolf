@@ -2,8 +2,6 @@
 #include "GIObject.h"
 #include "ue4.h"
 
-using namespace Game;
-
 void GIObject::Setup()
 {
 }
@@ -16,10 +14,16 @@ inline void GIObject::SetPointer(wchar_t const* objectToFind, T* objectToSet, bo
 	if (Util::IsBadReadPtr(obj))
 	{
 		PLOGE.printf("%s is nullptr", objectToFind);
-		success = false;
+		if (success != nullptr) 
+		{
+			success = false;
+		}
 		return;
 	}
 
 	objectToSet = obj;
-	success = true;
+	if (success != nullptr)
+	{
+		success = true;
+	}
 }

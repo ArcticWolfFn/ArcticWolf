@@ -1,6 +1,3 @@
-#ifndef HOOKS_H
-#define HOOKS_H
-
 #include "pch.h"
 
 #include "Url.h"
@@ -120,57 +117,9 @@ inline CURLcode CurlEasySetOptHook(struct Curl_easy* data, CURLoption tag, ...)
 	return result;
 }
 
-void RequestExitWithStatusHook(bool unknown, bool force)
+static class Hooks
 {
-	//printfc(FOREGROUND_BLUE, "[VEH] <REDACTED> Call IsForced: %i\n", force);
-}
-
-void RequestExitHook(bool force)
-{
-	printfc(FOREGROUND_BLUE, "[VEH] RequestExit Call IsForced: %i\n", force);
-}
-
-void UnsafeEnvironmentPopupHook(wchar_t** unknown1,
-	unsigned __int8 _case,
-	__int64 unknown2,
-	char unknown3)
-{
-	//printfc(FOREGROUND_BLUE, "[VEH] <REDACTED> Call with Case: %i\n", _case);
-}
-
-/*__int64 PushWidgetHook(__int64 WidgetInstance, const TCHAR* Body, const TCHAR* Widget, const TCHAR* WidgetType)
-{
-	const std::wstring bodyW(Body);
-	if (bodyW == L"Logging In...")
-	{
-		return PushWidget(WidgetInstance,
-			XOR(L"\tPlataniumV2\n\tMade by kemo\n\tUse Code Neonite #ad"),
-			Widget,
-			WidgetType);
-	}
-	else if (bodyW == L"FILL")
-	{
-		DetourTransactionBegin();
-		DetourUpdateThread(GetCurrentThread());
-		DetourDetach(reinterpret_cast<void**>(&PushWidget), PushWidgetHook);
-		DetourTransactionCommit();
-	}
-	return PushWidget(WidgetInstance, Body, Widget, WidgetType);
-}*/
-
-/*bool HotfixIniFileHook(void* HotfixManager, const FString& FileName, const FString& IniData)
-{
-	HotfixManagerInstance = HotfixManager;
-	DetourTransactionBegin();
-	DetourUpdateThread(GetCurrentThread());
-	DetourDetach(reinterpret_cast<void**>(&HotfixIniFile), HotfixIniFileHook);
-	DetourTransactionCommit();
-	return HotfixIniFile(HotfixManager, FileName, IniData);
-}*/
-
-namespace Hooks
-{
-	inline bool Init()
+	static bool Init()
 	{
 		PLOGD << "Init started";
 
@@ -191,7 +140,7 @@ namespace Hooks
 		}
 	}
 
-	inline bool Misc() {
+	static bool Misc() {
 		PLOGV << "Start Hooks::Misc";
 
 		if (MH_Initialize() != MH_OK)
@@ -292,8 +241,6 @@ namespace Hooks
 
 		return true;
 	}
-}
-
-#endif // HOOKS_H
+};
 
 

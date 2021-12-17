@@ -158,16 +158,23 @@
     <ClInclude Include="CoreNetTypes.h" />
     <ClInclude Include="curl.h" />
     <ClInclude Include="curlver.h" />
+    <ClInclude Include="Detours.h" />
     <ClInclude Include="EngineTypes.h" />
     <ClInclude Include="EnumAsByte.h" />
     <ClInclude Include="Field.h" />
+    <ClInclude Include="Finder.h" />
     <ClInclude Include="framework.h" />
+    <ClInclude Include="Functions.h" />
     <ClInclude Include="GIObject.h" />
     <ClInclude Include="GObjects.h" />
     <ClInclude Include="Hooks.h" />
+    <ClInclude Include="Masks.h" />
+    <ClInclude Include="Match.h" />
+    <ClInclude Include="MinHook.h" />
     <ClInclude Include="NameTypes.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectMacros.h" />
+    <ClInclude Include="Patterns.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Quat.h" />
     <ClInclude Include="Rotator.h" />
@@ -176,23 +183,29 @@
     <ClInclude Include="UE4.h" />
     <ClInclude Include="UnrealString.h" />
     <ClInclude Include="UnrealType.h" />
+    <ClInclude Include="UObjectArray.h" />
     <ClInclude Include="UObjectBaseUtility.h" />
     <ClInclude Include="Url.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Vector.h" />
+    <ClInclude Include="Veh.h" />
     <ClInclude Include="World.h" />
     <ClInclude Include="xorstr.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Array.cpp" />
     <ClCompile Include="CoreNetTypes.cpp" />
+    <ClCompile Include="Detours.cpp" />
     <ClCompile Include="dllmain.cpp" />
     <ClCompile Include="EngineTypes.cpp" />
     <ClCompile Include="EnumAsByte.cpp" />
     <ClCompile Include="Field.cpp" />
+    <ClCompile Include="Finder.cpp" />
+    <ClCompile Include="Functions.cpp" />
     <ClCompile Include="GIObject.cpp" />
     <ClCompile Include="GObjects.cpp" />
     <ClCompile Include="Hooks.cpp" />
+    <ClCompile Include="Match.cpp" />
     <ClCompile Include="NameTypes.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="pch.cpp">
@@ -209,7 +222,11 @@
     <ClCompile Include="Url.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="Vector.cpp" />
+    <ClCompile Include="Veh.cpp" />
     <ClCompile Include="World.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Library Include="..\PlataniumV2\minhook.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
