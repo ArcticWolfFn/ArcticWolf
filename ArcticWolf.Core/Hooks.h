@@ -6,7 +6,7 @@
 #include "Url.h"
 #include "curl.h"
 #include "Veh.h"
-#include "patterns.h"
+#include "Patterns.h"
 #include "masks.h"
 #include "ue4.h"
 #include "util.h"
