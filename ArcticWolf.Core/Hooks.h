@@ -3,17 +3,14 @@
 
 #include "pch.h"
 
-#include "url.h"
+#include "Url.h"
 #include "curl.h"
 #include "veh.h"
 #include "patterns.h"
 #include "masks.h"
 #include "ue4.h"
 #include "util.h"
-#include "patterns.h"
-#include "patterns.h"
 #include "detours.h"
-#include "curl.h"
 
 const char* URL_PROTOCOL = "https";
 const char* URL_HOST = "localhost";
