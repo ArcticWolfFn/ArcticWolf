@@ -171,11 +171,13 @@
     <ClInclude Include="pch.h" />
     <ClInclude Include="Quat.h" />
     <ClInclude Include="Rotator.h" />
+    <ClInclude Include="system.h" />
     <ClInclude Include="TransformNonVectorized.h" />
     <ClInclude Include="UE4.h" />
     <ClInclude Include="UnrealString.h" />
     <ClInclude Include="UnrealType.h" />
     <ClInclude Include="UObjectBaseUtility.h" />
+    <ClInclude Include="Url.h" />
     <ClInclude Include="Util.h" />
     <ClInclude Include="Vector.h" />
     <ClInclude Include="World.h" />
@@ -204,6 +206,7 @@
     <ClCompile Include="UE4.cpp" />
     <ClCompile Include="UnrealString.cpp" />
     <ClCompile Include="UnrealType.cpp" />
+    <ClCompile Include="Url.cpp" />
     <ClCompile Include="Util.cpp" />
     <ClCompile Include="Vector.cpp" />
     <ClCompile Include="World.cpp" />

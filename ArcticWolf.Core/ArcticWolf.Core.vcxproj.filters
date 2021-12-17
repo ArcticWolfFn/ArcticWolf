@@ -138,6 +138,12 @@
     <ClInclude Include="curlver.h">
       <Filter>Headerdateien\modules\curl</Filter>
     </ClInclude>
+    <ClInclude Include="system.h">
+      <Filter>Headerdateien\modules\curl</Filter>
+    </ClInclude>
+    <ClInclude Include="Url.h">
+      <Filter>Headerdateien</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -198,6 +204,9 @@
       <Filter>Quelldateien</Filter>
     </ClCompile>
     <ClCompile Include="Hooks.cpp">
+      <Filter>Quelldateien</Filter>
+    </ClCompile>
+    <ClCompile Include="Url.cpp">
       <Filter>Quelldateien</Filter>
     </ClCompile>
   </ItemGroup>
