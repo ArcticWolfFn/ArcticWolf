@@ -7,7 +7,7 @@
 #include "curl.h"
 #include "Veh.h"
 #include "Patterns.h"
-#include "masks.h"
+#include "Masks.h"
 #include "ue4.h"
 #include "util.h"
 #include "detours.h"
