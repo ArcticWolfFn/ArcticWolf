@@ -17,19 +17,19 @@ namespace CameraHook
 	inline FRotator Rotation = { 0.870931, -88.071960, 0.008899 };
 }
 
-class Detours
+static class Detours
 {
 public:
-	void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams);
+	static void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams);
 
 private:
-	bool bIsDebugCamera;
-	bool bIsFlying;
+	static bool bIsDebugCamera;
+	static bool bIsFlying;
 
 	// Special async logging
-	void Log(std::wstring nObj, std::wstring nFunc, std::wstring nObjClass);
+	static void Log(std::wstring nObj, std::wstring nFunc, std::wstring nObjClass);
 
-	int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE stereoPass);
+	static int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE stereoPass);
 };
 
 

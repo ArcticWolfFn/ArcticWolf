@@ -13,4 +13,5 @@
 #pragma comment(lib, "user32.lib")
 #pragma comment(lib, "winhttp.lib")
 #pragma comment(lib, "advapi32.lib")
-#pragma comment(lib, "ws2_32.lib") 
+#pragma comment(lib, "ws2_32.lib")
+#pragma comment(lib, "minhook.lib")

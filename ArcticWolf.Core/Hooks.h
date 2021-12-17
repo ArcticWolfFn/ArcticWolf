@@ -11,6 +11,7 @@
 #include "ue4.h"
 #include "util.h"
 #include "Detours.h"
+#include "MinHook.h"
 
 const char* URL_PROTOCOL = "https";
 const char* URL_HOST = "localhost";
@@ -173,10 +174,10 @@ namespace Hooks
 	{
 		PLOGD << "Init started";
 
-		CurlEasyAddress = Util::FindPattern(Patterns::CurlEasySetOpt.first, Patterns::CurlEasySetOpt.second);
+		CurlEasyAddress = Util::FindPattern(Patterns::Curl::CurlEasySetOpt.first, Patterns::Curl::CurlEasySetOpt.second);
 		VALIDATE_ADDRESS(CurlEasyAddress, "Curl easy pattern is outdated.")
 
-			CurlSetAddress = Util::FindPattern(Patterns::CurlSetOpt.first, Patterns::CurlSetOpt.second);
+		CurlSetAddress = Util::FindPattern(Patterns::Curl::CurlSetOpt.first, Patterns::Curl::CurlSetOpt.second);
 		VALIDATE_ADDRESS(CurlSetAddress, "Curl set pattern is outdated.")
 
 			CurlEasySetOpt = decltype(CurlEasySetOpt)(CurlEasyAddress);
@@ -200,19 +201,19 @@ namespace Hooks
 		}
 
 		//Used to find objects, dump them, mostly works as an alternative for the ObjectFinder.
-		auto GObjectsAdd = Util::FindPattern(Patterns::bGlobal::GObjects, Masks::bGlobal::GObjects);
+		auto GObjectsAdd = Util::FindPattern(Patterns::Global::GObjects, Masks::Global::GObjects);
 		VALIDATE_ADDRESS(GObjectsAdd, XOR("Failed to find GObjects Address."));
 
 		GObjs = decltype(GObjs)(RELATIVE_ADDRESS(GObjectsAdd, 7));
 
 		// Engine
-		auto GEngineAdd = Util::FindPattern(Patterns::bGlobal::GEngine, Masks::bGlobal::GEngine);
+		auto GEngineAdd = Util::FindPattern(Patterns::Global::GEngine, Masks::Global::GEngine);
 		VALIDATE_ADDRESS(GEngineAdd, XOR("Failed to find GEngine Address."));
 
 		GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 7 + *reinterpret_cast<int32_t*>(GEngineAdd + 3));
 
 		//Used for ProcessEvent Hooking.
-		auto ProcessEventAdd = Util::FindPattern(Patterns::bGlobal::ProcessEvent, Masks::bGlobal::ProcessEvent);
+		auto ProcessEventAdd = Util::FindPattern(Patterns::Global::ProcessEvent, Masks::Global::ProcessEvent);
 		VALIDATE_ADDRESS(ProcessEventAdd, XOR("Failed to find ProcessEvent Address."));
 
 		ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
@@ -220,51 +221,51 @@ namespace Hooks
 		gProcessEventAdd = ProcessEventAdd;
 
 		//Used for Camera Hooking.
-		auto GetViewPointAdd = Util::FindPattern(Patterns::bGlobal::GetViewPoint, Masks::bGlobal::GetViewPoint);
+		auto GetViewPointAdd = Util::FindPattern(Patterns::Global::GetViewPoint, Masks::Global::GetViewPoint);
 		VALIDATE_ADDRESS(GetViewPointAdd, XOR("Failed to find GetViewPoint Address."));
 
 		GetViewPoint = decltype(GetViewPoint)(GetViewPointAdd);
 
 		//Used for getting UObjects names.
-		auto GONIAdd = Util::FindPattern(Patterns::bGlobal::GONI, Masks::bGlobal::GONI);
+		auto GONIAdd = Util::FindPattern(Patterns::Global::GONI, Masks::Global::GONI);
 		VALIDATE_ADDRESS(GONIAdd, XOR("Failed to find GetObjectName Address."));
 
 		GetObjectNameInternal = decltype(GetObjectNameInternal)(GONIAdd);
 
 		//Used for getting UObjects full names.
-		auto GetObjectFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetObjectFullName, Masks::bGlobal::GetObjectFullName);
+		auto GetObjectFullNameAdd = Util::FindPattern(Patterns::Global::GetObjectFullName, Masks::Global::GetObjectFullName);
 		VALIDATE_ADDRESS(GetObjectFullNameAdd, XOR("Failed to find GetObjectFullName Address."));
 
 		GetObjectFullNameInternal = decltype(GetObjectFullNameInternal)(GetObjectFullNameAdd);
 
 		//Used for getting FFields full names.
-		auto GetFullNameAdd = Util::FindPattern(Patterns::bGlobal::GetFullName, Masks::bGlobal::GetFullName);
+		auto GetFullNameAdd = Util::FindPattern(Patterns::Global::GetFullName, Masks::Global::GetFullName);
 		VALIDATE_ADDRESS(GetFullNameAdd, XOR("Failed to find GetFullName Address."));
 
 		GetFullName = decltype(GetFullName)(GetFullNameAdd);
 
 
 		//Used to free the memory for names.
-		auto FreeInternalAdd = Util::FindPattern(Patterns::bGlobal::FreeInternal, Masks::bGlobal::FreeInternal);
+		auto FreeInternalAdd = Util::FindPattern(Patterns::Global::FreeInternal, Masks::Global::FreeInternal);
 		VALIDATE_ADDRESS(FreeInternalAdd, XOR("Failed to find Free Address."));
 
 		FreeInternal = decltype(FreeInternal)(FreeInternalAdd);
 
 
 		//Used to construct objects, mostly used for console stuff.
-		auto SCOIAdd = Util::FindPattern(Patterns::bGlobal::SCOI, Masks::bGlobal::SCOI);
+		auto SCOIAdd = Util::FindPattern(Patterns::Global::SCOI, Masks::Global::SCOI);
 		VALIDATE_ADDRESS(SCOIAdd, XOR("Failed to find SCOI Address."));
 
 		StaticConstructObject = decltype(StaticConstructObject)(SCOIAdd);
 
 		//Used to load objects.
-		auto SLOIAdd = Util::FindPattern(Patterns::bGlobal::SLOI, Masks::bGlobal::SLOI);
+		auto SLOIAdd = Util::FindPattern(Patterns::Global::SLOI, Masks::Global::SLOI);
 		VALIDATE_ADDRESS(SLOIAdd, XOR("Failed to find SLOI Address."));
 
 		StaticLoadObject = decltype(StaticLoadObject)(SLOIAdd);
 
 
-		auto AbilityPatchAdd = Util::FindPattern(Patterns::bGlobal::AbilityPatch, Masks::bGlobal::AbilityPatch);
+		auto AbilityPatchAdd = Util::FindPattern(Patterns::Global::AbilityPatch, Masks::Global::AbilityPatch);
 		VALIDATE_ADDRESS(AbilityPatchAdd, XOR("Failed to find AbilityPatch Address."));
 
 		//Patches fortnite ability ownership checks, work on everysingle fortnite version.
@@ -273,10 +274,10 @@ namespace Hooks
 		reinterpret_cast<uint8_t*>(AbilityPatchAdd)[11] = 0x8D;
 
 		//Process Event Hooking.
-		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
+		MH_CreateHook(reinterpret_cast<void*>(ProcessEventAdd), Detours::ProcessEventDetour, reinterpret_cast<void**>(&ProcessEvent));
 		MH_EnableHook(reinterpret_cast<void*>(ProcessEventAdd));
 
-		auto Map = APOLLO_TERRAIN;
+		auto Map = XOR(L"Apollo_Terrain?game=/Game/Athena/Athena_GameMode.Athena_GameMode_C");
 
 		gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
 		if (gPlaylist == nullptr) {

@@ -1,13 +1,13 @@
 #pragma once
 
-class VEH
+static class VEH
 {
 public:
-    bool Init();
+    static bool Init();
 
-    bool AddHook(void* Target, void* Detour);
+    static bool AddHook(void* Target, void* Detour);
 
-    bool RemoveHook(void* Target);
+    static bool RemoveHook(void* Target);
 
-    bool IsSamePage(void* A, void* B)
+    static bool IsSamePage(void* A, void* B);
 };

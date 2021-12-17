@@ -55,31 +55,31 @@ inline UObject* KismetStringLibrary;
 inline uintptr_t gProcessEventAdd;
 
 
-class UE4
+static class UE4
 {
 public:
-	auto StaticLoadObjectEasy(UClass* inClass, const wchar_t* inName, UObject* inOuter = nullptr);
+	static auto StaticLoadObjectEasy(UClass* inClass, const wchar_t* inName, UObject* inOuter = nullptr);
 
 	//Frees the memory for the name
-	void Free(void* buffer);
+	static void Free(void* buffer);
 
 	//The same as above but for FFields.
-	std::wstring GetFirstName(FField* object);
+	static std::wstring GetFirstName(FField* object);
 
 	//Returns the very first name of the object (E.G: BP_PlayButton).
-	std::wstring GetObjectFirstName(UObject* object);
+	static std::wstring GetObjectFirstName(UObject* object);
 
-	std::wstring GetObjectName(UObject* object);
+	static std::wstring GetObjectName(UObject* object);
 
 	//Returns FField's type.
-	std::wstring GetFieldClassName(FField* obj);
+	static std::wstring GetFieldClassName(FField* obj);
 
 	//Return FULL Object name including it's type.
-	std::wstring GetObjectFullName(UObject* object);
+	static std::wstring GetObjectFullName(UObject* object);
 
-	void DumpBPs();
+	static void DumpBPs();
 
-	void DumpGObjects();
+	static void DumpGObjects();
 
 	//Find any entity inside the UGlobalObjects array aka. GObjects.
 	template <typename T>

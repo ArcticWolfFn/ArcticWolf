@@ -4,55 +4,55 @@ namespace Masks
 {
 	namespace Curl
 	{
-		struct Old
+		static struct Old
 		{
-			const char* CurlEasySetOpt = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
-			const char* CurlSetOpt = "xxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+			static constexpr const char* CurlEasySetOpt = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+			static constexpr const char* CurlSetOpt = "xxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 		};
 
-		struct New
+		static struct New
 		{
-			const char* CurlSetOpt = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+			static constexpr const char* CurlSetOpt = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 		};
 	}
 
-	struct New
+	static struct New
 	{
-		const char* GEngine = "xxx????xxxxxxxxx";
-		const char* FNameToString = "xxxxxx????";
-		const char* ProcessEvent = "x?xxxxxxxxxx????xxxx";
-		const char* GONI = "x????xxxxxxxxx";
+		static constexpr const char* GEngine = "xxx????xxxxxxxxx";
+		static constexpr const char* FNameToString = "xxxxxx????";
+		static constexpr const char* ProcessEvent = "x?xxxxxxxxxx????xxxx";
+		static constexpr const char* GONI = "x????xxxxxxxxx";
 	};
 
-	struct Global
+	static struct Global
 	{
-		const char* GEngine = "xxx????xxxx????xx";
-		const char* GObjects = "xxx????xxxx";
-		const char* SCOI = "xxxxxxxxxxxxxxxxxxxxx????xxx????xxx????xxx";
-		const char* SLOI = "xxxx?xxxx?xxxx?xxxxxxxxxxxxxxx";
-		const char* ProcessEvent = "xxxxxxxxxxxxxxx????xxxx?xxx????xxx????xxxxxx????xxxxxxxx????xxxxxxxxxxx????xx";
-		const char* GONI = "xxxxxxxxxxxxxxxxxxxxxxxxxxx????xxxxxxxxxxxxxxxxxx????xxxxxx????xx????x????xxxxxxxxxxxxx";
-		const char* GetObjectFullName = "xxxxxxxxxx????xxx????xxxxxxx????xxxxxx";
-		const char* GetFullName = "xxxx?xxxx?xxxxxxxxx?x????xx";
-		const char* GetViewPoint = "xxxx?xxxx?xxxxxxxxxxxxxxxxxxx????x????xxx";
-		const char* AbilityPatch = "xxx?xxxxxxxx??xx";
-		const char* FreeInternal = "xxxxxxxxxxxxxxxx????xxxxx";
+		static constexpr const char* GEngine = "xxx????xxxx????xx";
+		static constexpr const char* GObjects = "xxx????xxxx";
+		static constexpr const char* SCOI = "xxxxxxxxxxxxxxxxxxxxx????xxx????xxx????xxx";
+		static constexpr const char* SLOI = "xxxx?xxxx?xxxx?xxxxxxxxxxxxxxx";
+		static constexpr const char* ProcessEvent = "xxxxxxxxxxxxxxx????xxxx?xxx????xxx????xxxxxx????xxxxxxxx????xxxxxxxxxxx????xx";
+		static constexpr const char* GONI = "xxxxxxxxxxxxxxxxxxxxxxxxxxx????xxxxxxxxxxxxxxxxxx????xxxxxx????xx????x????xxxxxxxxxxxxx";
+		static constexpr const char* GetObjectFullName = "xxxxxxxxxx????xxx????xxxxxxx????xxxxxx";
+		static constexpr const char* GetFullName = "xxxx?xxxx?xxxxxxxxx?x????xx";
+		static constexpr const char* GetViewPoint = "xxxx?xxxx?xxxxxxxxxxxxxxxxxxx????x????xxx";
+		static constexpr const char* AbilityPatch = "xxx?xxxxxxxx??xx";
+		static constexpr const char* FreeInternal = "xxxxxxxxxxxxxxxx????xxxxx";
 	};
 
 	namespace Old
 	{
-		struct Global
+		static struct Global
 		{
-			const char* GetObjectFullName = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
+			static constexpr const char* GetObjectFullName = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx";
 		};
 
-		struct Marshmallow
+		static struct Marshmallow
 		{
-			const char* GEngine = "xxx?????xxxxxxxx????xxx";
+			static constexpr const char* GEngine = "xxx?????xxxxxxxx????xxx";
 
-			const char* GObjects = "xxx????xxxxxxxxxx";
+			static constexpr const char* GObjects = "xxx????xxxxxxxxxx";
 
-			const char* GetObjectFullName = "xxxxxxxxxxxxxxxxxxxxxx?????x????xxxxxx????xx????x????xxxxxxxxxxxxx";
+			static constexpr const char* GetObjectFullName = "xxxxxxxxxxxxxxxxxxxxxx?????x????xxxxxx????xx????x????xxxxxxxxxxxxx";
 		};
 	}
 }
