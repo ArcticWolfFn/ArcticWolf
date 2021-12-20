@@ -138,9 +138,6 @@
     <ClInclude Include="Quat.h">
       <Filter>Headerdateien\UnrealEngine\Math</Filter>
     </ClInclude>
-    <ClInclude Include="World.h">
-      <Filter>Headerdateien\UnrealEngine</Filter>
-    </ClInclude>
     <ClInclude Include="EngineTypes.h">
       <Filter>Headerdateien\UnrealEngine</Filter>
     </ClInclude>
@@ -225,6 +222,21 @@
     <ClInclude Include="Class.h">
       <Filter>Headerdateien\UnrealEngine\UObject</Filter>
     </ClInclude>
+    <ClInclude Include="Actor.h">
+      <Filter>Headerdateien\UnrealEngine\GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="World.h">
+      <Filter>Headerdateien\UnrealEngine\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="GameModeBase.h">
+      <Filter>Headerdateien\UnrealEngine\GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMode.h">
+      <Filter>Headerdateien\UnrealEngine\GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="GameViewportClient.h">
+      <Filter>Headerdateien\UnrealEngine\Engine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -271,9 +283,6 @@
     </ClCompile>
     <ClCompile Include="Quat.cpp">
       <Filter>Quelldateien\UnrealEngine\Math</Filter>
-    </ClCompile>
-    <ClCompile Include="World.cpp">
-      <Filter>Quelldateien\UnrealEngine</Filter>
     </ClCompile>
     <ClCompile Include="EngineTypes.cpp">
       <Filter>Quelldateien\UnrealEngine</Filter>
@@ -327,6 +336,21 @@
       <Filter>Quelldateien\UnrealEngine\Engine</Filter>
     </ClCompile>
     <ClCompile Include="Player.cpp">
+      <Filter>Quelldateien\UnrealEngine\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Actor.cpp">
+      <Filter>Quelldateien\UnrealEngine\GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="World.cpp">
+      <Filter>Quelldateien\UnrealEngine\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="GameModeBase.cpp">
+      <Filter>Quelldateien\UnrealEngine\GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMode.cpp">
+      <Filter>Quelldateien\UnrealEngine\GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="GameViewportClient.cpp">
       <Filter>Quelldateien\UnrealEngine\Engine</Filter>
     </ClCompile>
   </ItemGroup>

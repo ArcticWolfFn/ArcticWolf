@@ -8,5 +8,7 @@ UPlayer::UPlayer(ObjectFinder PlayerFinder) : PlayerFinder(PlayerFinder)
 
 void UPlayer::Setup()
 {
-	PlayerController = &APlayerController(&PlayerFinder.Find(XOR(L"PlayerController")));
+	auto pControllerFinder = PlayerFinder.Find(XOR(L"PlayerController"));
+	auto pController = APlayerController(&pControllerFinder);
+	PlayerController = &pController;
 }

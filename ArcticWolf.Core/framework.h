@@ -18,3 +18,5 @@
 #pragma comment(lib, "advapi32.lib")
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "minhook.lib")
+
+inline FortniteGameInstance GGameInstance = FortniteGameInstance();

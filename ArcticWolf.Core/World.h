@@ -2,6 +2,8 @@
 
 #include "EngineTypes.h"
 #include "ObjectMacros.h"
+#include "Finder.h"
+#include "GameModeBase.h"
 
 enum ESpawnActorNameMode : uint8_t
 {
@@ -49,5 +51,18 @@ public:
 	ESpawnActorNameMode NameMode;
 
 	EObjectFlags ObjectFlags;
+};
+
+class UWorld : GIObject
+{
+public:
+	UWorld(ObjectFinder* WorldFinder);
+
+	void Setup() override;
+
+	AGameModeBase* AuthorityGameMode = nullptr;
+
+private:
+	ObjectFinder* InternalFinder = nullptr;
 };
 

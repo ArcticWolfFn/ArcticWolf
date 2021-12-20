@@ -9,4 +9,9 @@ void UGameInstance::Setup()
 
 	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 	ObjectFinder GameInstanceFinder = EngineFinder.Find(XOR(L"GameInstance"));
+
+	// Players is plural, but it works for now
+	auto localPlayer = ULocalPlayer(GameInstanceFinder.Find(XOR(L"LocalPlayers")));
+	localPlayer.Setup();
+	LocalPlayers.Add(&localPlayer);
 }

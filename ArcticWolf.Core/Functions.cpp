@@ -8,101 +8,37 @@ auto UFunctions::SetTimeOfDay(float Time)
 	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
 	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
 
-	FortniteGameInstance::FortKismetLibrary.SetTimeOfDay(WorldFinder.GetObj(), Time);
+	GGameInstance.FortKismetLibrary.SetTimeOfDay(WorldFinder.GetObj(), Time);
 }
 
 void UFunctions::TeleportToSpawn()
 {
-	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-	ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-	ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-	ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
-
-	auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:BugItGo"));
-
-	UCheatManager_BugItGo_Params params;
-	params.X = -156128.36;
-	params.Y = -159492.78;
-	params.Z = -2996.30;
-	params.Pitch = 0;
-	params.Yaw = 0;
-	params.Roll = 0;
-
-	ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
+	GGameInstance.LocalPlayers[0].PlayerController->CheatManager.BugItGo(-156128.36, -159492.78, -2996.30, 0, 0, 0);
 
 	PLOGI << "Teleported to spawn island";
 }
 
 void UFunctions::TeleportToMain()
 {
-	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-	ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-	ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-	ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
-
-	auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:BugItGo"));
-
-	UCheatManager_BugItGo_Params params;
-	params.X = 0;
-	params.Y = 0;
-	params.Z = 0;
-	params.Pitch = 0;
-	params.Yaw = 0;
-	params.Roll = 0;
-
-	ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
+	GGameInstance.LocalPlayers[0].PlayerController->CheatManager.BugItGo(0, 0, 0, 0, 0, 0);
 }
 
 void UFunctions::TeleportToCoords(float X, float Y, float Z)
 {
-	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-	ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-	ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-	ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
-
-	auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:BugItGo"));
-
-	UCheatManager_BugItGo_Params params;
-	params.X = X;
-	params.Y = Y;
-	params.Z = Z;
-	params.Pitch = 0;
-	params.Yaw = 0;
-	params.Roll = 0;
-
-	ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
+	GGameInstance.LocalPlayers[0].PlayerController->CheatManager.BugItGo(X, Y, Z, 0, 0, 0);
 }
 
 void UFunctions::DestroyAllHLODs()
 {
-	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-	ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+	auto HLODSMActor = UE4::FindObject<AActor*>(XOR(L"Class /Script/FortniteGame.FortHLODSMActor"));
 
-	ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+	GGameInstance.LocalPlayers[0].PlayerController->CheatManager.DestroyAll(HLODSMActor);
 
-	ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
-
-	auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.CheatManager:DestroyAll"));
-
-	auto HLODSMActor = UE4::FindObject<UClass*>(XOR(L"Class /Script/FortniteGame.FortHLODSMActor"));
-
-	UCheatManager_DestroyAll_Params params;
-	params.Class = HLODSMActor;
-
-	ProcessEvent(CheatManagerFinder.GetObj(), fn, &params);
 	PLOGD << "HLODSM Actor was destroyed.";
 }
 
 void UFunctions::Travel(const wchar_t* url)
 {
-	PLOGD << "Travel: Called";
-
 	if (url == nullptr) {
 		PLOGE << "Travel: url is null";
 		return;
@@ -110,37 +46,7 @@ void UFunctions::Travel(const wchar_t* url)
 
 	PLOGD.printf("Travel: To Url: %s", std::wstring(url).c_str());
 
-	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-
-	ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-	ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-	auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.PlayerController:SwitchLevel"));
-
-	if (fn == nullptr) {
-		PLOGE << "Travel: SwitchLevel function is null";
-		return;
-	}
-
-	const FString URL = APOLLO_TERRAIN;
-	PLOGD.printf("Travel: To fixed url: %s", URL.ToWString());
-
-	APlayerController_SwitchLevel_Params params;
-	params.URL = URL;
-
-	UObject* playerControllerObj = PlayerControllerFinder.GetObj();
-
-	if (playerControllerObj == nullptr) {
-		PLOGE << "Travel: playerControllerObj is null";
-		return;
-	}
-
-	PLOGD << "Travel: Process Event Called";
-
-	ProcessEvent(playerControllerObj, fn, &params);
-
-	PLOGD << "Travel: Finished";
+	GGameInstance.LocalPlayers[0].PlayerController->SwitchLevel(FString(url));
 }
 
 void UFunctions::StartMatch()

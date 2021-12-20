@@ -129,5 +129,43 @@ void UE4::DumpGObjects()
 template<typename T>
 T UE4::FindObject(wchar_t const* name, bool ends_with, bool to_lower, int toSkip)
 {
-	return T();
+	for (auto i = 0x0; i < GObjs->NumElements; ++i)
+	{
+		auto object = GObjs->GetByIndex(i);
+		if (object == nullptr)
+		{
+			continue;
+		}
+
+		auto objectFullName = GetObjectFullName(object);
+
+		if (to_lower)
+		{
+			std::transform(objectFullName.begin(), objectFullName.end(), objectFullName.begin(),
+				[](const unsigned char c) { return std::tolower(c); });
+		}
+
+		if (!ends_with)
+		{
+			if (objectFullName.starts_with(name))
+			{
+				if (toSkip > 0)
+				{
+					toSkip--;
+				}
+				else
+				{
+					return reinterpret_cast<T>(object);
+				}
+			}
+		}
+		else
+		{
+			if (objectFullName.ends_with(name))
+			{
+				return reinterpret_cast<T>(object);
+			}
+		}
+	}
+	return nullptr;
 }

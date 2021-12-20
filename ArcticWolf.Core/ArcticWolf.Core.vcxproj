@@ -153,6 +153,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Actor.h" />
     <ClInclude Include="Array.h" />
     <ClInclude Include="CameraTypes.h" />
     <ClInclude Include="CheatManager.h" />
@@ -171,6 +172,9 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="Functions.h" />
     <ClInclude Include="GameInstance.h" />
+    <ClInclude Include="GameMode.h" />
+    <ClInclude Include="GameModeBase.h" />
+    <ClInclude Include="GameViewportClient.h" />
     <ClInclude Include="GIObject.h" />
     <ClInclude Include="GObjects.h" />
     <ClInclude Include="Hooks.h" />
@@ -202,6 +206,7 @@
     <ClInclude Include="xorstr.hpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Actor.cpp" />
     <ClCompile Include="Array.cpp" />
     <ClCompile Include="CheatManager.cpp" />
     <ClCompile Include="Console.cpp" />
@@ -216,6 +221,9 @@
     <ClCompile Include="FortniteGameInstance.cpp" />
     <ClCompile Include="Functions.cpp" />
     <ClCompile Include="GameInstance.cpp" />
+    <ClCompile Include="GameMode.cpp" />
+    <ClCompile Include="GameModeBase.cpp" />
+    <ClCompile Include="GameViewportClient.cpp" />
     <ClCompile Include="GIObject.cpp" />
     <ClCompile Include="GObjects.cpp" />
     <ClCompile Include="Hooks.cpp" />

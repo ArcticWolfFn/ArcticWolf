@@ -8,6 +8,7 @@ UCheatManager::UCheatManager(UObject* InternalCheatManager) : InternalCheatManag
 void UCheatManager::Setup()
 {
 	GIObject::SetPointer(XOR(L"Function /Script/Engine.CheatManager:BugItGo"), &Fn_BugItGo, &CanExec_BugItGo);
+	GIObject::SetPointer(XOR(L"Function /Script/Engine.CheatManager:DestroyAll"), &Fn_DestroyAll, &CanExec_DestroyAll);
 }
 
 void UCheatManager::BugItGo(float X, float Y, float Z, float Pitch, float Yaw, float Roll)
@@ -33,4 +34,19 @@ void UCheatManager::BugItGo(float X, float Y, float Z, float Pitch, float Yaw, f
 	params.Roll = Roll;
 
 	ProcessEvent(InternalCheatManager, Fn_BugItGo, &params);
+}
+
+void UCheatManager::DestroyAll(AActor* aClass)
+{
+	if (!CanExec_DestroyAll) return;
+
+	struct Params
+	{
+		AActor* aClass;
+	};
+
+	auto params = new Params();
+	params->aClass = aClass;
+
+	ProcessEvent(InternalCheatManager, Fn_DestroyAll, &params);
 }

@@ -12,6 +12,27 @@ void APlayerController::Setup()
 {
 	__super::Setup();
 
+	InternalPlayerController = PlayerControllerFinder->GetObj();
+
+	if (Util::IsBadReadPtr(InternalPlayerController)) return;
+
+	GIObject::SetPointer(XOR(L"Function /Script/Engine.PlayerController:SwitchLevel"), &Fn_SwitchLevel, &CanExec_SwitchLevel);
+
 	CheatManager = UCheatManager(PlayerControllerFinder->Find(XOR(L"CheatManager")).GetObj());
 	CheatManager.Setup();
+}
+
+void APlayerController::SwitchLevel(FString URL)
+{
+	if (!CanExec_SwitchLevel) return;
+
+	struct Params
+	{
+		FString URL;
+	};
+
+	auto params = Params();
+	params.URL = URL;
+
+	ProcessEvent(InternalPlayerController, Fn_SwitchLevel, &params);
 }
