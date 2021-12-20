@@ -24,3 +24,13 @@ bool TArray<T>::IsValidIndex(int i) const
 {
 	return i < Num();
 }
+
+template<class T>
+int TArray<T>::Add(T* NewItem)
+{
+	Count = Count + 1;
+	Max = Max + 1;
+	Data = static_cast<UObject**>(malloc(Count * sizeof(UObject*)));
+	Data[Count - 1] = NewItem;
+	return Count;
+}

@@ -8,7 +8,7 @@ auto UFunctions::SetTimeOfDay(float Time)
 	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
 	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
 
-	FortniteGame::FortKismetLibrary.SetTimeOfDay(WorldFinder.GetObj(), Time);
+	FortniteGameInstance::FortKismetLibrary.SetTimeOfDay(WorldFinder.GetObj(), Time);
 }
 
 void UFunctions::TeleportToSpawn()

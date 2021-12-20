@@ -64,6 +64,24 @@
     <Filter Include="Headerdateien\modules\MinHook">
       <UniqueIdentifier>{6783a785-b08b-473f-8fd4-b729fc286147}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\FortniteGame">
+      <UniqueIdentifier>{065fae7e-118d-4e84-9c39-5210ed2a7a60}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\FortniteGame">
+      <UniqueIdentifier>{2c42043d-903e-46f1-9bad-cfb3c702d142}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\UnrealEngine\GameFramework">
+      <UniqueIdentifier>{22eec791-712b-432d-b394-fd617139e29d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\UnrealEngine\GameFramework">
+      <UniqueIdentifier>{0b39af33-d51d-485e-9bd9-783c61055456}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\UnrealEngine\Engine">
+      <UniqueIdentifier>{89282c63-699e-4372-b59b-f868d7533fe2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\UnrealEngine\Engine">
+      <UniqueIdentifier>{4a319f64-ed34-4035-ad22-3696556d2c31}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -180,6 +198,33 @@
     <ClInclude Include="UObjectArray.h">
       <Filter>Headerdateien\UnrealEngine\UObject</Filter>
     </ClInclude>
+    <ClInclude Include="Console.h">
+      <Filter>Headerdateien\game</Filter>
+    </ClInclude>
+    <ClInclude Include="FortniteGameInstance.h">
+      <Filter>Headerdateien\FortniteGame</Filter>
+    </ClInclude>
+    <ClInclude Include="FortKismetLibrary.h">
+      <Filter>Headerdateien\FortniteGame</Filter>
+    </ClInclude>
+    <ClInclude Include="CheatManager.h">
+      <Filter>Headerdateien\UnrealEngine\GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayerController.h">
+      <Filter>Headerdateien\UnrealEngine\GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="GameInstance.h">
+      <Filter>Headerdateien\UnrealEngine\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="LocalPlayer.h">
+      <Filter>Headerdateien\UnrealEngine\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Player.h">
+      <Filter>Headerdateien\UnrealEngine\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="Class.h">
+      <Filter>Headerdateien\UnrealEngine\UObject</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -259,6 +304,30 @@
     </ClCompile>
     <ClCompile Include="Finder.cpp">
       <Filter>Quelldateien\game</Filter>
+    </ClCompile>
+    <ClCompile Include="Console.cpp">
+      <Filter>Quelldateien\game</Filter>
+    </ClCompile>
+    <ClCompile Include="FortKismetLibrary.cpp">
+      <Filter>Quelldateien\FortniteGame</Filter>
+    </ClCompile>
+    <ClCompile Include="FortniteGameInstance.cpp">
+      <Filter>Quelldateien\FortniteGame</Filter>
+    </ClCompile>
+    <ClCompile Include="CheatManager.cpp">
+      <Filter>Quelldateien\UnrealEngine\GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayerController.cpp">
+      <Filter>Quelldateien\UnrealEngine\GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="GameInstance.cpp">
+      <Filter>Quelldateien\UnrealEngine\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="LocalPlayer.cpp">
+      <Filter>Quelldateien\UnrealEngine\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Player.cpp">
+      <Filter>Quelldateien\UnrealEngine\Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

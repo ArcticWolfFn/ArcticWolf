@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "Match.h"
 
+#include "Functions.h"
+#include "Console.h"
+
 void Match::Start(const wchar_t* MapToPlayOn)
 {
 	UFunctions::Travel(MapToPlayOn);
@@ -9,7 +12,7 @@ void Match::Start(const wchar_t* MapToPlayOn)
 
 void Match::Stop()
 {
-	UFunctions::Travel(FRONTEND);
+	UFunctions::Travel(XOR(L"Frontend?game=/Script/FortniteGame.FortGameModeFrontEnd"));
 	bIsStarted = false;
 	bIsInit = false;
 	NeoPlayer.Controller = nullptr;

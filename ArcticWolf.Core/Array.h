@@ -18,4 +18,6 @@ public:
 	const T& operator[](int i) const;
 
 	bool IsValidIndex(int i) const;
+
+	int Add(T* NewItem);
 };

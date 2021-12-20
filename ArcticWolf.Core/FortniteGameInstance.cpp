@@ -1,8 +1,10 @@
 #include "pch.h"
-#include "FortniteGame.h"
+#include "FortniteGameInstance.h"
 
-void FortniteGame::Setup()
+void FortniteGameInstance::Setup()
 {
+	__super::Setup();
+
 	FortKismetLibrary = UFortKismetLibrary();
 	FortKismetLibrary.Setup();
 }

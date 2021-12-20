@@ -1,12 +1,11 @@
 #pragma once
 #include "finder.h"
-#include "player.h"
 #include "framework.h"
-#include "structs.h"
 #include "ue4.h"
 
 static class UFunctions
 {
+public:
 	static auto SetTimeOfDay(float Time);
 
 	static void TeleportToSpawn();

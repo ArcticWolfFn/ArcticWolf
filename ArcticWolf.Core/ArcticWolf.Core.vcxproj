@@ -155,7 +155,9 @@
   <ItemGroup>
     <ClInclude Include="Array.h" />
     <ClInclude Include="CameraTypes.h" />
+    <ClInclude Include="CheatManager.h" />
     <ClInclude Include="Class.h" />
+    <ClInclude Include="Console.h" />
     <ClInclude Include="CoreNetTypes.h" />
     <ClInclude Include="curl.h" />
     <ClInclude Include="curlver.h" />
@@ -165,12 +167,14 @@
     <ClInclude Include="Field.h" />
     <ClInclude Include="Finder.h" />
     <ClInclude Include="FortKismetLibrary.h" />
-    <ClInclude Include="FortniteGame.h" />
+    <ClInclude Include="FortniteGameInstance.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="Functions.h" />
+    <ClInclude Include="GameInstance.h" />
     <ClInclude Include="GIObject.h" />
     <ClInclude Include="GObjects.h" />
     <ClInclude Include="Hooks.h" />
+    <ClInclude Include="LocalPlayer.h" />
     <ClInclude Include="Masks.h" />
     <ClInclude Include="Match.h" />
     <ClInclude Include="MinHook.h" />
@@ -179,6 +183,8 @@
     <ClInclude Include="ObjectMacros.h" />
     <ClInclude Include="Patterns.h" />
     <ClInclude Include="pch.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="PlayerController.h" />
     <ClInclude Include="Quat.h" />
     <ClInclude Include="Rotator.h" />
     <ClInclude Include="system.h" />
@@ -197,6 +203,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Array.cpp" />
+    <ClCompile Include="CheatManager.cpp" />
+    <ClCompile Include="Console.cpp" />
     <ClCompile Include="CoreNetTypes.cpp" />
     <ClCompile Include="Detours.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -205,11 +213,13 @@
     <ClCompile Include="Field.cpp" />
     <ClCompile Include="Finder.cpp" />
     <ClCompile Include="FortKismetLibrary.cpp" />
-    <ClCompile Include="FortniteGame.cpp" />
+    <ClCompile Include="FortniteGameInstance.cpp" />
     <ClCompile Include="Functions.cpp" />
+    <ClCompile Include="GameInstance.cpp" />
     <ClCompile Include="GIObject.cpp" />
     <ClCompile Include="GObjects.cpp" />
     <ClCompile Include="Hooks.cpp" />
+    <ClCompile Include="LocalPlayer.cpp" />
     <ClCompile Include="Match.cpp" />
     <ClCompile Include="NameTypes.cpp" />
     <ClCompile Include="Object.cpp" />
@@ -219,6 +229,8 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PlayerController.cpp" />
     <ClCompile Include="Quat.cpp" />
     <ClCompile Include="Rotator.cpp" />
     <ClCompile Include="UE4.cpp" />

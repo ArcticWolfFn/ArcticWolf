@@ -9,7 +9,7 @@
 #include "Class.h"
 #include "xorstr.hpp"
 #include "UE4.h"
-#include "FortniteGame.h"
+#include "FortniteGameInstance.h"
 
 #include <plog/Log.h>
 
