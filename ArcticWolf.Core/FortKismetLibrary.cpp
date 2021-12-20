@@ -27,5 +27,5 @@ void FortniteGame::UFortKismetLibrary::Setup()
 		return;
 	}
 
-	GIObject::SetPointer(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"), &Fn_SetTimeOfDay);
+	GIObject::SetPointer(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:SetTimeOfDay"), &Fn_SetTimeOfDay);
 }
