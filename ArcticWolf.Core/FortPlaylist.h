@@ -1,5 +1,5 @@
 #pragma once
-class UFortPlaylist : protected GIObject
+class UFortPlaylist : public UObject
 {
 };
 

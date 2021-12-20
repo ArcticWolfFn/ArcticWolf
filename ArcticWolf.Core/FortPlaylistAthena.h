@@ -2,7 +2,7 @@
 
 #include "FortPlaylist.h"
 
-class UFortPlaylistAthena : protected UFortPlaylist
+class UFortPlaylistAthena : public UFortPlaylist
 {
 };
 

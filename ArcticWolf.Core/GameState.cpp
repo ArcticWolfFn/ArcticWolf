@@ -4,4 +4,6 @@
 void AGameState::Setup()
 {
 	__super::Setup();
+
+	AGameStateBase();
 }

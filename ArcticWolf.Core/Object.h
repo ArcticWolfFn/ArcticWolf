@@ -4,7 +4,7 @@
 
 class UClass;
 
-class UObject
+class UObject : GIObject
 {
 public:
 	PVOID VTableObject;

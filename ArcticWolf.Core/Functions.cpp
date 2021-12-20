@@ -3,6 +3,7 @@
 #include "Class.h"
 #include "GameMode.h"
 #include "FortPlayerController.h"
+#include "FortGameStateAthena.h"
 
 auto UFunctions::SetTimeOfDay(float Time)
 {
@@ -70,20 +71,12 @@ void UFunctions::ServerReadyToStartMatch()
 
 void UFunctions::SetPlaylist()
 {
-	GEngine->GameViewport->World->GetGameState();
+	auto gameState = AFortGameStateAthena(*GEngine->GameViewport->World->GetGameState());
 
-	auto CurrentPlaylistInfoOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortGameStateAthena"), XOR(L"CurrentPlaylistInfo"));
+	gameState.CurrentPlaylistInfo->SetBasePlaylist(gPlaylist);
+	gameState.CurrentPlaylistInfo->SetOverridePlaylist(gPlaylist);
 
-	auto CurrentPlaylistInfo = reinterpret_cast<FPlaylistPropertyArray*>(reinterpret_cast<uintptr_t>(GameStateFinder.GetObj()) + CurrentPlaylistInfoOffset);
-
-	CurrentPlaylistInfo->BasePlaylist = gPlaylist;
-	CurrentPlaylistInfo->OverridePlaylist = gPlaylist;
-
-	auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_CurrentPlaylistInfo"));
-
-	Empty_Params params;
-
-	ProcessEvent(GameStateFinder.GetObj(), fn, &params);
+	gameState.OnRep_CurrentPlaylistInfo();
 
 	PLOGD << "Playlist was set";
 }
