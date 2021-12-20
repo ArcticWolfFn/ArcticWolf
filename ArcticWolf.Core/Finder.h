@@ -75,7 +75,7 @@ public:
 
 	ObjectFinder Find(const std::wstring& objectToFind) const;
 
-	static auto FindOffset(const std::wstring& classToFind, const std::wstring& objectToFind);
+	static int32_t FindOffset(const std::wstring& classToFind, const std::wstring& objectToFind);
 
 	ObjectFinder FindChildObject(const std::wstring& objectToFind) const;
 

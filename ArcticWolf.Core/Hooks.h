@@ -237,6 +237,9 @@ static class Hooks
 			PLOGV.printf("Hooks: Playlist points to %s", nObj.c_str());
 		}
 
+		GGameInstance.Setup();
+		GGameEngine.Setup();
+
 		PLOGV << "End Hooks::Misc";
 
 		return true;

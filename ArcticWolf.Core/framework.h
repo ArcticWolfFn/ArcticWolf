@@ -10,6 +10,7 @@
 #include "xorstr.hpp"
 #include "UE4.h"
 #include "FortniteGameInstance.h"
+#include "Engine.h"
 
 #include <plog/Log.h>
 
@@ -19,4 +20,9 @@
 #pragma comment(lib, "ws2_32.lib")
 #pragma comment(lib, "minhook.lib")
 
-inline FortniteGameInstance GGameInstance = FortniteGameInstance();
+inline UEngine GGameEngine = UEngine();
+
+inline FortniteGameInstance GetGame()
+{
+	return GGameEngine.GameInstance;
+}

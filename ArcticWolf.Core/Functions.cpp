@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "Functions.h"
 #include "Class.h"
+#include "GameMode.h"
+#include "FortPlayerController.h"
 
 auto UFunctions::SetTimeOfDay(float Time)
 {
@@ -8,31 +10,31 @@ auto UFunctions::SetTimeOfDay(float Time)
 	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
 	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
 
-	GGameInstance.FortKismetLibrary.SetTimeOfDay(WorldFinder.GetObj(), Time);
+	GetGame().FortKismetLibrary.SetTimeOfDay(WorldFinder.GetObj(), Time);
 }
 
 void UFunctions::TeleportToSpawn()
 {
-	GGameInstance.LocalPlayers[0].PlayerController->CheatManager.BugItGo(-156128.36, -159492.78, -2996.30, 0, 0, 0);
+	GetGame().LocalPlayers[0].PlayerController->CheatManager.BugItGo(-156128.36, -159492.78, -2996.30, 0, 0, 0);
 
 	PLOGI << "Teleported to spawn island";
 }
 
 void UFunctions::TeleportToMain()
 {
-	GGameInstance.LocalPlayers[0].PlayerController->CheatManager.BugItGo(0, 0, 0, 0, 0, 0);
+	GetGame().LocalPlayers[0].PlayerController->CheatManager.BugItGo(0, 0, 0, 0, 0, 0);
 }
 
 void UFunctions::TeleportToCoords(float X, float Y, float Z)
 {
-	GGameInstance.LocalPlayers[0].PlayerController->CheatManager.BugItGo(X, Y, Z, 0, 0, 0);
+	GetGame().LocalPlayers[0].PlayerController->CheatManager.BugItGo(X, Y, Z, 0, 0, 0);
 }
 
 void UFunctions::DestroyAllHLODs()
 {
 	auto HLODSMActor = UE4::FindObject<AActor*>(XOR(L"Class /Script/FortniteGame.FortHLODSMActor"));
 
-	GGameInstance.LocalPlayers[0].PlayerController->CheatManager.DestroyAll(HLODSMActor);
+	GetGame().LocalPlayers[0].PlayerController->CheatManager.DestroyAll(HLODSMActor);
 
 	PLOGD << "HLODSM Actor was destroyed.";
 }
@@ -46,20 +48,13 @@ void UFunctions::Travel(const wchar_t* url)
 
 	PLOGD.printf("Travel: To Url: %s", std::wstring(url).c_str());
 
-	GGameInstance.LocalPlayers[0].PlayerController->SwitchLevel(FString(url));
+	GetGame().LocalPlayers[0].PlayerController->SwitchLevel(FString(url));
 }
 
 void UFunctions::StartMatch()
 {
-	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(L"World");
-	ObjectFinder GameModeFinder = WorldFinder.Find(L"AuthorityGameMode");
-
-	const auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameMode:StartMatch"));
-	Empty_Params params;
-
-	ProcessEvent(GameModeFinder.GetObj(), fn, &params);
+	auto GameMode = dynamic_cast<AGameMode*>(GEngine->GameViewport->World->AuthorityGameMode);
+	GameMode->StartMatch();
 
 	PLOGI << "Match started!";
 }
@@ -67,25 +62,15 @@ void UFunctions::StartMatch()
 //Simulates the server telling the game that it's ready to start match
 void UFunctions::ServerReadyToStartMatch()
 {
-	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-	ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+	auto playerController = dynamic_cast<AFortPlayerController*>(GetGame().LocalPlayers[0].PlayerController);
+	playerController->ServerReadyToStartMatch();
 
-	ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-	auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortPlayerController:ServerReadyToStartMatch"));
-
-	Empty_Params params;
-
-	ProcessEvent(PlayerControllerFinder.GetObj(), fn, &params);
-	PLOGI << "Server is ready to start match";
+	PLOGI << "Server reported ReadyToStartMatch";
 }
 
 void UFunctions::SetPlaylist()
 {
-	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
-	ObjectFinder GameStateFinder = WorldFinder.Find(XOR(L"GameState"));
+	GEngine->GameViewport->World->GetGameState();
 
 	auto CurrentPlaylistInfoOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortGameStateAthena"), XOR(L"CurrentPlaylistInfo"));
 

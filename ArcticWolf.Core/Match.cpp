@@ -185,8 +185,6 @@ void Match::Init()
 
 	NeoPlayer.Pawn = ObjectFinder::FindActor(XOR(L"PlayerPawn_Athena_C"));
 
-	FortniteGame::Setup();
-
 	if (NeoPlayer.Pawn == nullptr) {
 		PLOGE << "Player Pawn is null";
 	}

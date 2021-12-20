@@ -4,6 +4,7 @@
 #include "ObjectMacros.h"
 #include "Finder.h"
 #include "GameModeBase.h"
+#include "GameStateBase.h"
 
 enum ESpawnActorNameMode : uint8_t
 {
@@ -60,9 +61,13 @@ public:
 
 	void Setup() override;
 
+	AGameStateBase* GetGameState();
+
 	AGameModeBase* AuthorityGameMode = nullptr;
 
 private:
 	ObjectFinder* InternalFinder = nullptr;
+
+	AGameStateBase* GameState = nullptr;
 };
 

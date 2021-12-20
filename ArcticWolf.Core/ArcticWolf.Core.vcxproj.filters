@@ -82,6 +82,24 @@
     <Filter Include="Headerdateien\UnrealEngine\Engine">
       <UniqueIdentifier>{4a319f64-ed34-4035-ad22-3696556d2c31}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Quelldateien\FortniteGame\GameStates">
+      <UniqueIdentifier>{d0276ea7-05f9-4c93-9e68-82b34a98a103}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\FortniteGame\Game States">
+      <UniqueIdentifier>{1802e131-934a-4fdb-a3b9-81ed768743b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\FortniteGame\Game States\InGame">
+      <UniqueIdentifier>{e650a7d9-c4d0-4135-8b21-52433ed4e353}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\FortniteGame\GameStates\InGame">
+      <UniqueIdentifier>{2699c13f-979f-4f5a-b0af-62ea478b96fc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Quelldateien\FortniteGame\Playlists">
+      <UniqueIdentifier>{d0e2050c-28fb-4dd1-a84e-e7ab52058911}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Headerdateien\FortniteGame\Playlists">
+      <UniqueIdentifier>{7ca86949-2a75-4231-898e-138d4e65cd8c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -237,6 +255,45 @@
     <ClInclude Include="GameViewportClient.h">
       <Filter>Headerdateien\UnrealEngine\Engine</Filter>
     </ClInclude>
+    <ClInclude Include="Engine.h">
+      <Filter>Headerdateien\UnrealEngine\Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="FortPlayerController.h">
+      <Filter>Headerdateien\FortniteGame</Filter>
+    </ClInclude>
+    <ClInclude Include="GameStateBase.h">
+      <Filter>Headerdateien\UnrealEngine\GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="FortGameState_InGame.h">
+      <Filter>Headerdateien\FortniteGame\Game States\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="FortGameStateAthena.h">
+      <Filter>Headerdateien\FortniteGame\Game States\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="FortGameStateZone.h">
+      <Filter>Headerdateien\FortniteGame\Game States\InGame</Filter>
+    </ClInclude>
+    <ClInclude Include="FortGameState.h">
+      <Filter>Headerdateien\FortniteGame\Game States</Filter>
+    </ClInclude>
+    <ClInclude Include="FortGameStateBase.h">
+      <Filter>Headerdateien\FortniteGame\Game States</Filter>
+    </ClInclude>
+    <ClInclude Include="PlayspaceGameState.h">
+      <Filter>Headerdateien\FortniteGame\Game States</Filter>
+    </ClInclude>
+    <ClInclude Include="GameState.h">
+      <Filter>Headerdateien\UnrealEngine\GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="PlaylistPropertyArray.h">
+      <Filter>Headerdateien\FortniteGame\Playlists</Filter>
+    </ClInclude>
+    <ClInclude Include="FortPlaylistAthena.h">
+      <Filter>Headerdateien\FortniteGame\Playlists</Filter>
+    </ClInclude>
+    <ClInclude Include="FortPlaylist.h">
+      <Filter>Headerdateien\FortniteGame\Playlists</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -320,9 +377,6 @@
     <ClCompile Include="FortKismetLibrary.cpp">
       <Filter>Quelldateien\FortniteGame</Filter>
     </ClCompile>
-    <ClCompile Include="FortniteGameInstance.cpp">
-      <Filter>Quelldateien\FortniteGame</Filter>
-    </ClCompile>
     <ClCompile Include="CheatManager.cpp">
       <Filter>Quelldateien\UnrealEngine\GameFramework</Filter>
     </ClCompile>
@@ -352,6 +406,48 @@
     </ClCompile>
     <ClCompile Include="GameViewportClient.cpp">
       <Filter>Quelldateien\UnrealEngine\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine.cpp">
+      <Filter>Quelldateien\UnrealEngine\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="FortPlayerController.cpp">
+      <Filter>Quelldateien\FortniteGame</Filter>
+    </ClCompile>
+    <ClCompile Include="GameStateBase.cpp">
+      <Filter>Quelldateien\UnrealEngine\GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="FortniteGameInstance.cpp">
+      <Filter>Quelldateien\FortniteGame</Filter>
+    </ClCompile>
+    <ClCompile Include="FortGameState_InGame.cpp">
+      <Filter>Quelldateien\FortniteGame\GameStates\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="FortGameStateAthena.cpp">
+      <Filter>Quelldateien\FortniteGame\GameStates\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="FortGameStateZone.cpp">
+      <Filter>Quelldateien\FortniteGame\GameStates\InGame</Filter>
+    </ClCompile>
+    <ClCompile Include="FortGameState.cpp">
+      <Filter>Quelldateien\FortniteGame\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="FortGameStateBase.cpp">
+      <Filter>Quelldateien\FortniteGame\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="PlayspaceGameState.cpp">
+      <Filter>Quelldateien\FortniteGame\GameStates</Filter>
+    </ClCompile>
+    <ClCompile Include="GameState.cpp">
+      <Filter>Quelldateien\UnrealEngine\GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="PlaylistPropertyArray.cpp">
+      <Filter>Quelldateien\FortniteGame\Playlists</Filter>
+    </ClCompile>
+    <ClCompile Include="FortPlaylistAthena.cpp">
+      <Filter>Quelldateien\FortniteGame\Playlists</Filter>
+    </ClCompile>
+    <ClCompile Include="FortPlaylist.cpp">
+      <Filter>Quelldateien\FortniteGame\Playlists</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -67,7 +67,7 @@ ObjectFinder ObjectFinder::Find(const std::wstring& objectToFind) const
 	return FindChildObject(objectToFind);
 }
 
-auto ObjectFinder::FindOffset(const std::wstring& classToFind, const std::wstring& objectToFind)
+int32_t ObjectFinder::FindOffset(const std::wstring& classToFind, const std::wstring& objectToFind)
 {
 	auto Class = UE4::FindObject<UClass*>(classToFind.c_str(), true);
 

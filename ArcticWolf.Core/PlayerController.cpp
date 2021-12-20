@@ -12,9 +12,9 @@ void APlayerController::Setup()
 {
 	__super::Setup();
 
-	InternalPlayerController = PlayerControllerFinder->GetObj();
+	InternalObject = PlayerControllerFinder->GetObj();
 
-	if (Util::IsBadReadPtr(InternalPlayerController)) return;
+	if (Util::IsBadReadPtr(InternalObject)) return;
 
 	GIObject::SetPointer(XOR(L"Function /Script/Engine.PlayerController:SwitchLevel"), &Fn_SwitchLevel, &CanExec_SwitchLevel);
 
@@ -34,5 +34,5 @@ void APlayerController::SwitchLevel(FString URL)
 	auto params = Params();
 	params.URL = URL;
 
-	ProcessEvent(InternalPlayerController, Fn_SwitchLevel, &params);
+	ProcessEvent(InternalObject, Fn_SwitchLevel, &params);
 }
