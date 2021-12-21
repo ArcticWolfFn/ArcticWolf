@@ -141,6 +141,8 @@ public:
 		{
 			VEH::AddHook(CurlEasySetOpt, CurlEasySetOptHook);
 		}
+
+		PLOGD << "Init finished";
 	}
 
 	static bool Misc() {
@@ -163,14 +165,6 @@ public:
 		VALIDATE_ADDRESS(GEngineAdd, XOR("Failed to find GEngine Address."));
 
 		GEngine = *reinterpret_cast<UEngine**>(GEngineAdd + 7 + *reinterpret_cast<int32_t*>(GEngineAdd + 3));
-
-		//Used for ProcessEvent Hooking.
-		auto ProcessEventAdd = Util::FindPattern(Patterns::Global::ProcessEvent, Masks::Global::ProcessEvent);
-		VALIDATE_ADDRESS(ProcessEventAdd, XOR("Failed to find ProcessEvent Address."));
-
-		ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
-
-		gProcessEventAdd = ProcessEventAdd;
 
 		//Used for Camera Hooking.
 		auto GetViewPointAdd = Util::FindPattern(Patterns::Global::GetViewPoint, Masks::Global::GetViewPoint);
@@ -219,6 +213,14 @@ public:
 
 		auto AbilityPatchAdd = Util::FindPattern(Patterns::Global::AbilityPatch, Masks::Global::AbilityPatch);
 		VALIDATE_ADDRESS(AbilityPatchAdd, XOR("Failed to find AbilityPatch Address."));
+
+		//Used for ProcessEvent Hooking.
+		auto ProcessEventAdd = Util::FindPattern(Patterns::Global::ProcessEvent, Masks::Global::ProcessEvent);
+		VALIDATE_ADDRESS(ProcessEventAdd, XOR("Failed to find ProcessEvent Address."));
+
+		ProcessEvent = decltype(ProcessEvent)(ProcessEventAdd);
+
+		gProcessEventAdd = ProcessEventAdd;
 
 		//Patches fortnite ability ownership checks, work on everysingle fortnite version.
 		//Author: @nyamimi

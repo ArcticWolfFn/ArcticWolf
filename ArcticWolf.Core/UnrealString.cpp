@@ -24,6 +24,10 @@ bool FString::IsValid() const
 
 const wchar_t* FString::ToWString() const
 {
+	if (Util::IsBadReadPtr(Data))
+	{
+		return L"";
+	}
 	return Data;
 }
 

@@ -47,14 +47,22 @@ std::wstring UE4::GetObjectFirstName(UObject* object)
 std::wstring UE4::GetObjectName(UObject* object)
 {
 	std::wstring name(L"");
+
 	for (auto i = 0; object; object = object->Outer, ++i)
 	{
 		FString internalName = GetObjectNameInternal(object);
-		if (!internalName.ToWString()) break;
+
+		if (!internalName.ToWString())
+			break;
+
 		name = internalName.ToWString() + std::wstring(i > 0 ? L"." : L"") + name;
+		PLOGI.printf("Name: %s", name);
+
 
 		Free((void*)internalName.ToWString());
 	}
+
+	PLOGI.printf("Name: %s", name);
 
 	return name;
 }
