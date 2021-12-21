@@ -12,9 +12,9 @@
 #include "Match.h"
 #include "FortPlaylistAthena.h"
 
-const char* URL_PROTOCOL = "https";
-const char* URL_HOST = "localhost";
-const char* URL_PORT = "44366";
+inline const char* URL_PROTOCOL = "https";
+inline const char* URL_HOST = "localhost";
+inline const char* URL_PORT = "44366";
 
 //globals
 static void* UnsafeEnvironmentPopupAddress;

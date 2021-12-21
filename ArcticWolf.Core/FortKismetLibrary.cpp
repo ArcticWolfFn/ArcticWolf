@@ -19,13 +19,15 @@ void FortniteGame::UFortKismetLibrary::SetTimeOfDay(UObject* WorldContextObject,
 
 void FortniteGame::UFortKismetLibrary::Setup()
 {
+	__super::Setup();
+
 	bool foundKismetLib = false;
-	GIObject::SetPointer(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"), &InternalFortKismetLibrary, &foundKismetLib);
+	SetPointer(XOR(L"FortKismetLibrary /Script/FortniteGame.Default__FortKismetLibrary"), &InternalFortKismetLibrary, &foundKismetLib);
 
 	if (!foundKismetLib) 
 	{
 		return;
 	}
 
-	GIObject::SetPointer(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:SetTimeOfDay"), &Fn_SetTimeOfDay);
+	SetPointer(XOR(L"Function /Script/FortniteGame.FortKismetLibrary:SetTimeOfDay"), &Fn_SetTimeOfDay);
 }

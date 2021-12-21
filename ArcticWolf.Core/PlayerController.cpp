@@ -16,7 +16,7 @@ void APlayerController::Setup()
 
 	if (Util::IsBadReadPtr(InternalObject)) return;
 
-	GIObject::SetPointer(XOR(L"Function /Script/Engine.PlayerController:SwitchLevel"), &Fn_SwitchLevel, &CanExec_SwitchLevel);
+	SetPointer(XOR(L"Function /Script/Engine.PlayerController:SwitchLevel"), &Fn_SwitchLevel, &CanExec_SwitchLevel);
 
 	CheatManager = UCheatManager(PlayerControllerFinder->Find(XOR(L"CheatManager")).GetObj());
 	CheatManager.Setup();

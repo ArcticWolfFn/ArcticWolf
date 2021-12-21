@@ -19,8 +19,8 @@ public:
 	static void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams);
 
 private:
-	static bool bIsDebugCamera;
-	static bool bIsFlying;
+	inline static bool bIsDebugCamera = false;
+	inline static bool bIsFlying = false;
 
 	// Special async logging
 	static void Log(std::wstring nObj, std::wstring nFunc, std::wstring nObjClass);

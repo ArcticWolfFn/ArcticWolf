@@ -9,32 +9,38 @@ inline std::vector<std::wstring> gBlueprints;
 inline std::vector<std::wstring> gMeshes;
 inline UFortPlaylistAthena* gPlaylist;
 
-static class Match
+class Match
 {
 public:
-	static bool bIsInit;
-	static bool bIsStarted;
-	static bool bIsPlayerInit;
+	bool bIsInit;
+	bool bIsStarted;
+	bool bIsPlayerInit;
 
-	static bool bHasJumped;
-	static bool bHasShowedPickaxe;
+	bool bHasJumped;
+	bool bHasShowedPickaxe;
 
-	static bool bWantsToJump;
-	static bool bWantsToSkydive;
-	static bool bWantsToOpenGlider;
-	static bool bWantsToShowPickaxe;
+	bool bWantsToJump;
+	bool bWantsToSkydive;
+	bool bWantsToOpenGlider;
+	bool bWantsToShowPickaxe;
 
-	static NeoPlayerClass NeoPlayer;
+	NeoPlayerClass NeoPlayer;
 
-	static void Start(const wchar_t* MapToPlayOn);
+	void Start(const wchar_t* MapToPlayOn);
 
-	static void Stop();
+	void Stop();
 
-	static void LoadMoreClasses();
+	void LoadMoreClasses();
 
-	static void InitCombos();
+	void InitCombos();
+	
+	// because CreaThread needs a static entry point
+	static DWORD ThreadEntry(LPVOID* param);
 
-	static void Thread();
+	void Thread();
 
-	static void Init();
+	void Init();
 };
+
+inline Match GMatch = Match();
+

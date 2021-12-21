@@ -1,8 +1,9 @@
 #pragma once
 #include "NameTypes.h"
 #include "UnrealType.h"
-
+#include "GIObject.h"
 class UClass;
+//class GIObject;
 
 class UObject : public GIObject
 {
@@ -14,11 +15,7 @@ public:
 	FName NamePrivate;
 	UObject* Outer;
 
-	void ProcessEvent(void* fn, void* parms);
-
-	bool IsA(UClass* cmp) const;
-
-	FName GetFName() const;
+	virtual void Setup() override;
 };
 
 struct UField : public UObject

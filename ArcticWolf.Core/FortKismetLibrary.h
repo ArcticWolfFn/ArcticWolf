@@ -1,10 +1,8 @@
 #pragma once
 
-#include "GIObject.h"
-
 namespace FortniteGame
 {
-	class UFortKismetLibrary : GIObject
+	class UFortKismetLibrary : public UObject
 	{
 	public:
 		// (Final|BlueprintAuthorityOnly|Native|Static|Public|BlueprintCallable)

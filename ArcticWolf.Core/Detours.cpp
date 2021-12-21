@@ -104,7 +104,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 
 	//If the game requested matchmaking we open the game mode
-	if (wcsstr(nFunc.c_str(), XOR(L"OnSetPlayButtonText")) && wcsstr(nObj.c_str(), XOR(L"Matchmaking_AthenaLegacy")) && !Match::bIsStarted)
+	if (wcsstr(nFunc.c_str(), XOR(L"OnSetPlayButtonText")) && wcsstr(nObj.c_str(), XOR(L"Matchmaking_AthenaLegacy")) && !GMatch.bIsStarted)
 	{
 		PLOGI << XOR("[NeoRoyale] Start!");
 
@@ -112,22 +112,22 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		gPlaylist = Playlist;
 		auto Map = XOR(L"Apollo_Terrain?game=/Game/Athena/Athena_GameMode.Athena_GameMode_C");
 
-		Match::Start(Map);
+		GMatch.Start(Map);
 	}
 
-	else if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && Match::bIsStarted && !Match::bIsInit)
+	else if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && GMatch.bIsStarted && !GMatch.bIsInit)
 	{
 		PLOGI << XOR("ReadyToStartMatch called");
-		Match::Init();
+		GMatch.Init();
 	}
 
-	else if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && Match::bIsInit && Match::bIsStarted)
+	else if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && GMatch.bIsInit && GMatch.bIsStarted)
 	{
 		PLOGD << "ServerLoadingScreenDropped called";
 
 		//UFunctions::PlayCustomPlayPhaseAlert();
 
-		Match::LoadMoreClasses();
+		GMatch.LoadMoreClasses();
 	}
 
 	else if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
@@ -143,15 +143,15 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	// Fly Command
 	else if (wcsstr(nFunc.c_str(), XOR(L"Fly")) && nObj.starts_with(XOR(L"CheatManager_")))
 	{
-		Match::NeoPlayer.Fly(bIsFlying);
+		GMatch.NeoPlayer.Fly(bIsFlying);
 		bIsFlying = !bIsFlying;
 	}
 
 	else if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
 	{
-		Match::NeoPlayer.ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
-		Match::NeoPlayer.Respawn();
-		auto currentLocation = Match::NeoPlayer.GetLocation();
+		GMatch.NeoPlayer.ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
+		GMatch.NeoPlayer.Respawn();
+		auto currentLocation = GMatch.NeoPlayer.GetLocation();
 		UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
 	}
 
@@ -195,31 +195,31 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		}
 	}
 
-	else if (Match::bIsInit)
+	else if (GMatch.bIsInit)
 	{
-		if (Match::bWantsToJump)
+		if (GMatch.bWantsToJump)
 		{
 			// ToDo: fix this
 			//FortniteGame::PlayerCharacter.Jump();
-			Match::bWantsToJump = false;
+			GMatch.bWantsToJump = false;
 		}
 
-		else if (Match::bWantsToOpenGlider)
+		else if (GMatch.bWantsToOpenGlider)
 		{
-			Match::NeoPlayer.ForceOpenParachute();
-			Match::bWantsToOpenGlider = false;
+			GMatch.NeoPlayer.ForceOpenParachute();
+			GMatch.bWantsToOpenGlider = false;
 		}
 
-		else if (Match::bWantsToSkydive)
+		else if (GMatch.bWantsToSkydive)
 		{
-			Match::NeoPlayer.Skydive();
-			Match::bWantsToSkydive = false;
+			GMatch.NeoPlayer.Skydive();
+			GMatch.bWantsToSkydive = false;
 		}
 
-		else if (Match::bWantsToShowPickaxe)
+		else if (GMatch.bWantsToShowPickaxe)
 		{
-			Match::NeoPlayer.ShowPickaxe();
-			Match::bWantsToShowPickaxe = false;
+			GMatch.NeoPlayer.ShowPickaxe();
+			GMatch.bWantsToShowPickaxe = false;
 		}
 	}
 
@@ -243,7 +243,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 	else if (wcsstr(nFunc.c_str(), XOR(L"BP_OnDeactivated")) && wcsstr(nObj.c_str(), XOR(L"PickerOverlay_EmoteWheel")))
 	{
-		if (Match::NeoPlayer.Pawn)
+		if (GMatch.NeoPlayer.Pawn)
 		{
 			ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 			ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
@@ -256,14 +256,14 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			if (LastEmotePlayed && !Util::IsBadReadPtr(LastEmotePlayed))
 			{
-				Match::NeoPlayer.Emote(LastEmotePlayed);
+				GMatch.NeoPlayer.Emote(LastEmotePlayed);
 			}
 		}
 	}
 
 	else if (wcsstr(nFunc.c_str(), XOR(L"BlueprintOnInteract")) && nObj.starts_with(XOR(L"BGA_FireExtinguisher_Pickup_C_")))
 	{
-	Match::NeoPlayer.EquipWeapon(XOR(L"WID_FireExtinguisher_Spray"));
+		GMatch.NeoPlayer.EquipWeapon(XOR(L"WID_FireExtinguisher_Spray"));
 	}
 
 
@@ -341,7 +341,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				if (!arg.empty())
 				{
-					Match::NeoPlayer.EquipWeapon(arg.c_str());
+					GMatch.NeoPlayer.EquipWeapon(arg.c_str());
 				}
 				else
 				{
@@ -355,7 +355,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				if (!arg.empty())
 				{
 					auto n = std::stof(arg);
-					Match::NeoPlayer.SetMaxHealth(n);
+					GMatch.NeoPlayer.SetMaxHealth(n);
 				}
 				else
 				{
@@ -369,7 +369,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				if (!arg.empty())
 				{
 					auto n = std::stof(arg);
-					Match::NeoPlayer.SetMaxShield(n);
+					GMatch.NeoPlayer.SetMaxShield(n);
 				}
 				else
 				{
@@ -383,7 +383,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				if (!arg.empty())
 				{
 					auto n = std::stof(arg);
-					Match::NeoPlayer.SetHealth(n);
+					GMatch.NeoPlayer.SetHealth(n);
 				}
 				else
 				{
@@ -397,7 +397,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				if (!arg.empty())
 				{
 					auto n = std::stof(arg);
-					Match::NeoPlayer.SetShield(n);
+					GMatch.NeoPlayer.SetShield(n);
 				}
 				else
 				{
@@ -411,7 +411,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				if (!arg.empty())
 				{
 					auto n = std::stof(arg);
-					Match::NeoPlayer.SetMovementSpeed(n);
+					GMatch.NeoPlayer.SetMovementSpeed(n);
 				}
 				else
 				{
@@ -425,7 +425,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				if (!arg.empty())
 				{
 					auto n = std::stof(arg);
-					Match::NeoPlayer.SetPawnGravityScale(n);
+					GMatch.NeoPlayer.SetPawnGravityScale(n);
 				}
 				else
 				{
@@ -457,16 +457,16 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			case SKYDIVE:
 			{
-				Match::NeoPlayer.StartSkydiving(0);
-				Match::NeoPlayer.StartSkydiving(0);
-				Match::NeoPlayer.StartSkydiving(0);
-				Match::NeoPlayer.StartSkydiving(1500.0f);
+				GMatch.NeoPlayer.StartSkydiving(0);
+				GMatch.NeoPlayer.StartSkydiving(0);
+				GMatch.NeoPlayer.StartSkydiving(0);
+				GMatch.NeoPlayer.StartSkydiving(1500.0f);
 				break;
 			}
 
 			case RESPAWN:
 			{
-				Match::NeoPlayer.Respawn();
+				GMatch.NeoPlayer.Respawn();
 				break;
 			}
 

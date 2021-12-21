@@ -1,5 +1,9 @@
 #pragma once
 
+#include <cstdlib>
+
+class UObject;
+
 template <class T>
 class TArray
 {
@@ -11,13 +15,39 @@ public:
 	int32_t Count = 0;
 	int32_t Max = 0;
 
-	int Num() const;
+	TArray()
+	{
+		Data = nullptr;
+		Count = Max = 0;
+	};
 
-	T& operator[](int i);
+	int Num() const
+	{
+		return Count;
+	};
 
-	const T& operator[](int i) const;
+	T& operator[](int i)
+	{
+		return Data[i];
+	};
 
-	bool IsValidIndex(int i) const;
+	const T& operator[](int i) const
+	{
+		return Data[i];
+	};
 
-	int Add(T* NewItem);
+	bool IsValidIndex(int i) const
+	{
+		return i < Num();
+	}
+
+	// Function does not work
+	/*int Add(UObject* NewItem)
+	{
+		Count = Count + 1;
+		Max = Max + 1;
+		Data = static_cast<UObject**>(malloc(Count * sizeof(UObject*)));
+		Data[Count - 1] = NewItem;
+		return Count;
+	}*/
 };

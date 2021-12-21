@@ -1,5 +1,9 @@
 #pragma once
 
+#include <plog/Log.h>
+
+class UE4;
+
 inline HANDLE hConsole;
 
 #define SET_COLOR(c) SetConsoleTextAttribute(hConsole, c);
@@ -49,3 +53,25 @@ public:
 
 	static std::wstring sSplit(std::wstring s, std::wstring delimiter);
 };
+
+template <class T>
+inline void SetPointer(const wchar_t* objectToFind, T* objectToSet, bool* success = nullptr)
+{
+	T obj = UE4::FindObject<T>(objectToFind);
+
+	if (Util::IsBadReadPtr(obj))
+	{
+		PLOGE.printf("%s is nullptr", objectToFind);
+		if (success != nullptr)
+		{
+			*success = false;
+		}
+		return;
+	}
+
+	objectToSet = &obj;
+	if (success != nullptr)
+	{
+		*success = true;
+	}
+}

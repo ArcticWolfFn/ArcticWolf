@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "FortGameStateAthena.h"
 
+int32_t AFortGameStateAthena::Offset_CurrentPlaylistInfo = 0;
+int32_t AFortGameStateAthena::Offset_GamePhase = 0;
+
 AFortGameStateAthena::AFortGameStateAthena()
 {
 }

@@ -3,7 +3,7 @@
 #include "PlayerController.h"
 #include "Finder.h"
 
-class UPlayer : GIObject
+class UPlayer : public UObject
 {
 public:
 	UPlayer(ObjectFinder PlayerFinder);

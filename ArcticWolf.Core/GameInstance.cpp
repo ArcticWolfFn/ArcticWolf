@@ -13,5 +13,5 @@ void UGameInstance::Setup()
 	// Players is plural, but it works for now
 	auto localPlayer = ULocalPlayer(GameInstanceFinder.Find(XOR(L"LocalPlayers")));
 	localPlayer.Setup();
-	LocalPlayers.Add(&localPlayer);
+	LocalPlayers[0] = &localPlayer;
 }

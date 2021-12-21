@@ -171,6 +171,13 @@ void Match::Thread()
 	}
 }
 
+DWORD Match::ThreadEntry(LPVOID* param)
+{
+	Match* myObj = (Match*)param;
+	myObj->Thread();
+	return 0;
+}
+
 void Match::Init()
 {
 	PLOGI << "Init Match";
@@ -223,7 +230,7 @@ void Match::Init()
 
 		UFunctions::ServerReadyToStartMatch();
 
-		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(&Thread), nullptr, NULL, nullptr);
+		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(*ThreadEntry), this, NULL, nullptr);
 
 		bIsInit = !bIsInit;
 	}

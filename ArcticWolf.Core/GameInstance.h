@@ -6,7 +6,7 @@ class UGameInstance : GIObject
 {
 public:
 
-	TArray<ULocalPlayer> LocalPlayers;
+	ULocalPlayer* LocalPlayers[1];
 
 	void Setup() override;
 };

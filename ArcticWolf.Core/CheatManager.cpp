@@ -7,8 +7,8 @@ UCheatManager::UCheatManager(UObject* InternalCheatManager) : InternalCheatManag
 
 void UCheatManager::Setup()
 {
-	GIObject::SetPointer(XOR(L"Function /Script/Engine.CheatManager:BugItGo"), &Fn_BugItGo, &CanExec_BugItGo);
-	GIObject::SetPointer(XOR(L"Function /Script/Engine.CheatManager:DestroyAll"), &Fn_DestroyAll, &CanExec_DestroyAll);
+	SetPointer(XOR(L"Function /Script/Engine.CheatManager:BugItGo"), &Fn_BugItGo, &CanExec_BugItGo);
+	SetPointer(XOR(L"Function /Script/Engine.CheatManager:DestroyAll"), &Fn_DestroyAll, &CanExec_DestroyAll);
 }
 
 void UCheatManager::BugItGo(float X, float Y, float Z, float Pitch, float Yaw, float Roll)

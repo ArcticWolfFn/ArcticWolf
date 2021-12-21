@@ -13,8 +13,10 @@
 #include "GObjects.h"
 #include <fstream>
 #include <iostream>
-#include "Util.h"
 #include "Field.h"
+#include <algorithm>
+
+class Util;
 
 inline void* (*ProcessEvent)(void*, void*, void*);
 inline int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE);
@@ -82,6 +84,47 @@ public:
 	static void DumpGObjects();
 
 	//Find any entity inside the UGlobalObjects array aka. GObjects.
-	template <typename T>
-	static T FindObject(wchar_t const* name, bool ends_with = false, bool to_lower = false, int toSkip = 0);
+	template<typename T>
+	static inline T FindObject(wchar_t const* name, bool ends_with = false, bool to_lower = false, int toSkip = 0)
+	{
+		for (auto i = 0x0; i < GObjs->NumElements; ++i)
+		{
+			auto object = GObjs->GetByIndex(i);
+			if (object == nullptr)
+			{
+				continue;
+			}
+
+			auto objectFullName = GetObjectFullName(object);
+
+			if (to_lower)
+			{
+				std::transform(objectFullName.begin(), objectFullName.end(), objectFullName.begin(),
+					[](const unsigned char c) { return std::tolower(c); });
+			}
+
+			if (!ends_with)
+			{
+				if (objectFullName.starts_with(name))
+				{
+					if (toSkip > 0)
+					{
+						toSkip--;
+					}
+					else
+					{
+						return reinterpret_cast<T>(object);
+					}
+				}
+			}
+			else
+			{
+				if (objectFullName.ends_with(name))
+				{
+					return reinterpret_cast<T>(object);
+				}
+			}
+		}
+		return nullptr;
+	}
 };
