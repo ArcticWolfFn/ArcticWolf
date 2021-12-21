@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "FortKismetLibrary.h"
-#include "Object.cpp"
 
 void FortniteGame::UFortKismetLibrary::SetTimeOfDay(UObject* WorldContextObject, float TimeOfDay)
 {
