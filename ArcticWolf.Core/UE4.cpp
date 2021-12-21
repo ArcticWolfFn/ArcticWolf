@@ -44,25 +44,127 @@ std::wstring UE4::GetObjectFirstName(UObject* object)
 	return name;
 }
 
+template <class T>
+struct InternalTArray
+{
+	friend struct InterFString;
+
+public:
+
+	T* Data;
+	int32_t Count;
+	int32_t Max;
+
+	InternalTArray()
+	{
+		Data = nullptr;
+		Count = Max = 0;
+	};
+
+	int Num() const
+	{
+		return Count;
+	};
+
+	T& operator[](int i)
+	{
+		return Data[i];
+	};
+
+	const T& operator[](int i) const
+	{
+		return Data[i];
+	};
+
+	bool IsValidIndex(int i) const
+	{
+		return i < Num();
+	}
+
+	int Add(UObject* NewItem)
+	{
+		Count = Count + 1;
+		Max = Max + 1;
+		Data = static_cast<UObject**>(malloc(Count * sizeof(UObject*)));
+		Data[Count - 1] = NewItem;
+		return Count;
+	}
+};
+
+
+struct InternalFString : private InternalTArray<wchar_t>
+{
+	InternalFString()
+	{
+	};
+
+	InternalFString(const wchar_t* other)
+	{
+		Max = Count = *other ? std::wcslen(other) + 1 : 0;
+
+		if (Count)
+		{
+			Data = const_cast<wchar_t*>(other);
+		}
+	}
+
+	bool IsValid() const
+	{
+		return Data != nullptr;
+	}
+
+	const wchar_t* ToWString() const
+	{
+		return Data;
+	}
+
+	std::string ToString() const
+	{
+		auto length = std::wcslen(Data);
+
+		std::string str(length, '\0');
+
+		std::use_facet<std::ctype<wchar_t>>(std::locale()).narrow(Data, Data + length, '?', &str[0]);
+
+		return str;
+	}
+};
+
 std::wstring UE4::GetObjectName(UObject* object)
 {
 	std::wstring name(L"");
 
+	// ToDo: function not found
+	auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Object:GetName"));
+
+	if (Util::IsBadReadPtr(fn))
+	{
+		PLOGE << "Function is bad";
+		return name;
+	}
+
 	for (auto i = 0; object; object = object->Outer, ++i)
 	{
-		FString internalName = GetObjectNameInternal(object);
+		struct Params {
+			InternalFString ReturnValue;
+		};
+
+		auto params = Params();
+		ProcessEvent(object, fn, &params);
+
+		InternalFString internalName = params.ReturnValue;
 
 		if (!internalName.ToWString())
 			break;
 
 		name = internalName.ToWString() + std::wstring(i > 0 ? L"." : L"") + name;
-		PLOGI.printf("Name: %s", name);
+		PLOGI.printf("NamePart: %s", name.c_str());
 
 
 		Free((void*)internalName.ToWString());
 	}
 
-	PLOGI.printf("Name: %s", name);
+	PLOGI.printf("Name: %s", name.c_str());
 
 	return name;
 }

@@ -3,7 +3,7 @@
 #include "Array.h"
 #include <string>
 
-class FString : public TArray<wchar_t>
+class FString : private TArray<wchar_t>
 {
 
 public:
