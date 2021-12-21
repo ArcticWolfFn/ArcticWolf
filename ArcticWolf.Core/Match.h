@@ -1,17 +1,17 @@
 #pragma once
 
-#include "mods.h"
 #include "sdk.h"
-#include "mods.h"
-#include "FortniteGame.h"
+#include "NeoPlayer.h"
+#include "FortPlaylistAthena.h"
 
 inline std::vector<std::wstring> gWeapons;
 inline std::vector<std::wstring> gBlueprints;
 inline std::vector<std::wstring> gMeshes;
-inline UObject* gPlaylist;
+inline UFortPlaylistAthena* gPlaylist;
 
 static class Match
 {
+public:
 	static bool bIsInit;
 	static bool bIsStarted;
 	static bool bIsPlayerInit;
@@ -24,7 +24,7 @@ static class Match
 	static bool bWantsToOpenGlider;
 	static bool bWantsToShowPickaxe;
 
-	static Player NeoPlayer;
+	static NeoPlayerClass NeoPlayer;
 
 	static void Start(const wchar_t* MapToPlayOn);
 

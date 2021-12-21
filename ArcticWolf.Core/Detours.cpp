@@ -1,9 +1,100 @@
 #include "pch.h"
 #include "Detours.h"
+#include "Match.h"
+#include "FortPlaylistAthena.h"
+#include "Functions.h"
+#include "Console.h"
+
+enum class EInteractionBeingAttempted : uint8_t {
+	FirstInteraction,
+	SecondInteraction,
+	AllInteraction,
+	EInteractionBeingAttempted_MAX,
+};
+
+struct AFortPawn_OnWeaponEquipped_Params
+{
+	UObject* NewWeapon;
+	UObject* PrevWeapon;
+};
+
+struct UCheatManager_CheatScript_Params
+{
+	FString ScriptName;
+};
+
+static const wchar_t* CheatScriptHelp =
+LR"(
+Custom Cheatscript Commands
+---------------------------
+cheatscript event - Triggers the event for your version (e.g. Junior, Jerky, NightNight).
+cheatscript debugcamera - Toggles a custom version of the debug camera.
+cheatscript skydive | skydiving - Puts you in a skydive with deploy at 500m above the ground.
+cheatscript equip <WID | AGID> - Equips a weapon / pickaxe.
+cheatscript setgravity <NewGravityScaleFloat> - Changes the gravity scale.
+cheatscript speed | setspeed <NewCharacterSpeedMultiplier> - Changes the movement speed multiplier.
+cheatscript setplaylist <Playlist> - Overrides the current playlist.
+cheatscript respawn - Respawns the player (duh)
+cheatscript sethealth <NewHealthFloat> - Changes your health value.
+cheatscript setshield <NewShieldFloat> - Changes your shield value.
+cheatscript setmaxhealth <NewMaxHealthFloat> - Changes your max health value.
+cheatscript setmaxshield <newMaxShieldFloat> - Changes your max shield value.
+cheatscript dump - Dumps a list of all GObjects.
+cheatscript dumpbps - Dumps all blueprints.
+fly - Toggles flying.
+enablecheats - Enables cheatmanager.
+)";
 
 void Detours::Log(std::wstring nObj, std::wstring nFunc, std::wstring nObjClass)
 {
 	PLOGV.printf(XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), nObjClass.c_str());
+}
+
+enum ECommands
+{
+	HELP,
+	ACTIVATE,
+	EVENT,
+	DEBUG_CAMERA,
+	SKYDIVE,
+	EQUIP,
+	SET_GRAVITY,
+	SET_SPEED,
+	SET_PLAYLIST,
+	RESPAWN,
+	SET_HEALTH,
+	SET_SHIELD,
+	SET_MAX_HEALTH,
+	SET_MAX_SHIELD,
+	DUMP,
+	DUMPBPS,
+	TEST,
+	LOADBPC,
+	NONE
+};
+
+static auto str2enum(const std::wstring& str)
+{
+	if (str.starts_with(L"event")) return EVENT;
+	else if (str.starts_with(L"help")) return HELP;
+	else if (str.starts_with(L"activate")) return DEBUG_CAMERA;
+	else if (str.starts_with(L"debugcamera")) return DEBUG_CAMERA;
+	else if (str.starts_with(L"skydive")) return SKYDIVE;
+	else if (str.starts_with(L"skydiving")) return SKYDIVE;
+	else if (str.starts_with(L"equip")) return EQUIP;
+	else if (str.starts_with(L"setgravity")) return SET_GRAVITY;
+	else if (str.starts_with(L"setspeed") || str.starts_with(L"speed")) return SET_SPEED;
+	else if (str.starts_with(L"setplaylist")) return SET_PLAYLIST;
+	else if (str.starts_with(L"respawn")) return RESPAWN;
+	else if (str.starts_with(L"sethealth")) return SET_HEALTH;
+	else if (str.starts_with(L"setshield")) return SET_SHIELD;
+	else if (str.starts_with(L"setmaxhealth")) return SET_MAX_HEALTH;
+	else if (str.starts_with(L"setmaxshield")) return SET_MAX_SHIELD;
+	else if (str.starts_with(L"dump")) return DUMP;
+	else if (str.starts_with(L"test")) return TEST;
+	else if (str.starts_with(L"dumpbps")) return DUMPBPS;
+	else if (str.starts_with(L"loadbpc")) return LOADBPC;
+	else return NONE;
 }
 
 void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
@@ -13,30 +104,30 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 
 	//If the game requested matchmaking we open the game mode
-	if (wcsstr(nFunc.c_str(), XOR(L"OnSetPlayButtonText")) && wcsstr(nObj.c_str(), XOR(L"Matchmaking_AthenaLegacy")) && !bIsStarted)
+	if (wcsstr(nFunc.c_str(), XOR(L"OnSetPlayButtonText")) && wcsstr(nObj.c_str(), XOR(L"Matchmaking_AthenaLegacy")) && !Match::bIsStarted)
 	{
 		PLOGI << XOR("[NeoRoyale] Start!");
 
-		auto Playlist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+		auto Playlist = UE4::FindObject<UFortPlaylistAthena*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
 		gPlaylist = Playlist;
-		auto Map = APOLLO_TERRAIN;
+		auto Map = XOR(L"Apollo_Terrain?game=/Game/Athena/Athena_GameMode.Athena_GameMode_C");
 
-		Start(Map);
+		Match::Start(Map);
 	}
 
-	else if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && bIsStarted && !bIsInit)
+	else if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && Match::bIsStarted && !Match::bIsInit)
 	{
 		PLOGI << XOR("ReadyToStartMatch called");
-		Init();
+		Match::Init();
 	}
 
-	else if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && bIsInit && bIsStarted)
+	else if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && Match::bIsInit && Match::bIsStarted)
 	{
 		PLOGD << "ServerLoadingScreenDropped called";
 
 		//UFunctions::PlayCustomPlayPhaseAlert();
 
-		LoadMoreClasses();
+		Match::LoadMoreClasses();
 	}
 
 	else if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
@@ -52,15 +143,15 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	// Fly Command
 	else if (wcsstr(nFunc.c_str(), XOR(L"Fly")) && nObj.starts_with(XOR(L"CheatManager_")))
 	{
-		NeoPlayer.Fly(bIsFlying);
+		Match::NeoPlayer.Fly(bIsFlying);
 		bIsFlying = !bIsFlying;
 	}
 
 	else if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
 	{
-		NeoPlayer.ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
-		NeoPlayer.Respawn();
-		auto currentLocation = NeoPlayer.GetLocation();
+		Match::NeoPlayer.ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
+		Match::NeoPlayer.Respawn();
+		auto currentLocation = Match::NeoPlayer.GetLocation();
 		UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
 	}
 
@@ -72,7 +163,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		{
 			UObject* ReceivingActor;
 			UObject* InteractComponent;
-			byte InteractType;
+			std::byte InteractType;
 			struct UObject* OptionalObjectData;
 			EInteractionBeingAttempted InteractionBeingAttempted;
 			int32_t RequestID;
@@ -104,30 +195,31 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		}
 	}
 
-	else if (bIsInit)
+	else if (Match::bIsInit)
 	{
-		if (bWantsToJump)
+		if (Match::bWantsToJump)
 		{
-			FortniteGame::PlayerCharacter.Jump();
-			bWantsToJump = false;
+			// ToDo: fix this
+			//FortniteGame::PlayerCharacter.Jump();
+			Match::bWantsToJump = false;
 		}
 
-		else if (bWantsToOpenGlider)
+		else if (Match::bWantsToOpenGlider)
 		{
-			NeoPlayer.ForceOpenParachute();
-			bWantsToOpenGlider = false;
+			Match::NeoPlayer.ForceOpenParachute();
+			Match::bWantsToOpenGlider = false;
 		}
 
-		else if (bWantsToSkydive)
+		else if (Match::bWantsToSkydive)
 		{
-			NeoPlayer.Skydive();
-			bWantsToSkydive = false;
+			Match::NeoPlayer.Skydive();
+			Match::bWantsToSkydive = false;
 		}
 
-		else if (bWantsToShowPickaxe)
+		else if (Match::bWantsToShowPickaxe)
 		{
-			NeoPlayer.ShowPickaxe();
-			bWantsToShowPickaxe = false;
+			Match::NeoPlayer.ShowPickaxe();
+			Match::bWantsToShowPickaxe = false;
 		}
 	}
 
@@ -151,7 +243,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 	else if (wcsstr(nFunc.c_str(), XOR(L"BP_OnDeactivated")) && wcsstr(nObj.c_str(), XOR(L"PickerOverlay_EmoteWheel")))
 	{
-		if (NeoPlayer.Pawn)
+		if (Match::NeoPlayer.Pawn)
 		{
 			ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 			ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
@@ -164,14 +256,14 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			if (LastEmotePlayed && !Util::IsBadReadPtr(LastEmotePlayed))
 			{
-				NeoPlayer.Emote(LastEmotePlayed);
+				Match::NeoPlayer.Emote(LastEmotePlayed);
 			}
 		}
 	}
 
 	else if (wcsstr(nFunc.c_str(), XOR(L"BlueprintOnInteract")) && nObj.starts_with(XOR(L"BGA_FireExtinguisher_Pickup_C_")))
 	{
-		NeoPlayer.EquipWeapon(XOR(L"WID_FireExtinguisher_Spray"));
+	Match::NeoPlayer.EquipWeapon(XOR(L"WID_FireExtinguisher_Spray"));
 	}
 
 
@@ -249,7 +341,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				if (!arg.empty())
 				{
-					NeoPlayer.EquipWeapon(arg.c_str());
+					Match::NeoPlayer.EquipWeapon(arg.c_str());
 				}
 				else
 				{
@@ -263,7 +355,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				if (!arg.empty())
 				{
 					auto n = std::stof(arg);
-					NeoPlayer.SetMaxHealth(n);
+					Match::NeoPlayer.SetMaxHealth(n);
 				}
 				else
 				{
@@ -277,7 +369,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				if (!arg.empty())
 				{
 					auto n = std::stof(arg);
-					NeoPlayer.SetMaxShield(n);
+					Match::NeoPlayer.SetMaxShield(n);
 				}
 				else
 				{
@@ -291,7 +383,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				if (!arg.empty())
 				{
 					auto n = std::stof(arg);
-					NeoPlayer.SetHealth(n);
+					Match::NeoPlayer.SetHealth(n);
 				}
 				else
 				{
@@ -305,7 +397,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				if (!arg.empty())
 				{
 					auto n = std::stof(arg);
-					NeoPlayer.SetShield(n);
+					Match::NeoPlayer.SetShield(n);
 				}
 				else
 				{
@@ -319,7 +411,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				if (!arg.empty())
 				{
 					auto n = std::stof(arg);
-					NeoPlayer.SetMovementSpeed(n);
+					Match::NeoPlayer.SetMovementSpeed(n);
 				}
 				else
 				{
@@ -333,7 +425,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 				if (!arg.empty())
 				{
 					auto n = std::stof(arg);
-					NeoPlayer.SetPawnGravityScale(n);
+					Match::NeoPlayer.SetPawnGravityScale(n);
 				}
 				else
 				{
@@ -346,7 +438,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				if (!arg.empty())
 				{
-					auto Playlist = UE4::FindObject<UObject*>(ScriptNameW.c_str());
+					auto Playlist = UE4::FindObject<UFortPlaylistAthena*>(ScriptNameW.c_str());
 					if (Playlist)
 					{
 						gPlaylist = Playlist;
@@ -365,16 +457,16 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			case SKYDIVE:
 			{
-				NeoPlayer.StartSkydiving(0);
-				NeoPlayer.StartSkydiving(0);
-				NeoPlayer.StartSkydiving(0);
-				NeoPlayer.StartSkydiving(1500.0f);
+				Match::NeoPlayer.StartSkydiving(0);
+				Match::NeoPlayer.StartSkydiving(0);
+				Match::NeoPlayer.StartSkydiving(0);
+				Match::NeoPlayer.StartSkydiving(1500.0f);
 				break;
 			}
 
 			case RESPAWN:
 			{
-				NeoPlayer.Respawn();
+				Match::NeoPlayer.Respawn();
 				break;
 			}
 
@@ -490,7 +582,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 		{
-			std::thread log(LogThread, nObj, nFunc, UE4::GetObjectFullName(static_cast<UObject*>(pObj)->Class));
+			std::thread log(Log, nObj, nFunc, UE4::GetObjectFullName(static_cast<UObject*>(pObj)->Class));
 			log.detach();
 		}
 	}

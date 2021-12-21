@@ -9,6 +9,8 @@
 #include "util.h"
 #include "Detours.h"
 #include "MinHook.h"
+#include "Match.h"
+#include "FortPlaylistAthena.h"
 
 const char* URL_PROTOCOL = "https";
 const char* URL_HOST = "localhost";
@@ -229,7 +231,7 @@ public:
 
 		auto Map = XOR(L"Apollo_Terrain?game=/Game/Athena/Athena_GameMode.Athena_GameMode_C");
 
-		gPlaylist = UE4::FindObject<UObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+		gPlaylist = UE4::FindObject<UFortPlaylistAthena*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
 		if (gPlaylist == nullptr) {
 			PLOGE << "Hooks: Playlist is null";
 		}
@@ -238,7 +240,6 @@ public:
 			PLOGV.printf("Hooks: Playlist points to %s", nObj.c_str());
 		}
 
-		GGameInstance.Setup();
 		GGameEngine.Setup();
 
 		PLOGV << "End Hooks::Misc";

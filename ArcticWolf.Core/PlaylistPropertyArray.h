@@ -21,6 +21,6 @@ public:
 	void SetOverridePlaylist(UFortPlaylistAthena* Playlist);
 
 private:
-	INTERNALFPlaylistPropertyArray* InternalObject
+	INTERNALFPlaylistPropertyArray* InternalObject;
 };
 

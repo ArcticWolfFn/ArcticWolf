@@ -128,7 +128,7 @@ ObjectFinder ObjectFinder::FindChildObject(const std::wstring& objectToFind) con
 	}
 }
 
-UObject* ObjectFinder::FindActor(std::wstring name, int toSkip = 0)
+UObject* ObjectFinder::FindActor(std::wstring name, int toSkip)
 {
 	ObjectFinder EngineFinder = EntryPoint(uintptr_t(GEngine));
 	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));

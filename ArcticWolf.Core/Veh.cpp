@@ -41,14 +41,14 @@ LONG WINAPI Handler(EXCEPTION_POINTERS* Exception)
 	if (Exception->ExceptionRecord->ExceptionCode == STATUS_GUARD_PAGE_VIOLATION)
 	{
 		auto Itr = std::find_if(Hooks.begin(), Hooks.end(),
-			[Eip = Exception->ContextRecord->Eip ](const HOOK_INFO& Hook)
+			[Eip = Exception->ContextRecord->Rip](const HOOK_INFO& Hook)
 		{
 			return Hook.Original == (void*)Eip;
 		});
 		if (Itr != Hooks.end())
 		{
 			//OriginalHook = Itr->Original;
-			Exception->ContextRecord->Eip = (uintptr_t)Itr->Detour;
+			Exception->ContextRecord->Rip = (uintptr_t)Itr->Detour;
 		}
 
 		Exception->ContextRecord->EFlags |= 0x100; // SINGLE_STEP_FLAG

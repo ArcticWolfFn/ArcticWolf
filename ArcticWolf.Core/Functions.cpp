@@ -4,6 +4,7 @@
 #include "GameMode.h"
 #include "FortPlayerController.h"
 #include "FortGameStateAthena.h"
+#include "Match.h"
 
 auto UFunctions::SetTimeOfDay(float Time)
 {
@@ -169,7 +170,7 @@ void UFunctions::DestoryActor(UObject* actor)
 	ProcessEvent(AGPCW, PlayIntroAnim, &PlayIntroAnimParams);
 }*/
 
-auto UFunctions::StaticLoadObjectEasy(UClass* inClass, const wchar_t* inName, UObject* inOuter = nullptr)
+UObject* UFunctions::StaticLoadObjectEasy(UClass* inClass, const wchar_t* inName, UObject* inOuter)
 {
 	return StaticLoadObject(inClass, inOuter, inName, nullptr, 0, nullptr, false, nullptr);
 }

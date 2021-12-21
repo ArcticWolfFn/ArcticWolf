@@ -37,5 +37,5 @@ public:
 
 	//static void PlayCustomPlayPhaseAlert();
 
-	static auto StaticLoadObjectEasy(UClass* inClass, const wchar_t* inName, UObject* inOuter = nullptr);
+	static UObject* StaticLoadObjectEasy(UClass* inClass, const wchar_t* inName, UObject* inOuter = nullptr);
 };

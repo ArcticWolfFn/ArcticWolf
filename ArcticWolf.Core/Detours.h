@@ -1,12 +1,9 @@
 #pragma once
 #include "ue4.h"
 #include <minwindef.h>
-#include "neoroyale.h"
 #include "ue4.h"
 #include "player.h"
 #include <thread>
-
-using namespace NeoRoyale;
 
 namespace CameraHook
 {

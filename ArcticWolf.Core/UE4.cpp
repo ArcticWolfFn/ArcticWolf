@@ -1,5 +1,6 @@
 #include "pch.h"
 #include "UE4.h"
+#include <algorithm>
 
 auto UE4::StaticLoadObjectEasy(UClass* inClass, const wchar_t* inName, UObject* inOuter)
 {

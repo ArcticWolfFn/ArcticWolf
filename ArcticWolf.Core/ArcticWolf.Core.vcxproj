@@ -195,6 +195,7 @@
     <ClInclude Include="Match.h" />
     <ClInclude Include="MinHook.h" />
     <ClInclude Include="NameTypes.h" />
+    <ClInclude Include="NeoPlayer.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectMacros.h" />
     <ClInclude Include="Patterns.h" />
@@ -205,6 +206,7 @@
     <ClInclude Include="PlayspaceGameState.h" />
     <ClInclude Include="Quat.h" />
     <ClInclude Include="Rotator.h" />
+    <ClInclude Include="SDK.h" />
     <ClInclude Include="system.h" />
     <ClInclude Include="TransformNonVectorized.h" />
     <ClInclude Include="UE4.h" />
@@ -255,6 +257,7 @@
     <ClCompile Include="LocalPlayer.cpp" />
     <ClCompile Include="Match.cpp" />
     <ClCompile Include="NameTypes.cpp" />
+    <ClCompile Include="NeoPlayer.cpp" />
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
@@ -268,6 +271,7 @@
     <ClCompile Include="PlayspaceGameState.cpp" />
     <ClCompile Include="Quat.cpp" />
     <ClCompile Include="Rotator.cpp" />
+    <ClCompile Include="SDK.cpp" />
     <ClCompile Include="UE4.cpp" />
     <ClCompile Include="Engine.cpp" />
     <ClCompile Include="UnrealString.cpp" />

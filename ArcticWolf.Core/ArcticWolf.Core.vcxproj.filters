@@ -294,6 +294,12 @@
     <ClInclude Include="FortPlaylist.h">
       <Filter>Headerdateien\FortniteGame\Playlists</Filter>
     </ClInclude>
+    <ClInclude Include="NeoPlayer.h">
+      <Filter>Headerdateien\game</Filter>
+    </ClInclude>
+    <ClInclude Include="SDK.h">
+      <Filter>Headerdateien\game</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -448,6 +454,12 @@
     </ClCompile>
     <ClCompile Include="FortPlaylist.cpp">
       <Filter>Quelldateien\FortniteGame\Playlists</Filter>
+    </ClCompile>
+    <ClCompile Include="NeoPlayer.cpp">
+      <Filter>Quelldateien\game</Filter>
+    </ClCompile>
+    <ClCompile Include="SDK.cpp">
+      <Filter>Quelldateien\game</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
