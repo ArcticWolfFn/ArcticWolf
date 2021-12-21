@@ -3,6 +3,8 @@
 #include <plog/Appenders/ColorConsoleAppender.h>
 #include <plog/Formatters/TxtFormatter.h>
 #include "plog/Initializers/RollingFileInitializer.h"
+#include "Hooks.h"
+#include "Console.h"
 
 VOID WINAPI Main()
 {

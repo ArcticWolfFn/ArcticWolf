@@ -16,8 +16,9 @@ struct PreFUObjectItem
 	FUObjectItem* Objects[10];
 };
 
-struct GObjects
+class GObjects
 {
+public:
 	PreFUObjectItem* ObjectArray;
 	BYTE unknown1[8];
 	int32_t MaxElements;

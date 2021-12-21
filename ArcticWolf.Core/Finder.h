@@ -4,6 +4,7 @@
 #include "util.h"
 #include "ue4.h"
 #include "UObjectArray.h"
+#include "GObjects.h"
 
 namespace Offsets
 {
@@ -16,9 +17,9 @@ namespace Offsets
 
 class GameObject;
 
-inline TUObjectArray* ObjObjects;
+inline TUObjectArray* ObjObjects = nullptr;
 
-inline GObjects* GlobalObjects;
+inline GObjects* GlobalObjects = nullptr;
 
 class GameClass
 {

@@ -5,12 +5,14 @@
 #include <windows.h>
 #include <cstdint>
 #include <stdint.h>
+#include "GIObject.h"
 #include "Object.h"
 #include "Class.h"
 #include "xorstr.hpp"
 #include "UE4.h"
 #include "FortniteGameInstance.h"
 #include "Engine.h"
+#include "GObjects.h"
 
 #include <plog/Log.h>
 

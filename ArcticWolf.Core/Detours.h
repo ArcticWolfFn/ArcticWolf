@@ -5,7 +5,6 @@
 #include "ue4.h"
 #include "player.h"
 #include <thread>
-#include "FortniteGame.h"
 
 using namespace NeoRoyale;
 

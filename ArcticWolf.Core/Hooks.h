@@ -119,6 +119,7 @@ inline CURLcode CurlEasySetOptHook(struct Curl_easy* data, CURLoption tag, ...)
 
 static class Hooks
 {
+public:
 	static bool Init()
 	{
 		PLOGD << "Init started";
