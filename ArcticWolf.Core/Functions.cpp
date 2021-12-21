@@ -83,23 +83,11 @@ void UFunctions::SetPlaylist()
 
 void UFunctions::SetGamePhase()
 {
-	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
-	ObjectFinder GameStateFinder = WorldFinder.Find(XOR(L"GameState"));
+	auto gameState = AFortGameStateAthena(*GEngine->GameViewport->World->GetGameState());
 
-	auto GamePhaseOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortGameStateAthena"), XOR(L"GamePhase"));
+	*gameState.GamePhase = EAthenaGamePhase::None;
 
-	EAthenaGamePhase* GamePhase = reinterpret_cast<EAthenaGamePhase*>(reinterpret_cast<uintptr_t>(GameStateFinder.GetObj()) + GamePhaseOffset);
-
-	*GamePhase = EAthenaGamePhase::None;
-
-	auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_GamePhase"));
-
-	AFortGameStateAthena_OnRep_GamePhase_Params params;
-	params.OldGamePhase = EAthenaGamePhase::Setup;
-
-	ProcessEvent(GameStateFinder.GetObj(), fn, &params);
+	gameState.OnRep_GamePhase(EAthenaGamePhase::Setup);
 
 	PLOGD << "Game phase was set";
 }
