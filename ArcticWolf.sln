@@ -1,13 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.31702.278
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.32014.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcticWolfApi", "ArcticWolfApi\ArcticWolfApi.csproj", "{7E068292-633A-473C-8795-1B3C43CE327C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcticWolfLauncher", "ArcticWolfLauncher\ArcticWolfLauncher.csproj", "{C316AC99-4A34-45BD-8BC8-BD4BD69ED87D}"
 	ProjectSection(ProjectDependencies) = postProject
 		{93968F5D-D6DE-4326-9D94-0ECF5711E100} = {93968F5D-D6DE-4326-9D94-0ECF5711E100}
+		{1DDD68DF-08A1-4F5C-B46A-C5A0B5A25D6B} = {1DDD68DF-08A1-4F5C-B46A-C5A0B5A25D6B}
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ArcticSpy", "ArcticSpy\ArcticSpy.csproj", "{859D2A79-7117-47F1-B233-3F536D3DFA7A}"

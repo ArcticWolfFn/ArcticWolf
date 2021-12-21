@@ -45,7 +45,7 @@
   </ItemGroup>
 
   <Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="copy /Y &quot;C:\Users\Joschua\Documents\Github\ArcticWolf\PlataniumV2\bin\$(ConfigurationName)\PlataniumV2.dll&quot; &quot;$(TargetDir)PlataniumV2.dll&quot;" />
+    <Exec Command="copy /Y &quot;C:\Users\Joschua\Documents\Github\ArcticWolf\x64\$(ConfigurationName)\ArcticWolf.Core.dll&quot; &quot;$(TargetDir)ArcticWolf.Core.dll&quot;" />
   </Target>
 
 </Project>

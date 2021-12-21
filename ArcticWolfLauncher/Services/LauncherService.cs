@@ -87,7 +87,7 @@ namespace ArcticWolfLauncher.Services
                     FileName = "Resources/FortniteClient-Win64-Shipping_BE.exe"
                 }); 
 
-                InjectDll(_fortniteProcess.Id, "PlataniumV2.dll");
+                InjectDll(_fortniteProcess.Id, "ArcticWolf.Core.dll");
             });
         }
 
