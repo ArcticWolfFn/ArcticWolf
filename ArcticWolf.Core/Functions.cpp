@@ -7,11 +7,7 @@
 
 auto UFunctions::SetTimeOfDay(float Time)
 {
-	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
-
-	GetGame().FortKismetLibrary.SetTimeOfDay(WorldFinder.GetObj(), Time);
+	GetGame().FortKismetLibrary.SetTimeOfDay(GGameEngine.GameViewport->World, Time);
 }
 
 void UFunctions::TeleportToSpawn()
@@ -54,7 +50,7 @@ void UFunctions::Travel(const wchar_t* url)
 
 void UFunctions::StartMatch()
 {
-	auto GameMode = dynamic_cast<AGameMode*>(GEngine->GameViewport->World->AuthorityGameMode);
+	auto GameMode = dynamic_cast<AGameMode*>(GGameEngine.GameViewport->World->AuthorityGameMode);
 	GameMode->StartMatch();
 
 	PLOGI << "Match started!";
@@ -71,7 +67,7 @@ void UFunctions::ServerReadyToStartMatch()
 
 void UFunctions::SetPlaylist()
 {
-	auto gameState = AFortGameStateAthena(*GEngine->GameViewport->World->GetGameState());
+	auto gameState = AFortGameStateAthena(*GGameEngine.GameViewport->World->GetGameState());
 
 	gameState.CurrentPlaylistInfo->SetBasePlaylist(gPlaylist);
 	gameState.CurrentPlaylistInfo->SetOverridePlaylist(gPlaylist);
@@ -83,7 +79,7 @@ void UFunctions::SetPlaylist()
 
 void UFunctions::SetGamePhase()
 {
-	auto gameState = AFortGameStateAthena(*GEngine->GameViewport->World->GetGameState());
+	auto gameState = AFortGameStateAthena(*GGameEngine.GameViewport->World->GetGameState());
 
 	*gameState.GamePhase = EAthenaGamePhase::None;
 
@@ -92,13 +88,11 @@ void UFunctions::SetGamePhase()
 	PLOGD << "Game phase was set";
 }
 
-void UFunctions::LoadAndStreamInLevel(const wchar_t* EventSequenceMap)
+/*void UFunctions::LoadAndStreamInLevel(const wchar_t* EventSequenceMap)
 {
 	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
 	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
-	ObjectFinder NetworkManagerFinder = WorldFinder.Find(XOR(L"NetworkManager"));
-	ObjectFinder PersistentLevelFinder = WorldFinder.Find(XOR(L"PersistentLevel"));
 
 	//Loading the level instance in memory
 	auto LoadLevelInstance = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.LevelStreamingDynamic:LoadLevelInstance"));
@@ -140,32 +134,23 @@ void UFunctions::Play(const wchar_t* AnimationPlayerFullName)
 	auto Sequence = UE4::FindObject<void*>(AnimationPlayerFullName);
 
 	ProcessEvent(Sequence, Play, nullptr);
-}
+}*/
 
 void UFunctions::ConsoleLog(std::wstring message)
 {
-	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
-	ObjectFinder GameModeFinder = WorldFinder.Find(XOR(L"AuthorityGameMode"));
+	auto gameMode = dynamic_cast<AGameMode*>(GGameEngine.GameViewport->World->AuthorityGameMode);
 
-	auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameMode:Say"));
-
-	const FString Msg = message.c_str();
-	AGameMode_Say_Params params;
-	params.Msg = Msg;
-
-	ProcessEvent(GameModeFinder.GetObj(), fn, &params);
+	gameMode->Say(FString(message.c_str()));
 }
 
+// ToDo: take AActor as param
 void UFunctions::DestoryActor(UObject* actor)
 {
-	auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
-
-	ProcessEvent(actor, fn, nullptr);
+	auto convActor = AActor(*actor);
+	convActor.K2_DestroyActor();
 }
 
-void UFunctions::PlayCustomPlayPhaseAlert()
+/*void UFunctions::PlayCustomPlayPhaseAlert()
 {
 	// ToDo: this shit is not working
 	return;
@@ -182,7 +167,7 @@ void UFunctions::PlayCustomPlayPhaseAlert()
 	PlayIntroAnimParams.Step = EAthenaGamePhaseStep::Count;
 
 	ProcessEvent(AGPCW, PlayIntroAnim, &PlayIntroAnimParams);
-}
+}*/
 
 auto UFunctions::StaticLoadObjectEasy(UClass* inClass, const wchar_t* inName, UObject* inOuter = nullptr)
 {

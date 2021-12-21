@@ -54,7 +54,7 @@ public:
 	EObjectFlags ObjectFlags;
 };
 
-class UWorld : GIObject
+class UWorld : public UObject
 {
 public:
 	UWorld(ObjectFinder* WorldFinder);

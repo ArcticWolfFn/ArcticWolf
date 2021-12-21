@@ -34,7 +34,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 	{
 		PLOGD << "ServerLoadingScreenDropped called";
 
-		UFunctions::PlayCustomPlayPhaseAlert();
+		//UFunctions::PlayCustomPlayPhaseAlert();
 
 		LoadMoreClasses();
 	}

@@ -27,17 +27,15 @@ public:
 
 	static void SetGamePhase();
 
-	static void LoadAndStreamInLevel(const wchar_t* EventSequenceMap);
+	//static void LoadAndStreamInLevel(const wchar_t* EventSequenceMap);
 
-	static void Play(const wchar_t* AnimationPlayerFullName);
+	//static void Play(const wchar_t* AnimationPlayerFullName);
 
 	static void ConsoleLog(std::wstring message);
 
 	static void DestoryActor(UObject* actor);
 
-	static void PlayCustomPlayPhaseAlert();
+	//static void PlayCustomPlayPhaseAlert();
 
 	static auto StaticLoadObjectEasy(UClass* inClass, const wchar_t* inName, UObject* inOuter = nullptr);
-
-	static bool ForceSettings();
 };
