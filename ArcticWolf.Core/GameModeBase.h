@@ -2,11 +2,11 @@
 class AGameModeBase : public GIObject
 {
 public:
-	AGameModeBase(UObject* InternalObject);
+	AGameModeBase(InternalUObject* InternalObject);
 
 	virtual void Setup() override;
 
 protected:
-	UObject* InternalObject = nullptr;
+	InternalUObject* InternalObject = nullptr;
 };
 

@@ -7,13 +7,13 @@ class AGameStateBase : protected GIObject
 public:
 	// Only used for conversions
 	AGameStateBase();
-	AGameStateBase(UObject* InternalObject);
+	AGameStateBase(InternalUObject* InternalObject);
 
 	virtual void Setup() override;
 
-	UObject* GetInternalObject();
+	InternalUObject* GetInternalObject();
 
 protected:
-	UObject* InternalObject;
+	InternalUObject* InternalObject = nullptr;
 };
 

@@ -192,7 +192,7 @@ void Match::Init()
 
 	NeoPlayer.Pawn = ObjectFinder::FindActor(XOR(L"PlayerPawn_Athena_C"));
 
-	if (NeoPlayer.Pawn == nullptr) {
+	if (Util::IsBadReadPtr(NeoPlayer.Pawn)) {
 		PLOGE << "Player Pawn is null";
 	}
 

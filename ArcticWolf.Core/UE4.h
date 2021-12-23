@@ -28,9 +28,9 @@ inline void (*FreeInternal)(void*);
 inline GObjects* GObjs;
 inline struct UEngine* GEngine;
 
-inline UObject* (*StaticConstructObject)(
-	UClass* Class,
-	UObject* InOuter,
+inline InternalUObject* (*StaticConstructObject)(
+	InternalUClass* Class,
+	InternalUObject* InOuter,
 	void* Name,
 	EObjectFlags SetFlags,
 	EInternalObjectFlags InternalSetFlags,

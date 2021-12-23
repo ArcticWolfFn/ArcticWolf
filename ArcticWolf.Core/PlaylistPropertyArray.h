@@ -6,8 +6,8 @@
 struct INTERNALFPlaylistPropertyArray
 {
 	char padding[0x0120];
-	UObject* BasePlaylist;
-	UObject* OverridePlaylist;
+	InternalUObject* BasePlaylist;
+	InternalUObject* OverridePlaylist;
 };
 
 class FPlaylistPropertyArray : GIObject
@@ -17,8 +17,8 @@ public:
 
 	void Setup() override;
 
-	void SetBasePlaylist(UFortPlaylistAthena* Playlist);
-	void SetOverridePlaylist(UFortPlaylistAthena* Playlist);
+	void SetBasePlaylist(InternalUObject* Playlist);
+	void SetOverridePlaylist(InternalUObject* Playlist);
 
 private:
 	INTERNALFPlaylistPropertyArray* InternalObject;

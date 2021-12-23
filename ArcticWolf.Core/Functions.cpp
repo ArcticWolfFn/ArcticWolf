@@ -8,7 +8,7 @@
 
 auto UFunctions::SetTimeOfDay(float Time)
 {
-	GetGame()->FortKismetLibrary.SetTimeOfDay(GGameEngine.GameViewport->World, Time);
+	GetGame()->FortKismetLibrary.SetTimeOfDay(&GGameEngine.GameViewport.World, Time);
 }
 
 void UFunctions::TeleportToSpawn()
@@ -63,7 +63,7 @@ void UFunctions::Travel(const wchar_t* url)
 
 void UFunctions::StartMatch()
 {
-	auto GameMode = dynamic_cast<AGameMode*>(GGameEngine.GameViewport->World->AuthorityGameMode);
+	auto GameMode = dynamic_cast<AGameMode*>(GGameEngine.GameViewport.World.AuthorityGameMode);
 	GameMode->StartMatch();
 
 	PLOGI << "Match started!";
@@ -80,23 +80,30 @@ void UFunctions::ServerReadyToStartMatch()
 
 void UFunctions::SetPlaylist()
 {
-	auto gameState = AFortGameStateAthena(*GGameEngine.GameViewport->World->GetGameState());
+	auto gameState = AFortGameStateAthena(*GGameEngine.GameViewport.World.GetGameState());
 
-	gameState.CurrentPlaylistInfo->SetBasePlaylist(gPlaylist);
-	gameState.CurrentPlaylistInfo->SetOverridePlaylist(gPlaylist);
+	if (Util::IsBadReadPtr(gPlaylist))
+	{
+		PLOGE << "gPlaylist is nullptr";
+	}
 
-	gameState.OnRep_CurrentPlaylistInfo();
+	gameState.CurrentPlaylistInfo.SetBasePlaylist(gPlaylist);
+	gameState.CurrentPlaylistInfo.SetOverridePlaylist(gPlaylist);
+
+	// ToDo: this is currently causing an access violation while reading an address
+	//gameState.OnRep_CurrentPlaylistInfo();
 
 	PLOGD << "Playlist was set";
 }
 
 void UFunctions::SetGamePhase()
 {
-	auto gameState = AFortGameStateAthena(*GGameEngine.GameViewport->World->GetGameState());
+	auto gameState = AFortGameStateAthena(*GGameEngine.GameViewport.World.GetGameState());
 
 	*gameState.GamePhase = EAthenaGamePhase::None;
 
-	gameState.OnRep_GamePhase(EAthenaGamePhase::Setup);
+	// ToDo: this is currently causing an access violation while reading an address
+	//gameState.OnRep_GamePhase(EAthenaGamePhase::Setup);
 
 	PLOGD << "Game phase was set";
 }
@@ -151,7 +158,7 @@ void UFunctions::Play(const wchar_t* AnimationPlayerFullName)
 
 void UFunctions::ConsoleLog(std::wstring message)
 {
-	auto gameMode = dynamic_cast<AGameMode*>(GGameEngine.GameViewport->World->AuthorityGameMode);
+	auto gameMode = dynamic_cast<AGameMode*>(GGameEngine.GameViewport.World.AuthorityGameMode);
 
 	gameMode->Say(FString(message.c_str()));
 }

@@ -9,9 +9,8 @@ void UEngine::Setup()
 	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
 
 	auto GameViewPortFinder = EngineFinder.Find(XOR(L"GameViewport"));
-	auto gameViewport = UGameViewportClient(&GameViewPortFinder);
-	gameViewport.Setup();
-	GameViewport = &gameViewport;
+	GameViewport = UGameViewportClient(&GameViewPortFinder);
+	GameViewport.Setup();
 
 	GameInstance.Setup();
 }

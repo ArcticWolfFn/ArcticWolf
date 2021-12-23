@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "GameMode.h"
 
-AGameMode::AGameMode(UObject* InternalObject) : AGameModeBase(InternalObject)
+AGameMode::AGameMode(InternalUObject* InternalObject) : AGameModeBase(InternalObject)
 {
 }
 

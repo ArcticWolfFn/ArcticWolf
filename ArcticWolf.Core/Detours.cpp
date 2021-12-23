@@ -108,7 +108,7 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 	{
 		PLOGI << XOR("[NeoRoyale] Start!");
 
-		auto Playlist = UE4::FindObject<UFortPlaylistAthena*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+		auto Playlist = UE4::FindObject<InternalUObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
 		gPlaylist = Playlist;
 		auto Map = XOR(L"Apollo_Terrain?game=/Game/Athena/Athena_GameMode.Athena_GameMode_C");
 
@@ -438,7 +438,7 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 			{
 				if (!arg.empty())
 				{
-					auto Playlist = UE4::FindObject<UFortPlaylistAthena*>(ScriptNameW.c_str());
+					auto Playlist = UE4::FindObject<InternalUObject*>(ScriptNameW.c_str());
 					if (Playlist)
 					{
 						gPlaylist = Playlist;

@@ -17,7 +17,7 @@ public:
 	UCheatManager CheatManager = NULL;
 
 protected:
-	UObject* InternalObject = nullptr;
+	InternalUObject* InternalObject = nullptr;
 
 private:
 	ObjectFinder* PlayerControllerFinder;

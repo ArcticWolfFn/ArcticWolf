@@ -9,7 +9,7 @@ public:
 
 	void Setup() override;
 
-	UWorld* World = nullptr;
+	UWorld World = NULL;
 
 private:
 	ObjectFinder* InternalFinder = nullptr;

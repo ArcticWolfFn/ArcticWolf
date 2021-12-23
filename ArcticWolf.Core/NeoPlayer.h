@@ -14,9 +14,9 @@ struct UFortGadgetItemDefinition_GetWeaponItemDefinition_Params
 
 struct UKismetSystemLibrary_ExecuteConsoleCommand_Params
 {
-	UObject* WorldContextObject;
+	InternalUObject* WorldContextObject;
 	FString Command;
-	UObject* SpecificPlayer;
+	InternalUObject* SpecificPlayer;
 };
 
 enum class EMontagePlayReturnType : uint8_t
@@ -85,7 +85,7 @@ struct AFortPawn_SetMaxHealth_Params
 
 struct UAnimInstance_Montage_Play_Params
 {
-	UObject* MontageToPlay;
+	InternalUObject* MontageToPlay;
 	float InPlayRate;
 	EMontagePlayReturnType ReturnValueType;
 	float InTimeToStartMontageAt;
@@ -137,7 +137,7 @@ struct ACharacter_IsSkydiving_Params
 
 struct AController_Possess_Params
 {
-	UObject* InPawn;
+	InternalUObject* InPawn;
 };
 
 struct ACharacter_IsInAircraft_Params
@@ -200,8 +200,8 @@ struct UFortMontageItemDefinitionBase_GetAnimationHardReference_Params
 {
 	TEnumAsByte<EFortCustomBodyType> BodyType;
 	TEnumAsByte<EFortCustomGender> Gender;
-	UObject* PawnContext;
-	UObject* ReturnValue;
+	InternalUObject* PawnContext;
+	InternalUObject* ReturnValue;
 };
 
 struct ACharacter_IsJumpProvidingForce_Params
@@ -211,7 +211,7 @@ struct ACharacter_IsJumpProvidingForce_Params
 
 struct UAnimInstance_GetCurrentActiveMontage_Params
 {
-	UObject* ReturnValue;
+	InternalUObject* ReturnValue;
 };
 
 struct ACharacter_IsParachuteOpen_Params
@@ -247,15 +247,15 @@ struct ACharacter_IsParachuteForcedOpen_Params
 
 struct UFortKismetLibrary_UpdatePlayerCustomCharacterPartsVisualization_Params
 {
-	UObject* PlayerState;
+	InternalUObject* PlayerState;
 };
 
 class NeoPlayerClass
 {
 public:
-	UObject* Controller;
-	UObject* Pawn;
-	UObject* Mesh;
+	InternalUObject* Controller;
+	InternalUObject* Pawn;
+	InternalUObject* Mesh;
 	UObject* AnimInstance;;
 	std::wstring SkinOverride;
 
@@ -309,7 +309,7 @@ public:
 	// not working in season 15
 	// idk what this does tbh
 	void SetupAbilities() {
-		if (!Util::IsBadReadPtr(Pawn)) {
+		/*if (!Util::IsBadReadPtr(Pawn)) {
 			UObject* jumpAbility = UE4::FindObject<UObject*>(L"Class /Script/FortniteGame.FortGameplayAbility_Jump");
 			if (!Util::IsBadReadPtr(jumpAbility)) {
 				SDK::GrantGameplayAbility(Pawn, jumpAbility);
@@ -348,7 +348,7 @@ public:
 		}
 		else {
 			PLOGE << "Pawn is null";
-		}
+		}*/
 	}
 
 	void UpdatePlayerController()
@@ -633,7 +633,7 @@ public:
 		}
 	}
 
-	auto Emote(UObject* EmoteDef)
+	auto Emote(InternalUObject* EmoteDef)
 	{
 		//We grab the mesh from the pawn then use it to get the animation instance
 		if (!this->Mesh || !this->AnimInstance || !Util::IsBadReadPtr(this->Mesh) || !Util::IsBadReadPtr(this->AnimInstance))

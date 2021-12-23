@@ -68,6 +68,6 @@ public:
 private:
 	ObjectFinder* InternalFinder = nullptr;
 
-	AGameStateBase* GameState = nullptr;
+	AGameStateBase GameState = NULL;
 };
 

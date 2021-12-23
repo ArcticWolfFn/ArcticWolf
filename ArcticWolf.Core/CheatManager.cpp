@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "CheatManager.h"
 
-UCheatManager::UCheatManager(UObject* InternalCheatManager) : InternalCheatManager(InternalCheatManager)
+UCheatManager::UCheatManager(InternalUObject* InternalCheatManager) : InternalCheatManager(InternalCheatManager)
 {
 }
 

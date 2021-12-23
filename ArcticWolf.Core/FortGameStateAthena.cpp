@@ -30,9 +30,8 @@ void AFortGameStateAthena::Setup()
 	}
 
 	auto InternalCurrentPlaylistInfo = reinterpret_cast<INTERNALFPlaylistPropertyArray*>(reinterpret_cast<uintptr_t>(InternalObject) + Offset_CurrentPlaylistInfo);
-	auto currentPlaylistInfo = FPlaylistPropertyArray(InternalCurrentPlaylistInfo);
-	currentPlaylistInfo.Setup();
-	CurrentPlaylistInfo = &currentPlaylistInfo;
+	CurrentPlaylistInfo = FPlaylistPropertyArray(InternalCurrentPlaylistInfo);
+	CurrentPlaylistInfo.Setup();
 
 	GamePhase = reinterpret_cast<EAthenaGamePhase*>(reinterpret_cast<uintptr_t>(InternalObject) + Offset_GamePhase);
 
@@ -43,6 +42,17 @@ void AFortGameStateAthena::Setup()
 void AFortGameStateAthena::OnRep_CurrentPlaylistInfo()
 {
 	if (!CanExec_OnRep_CurrentPlaylistInfo) return;
+
+	if (Util::IsBadReadPtr(InternalObject))
+	{
+		PLOGE << "InternalUObject is nullptr";
+	}
+
+	if (Util::IsBadReadPtr(Fn_OnRep_CurrentPlaylistInfo))
+	{
+		PLOGE << "Fn_OnRep_CurrentPlaylistInfo is nullptr";
+	}
+
 	ProcessNoParamsEvent(InternalObject, Fn_OnRep_CurrentPlaylistInfo);
 }
 
@@ -56,6 +66,17 @@ void AFortGameStateAthena::OnRep_GamePhase(EAthenaGamePhase OldGamePhase)
 
 	auto params = Params();
 	params.OldGamePhase = OldGamePhase;
+
+	if (Util::IsBadReadPtr(InternalObject))
+	{
+		PLOGE << "InternalObject is nullptr";
+	}
+
+
+	if (Util::IsBadReadPtr(Fn_OnRep_GamePhase))
+	{
+		PLOGE << "Fn_OnRep_GamePhase is nullptr";
+	}
 
 	ProcessEvent(InternalObject, Fn_OnRep_GamePhase, &params);
 }

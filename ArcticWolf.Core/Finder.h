@@ -70,7 +70,7 @@ class ObjectFinder
 public:
 	ObjectFinder(const std::wstring& currentObject, const std::wstring objectType, GameObject* object, GameObject*& objectRef);
 
-	UObject*& GetObj() const;
+	InternalUObject*& GetObj() const;
 
 	static ObjectFinder EntryPoint(uintptr_t EntryPointAddress);
 
@@ -80,7 +80,7 @@ public:
 
 	ObjectFinder FindChildObject(const std::wstring& objectToFind) const;
 
-	static UObject* FindActor(std::wstring name, int toSkip = 0);
+	static InternalUObject* FindActor(std::wstring name, int toSkip = 0);
 
 	static void DestroyActor(std::wstring name);
 };

@@ -7,7 +7,7 @@ class UEngine : GIObject
 public:
 	void Setup() override;
 
-	UGameViewportClient* GameViewport = nullptr;
+	UGameViewportClient GameViewport = NULL;
 
 	FortniteGameInstance GameInstance;
 };

@@ -23,12 +23,11 @@ void UWorld::Setup()
     authorityGameMode.Setup();
     AuthorityGameMode = &authorityGameMode;
 
-    auto gameState = AGameStateBase(InternalFinder->Find(XOR(L"GameState")).GetObj());
-    gameState.Setup();
-    this->GameState = &gameState;
+    this->GameState = AGameStateBase(InternalFinder->Find(XOR(L"GameState")).GetObj());
+    this->GameState.Setup();
 }
 
 AGameStateBase* UWorld::GetGameState()
 {
-    return this->GameState;
+    return &GameState;
 }

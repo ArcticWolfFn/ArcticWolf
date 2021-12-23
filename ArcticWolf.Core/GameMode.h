@@ -5,7 +5,7 @@
 class AGameMode : public AGameModeBase
 {
 public:
-	AGameMode(UObject* InternalObject);
+	AGameMode(InternalUObject* InternalObject);
 
 	void Setup() override; 
 

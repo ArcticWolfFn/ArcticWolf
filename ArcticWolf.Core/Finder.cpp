@@ -52,9 +52,9 @@ ObjectFinder::ObjectFinder(const std::wstring& currentObject, const std::wstring
 {
 };
 
-UObject*& ObjectFinder::GetObj() const
+InternalUObject*& ObjectFinder::GetObj() const
 {
-	return reinterpret_cast<UObject*&>(m_objectRef);
+	return reinterpret_cast<InternalUObject*&>(m_objectRef);
 }
 
 ObjectFinder ObjectFinder::EntryPoint(uintptr_t EntryPointAddress)
@@ -69,7 +69,7 @@ ObjectFinder ObjectFinder::Find(const std::wstring& objectToFind) const
 
 int32_t ObjectFinder::FindOffset(const std::wstring& classToFind, const std::wstring& objectToFind)
 {
-	auto Class = UE4::FindObject<UClass*>(classToFind.c_str(), true);
+	auto Class = UE4::FindObject<InternalUClass*>(classToFind.c_str(), true);
 
 	if (Class)
 	{
@@ -128,7 +128,7 @@ ObjectFinder ObjectFinder::FindChildObject(const std::wstring& objectToFind) con
 	}
 }
 
-UObject* ObjectFinder::FindActor(std::wstring name, int toSkip)
+InternalUObject* ObjectFinder::FindActor(std::wstring name, int toSkip)
 {
 	ObjectFinder EngineFinder = EntryPoint(uintptr_t(GEngine));
 	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
@@ -141,13 +141,13 @@ UObject* ObjectFinder::FindActor(std::wstring name, int toSkip)
 	{
 		auto Actors = READ_POINTER(PersistentLevelFinder.GetObj(), AActors);
 
-		auto pActor = static_cast<UObject*>(READ_POINTER(Actors, i * sizeof(void*)));
+		auto pActor = static_cast<InternalUObject*>(READ_POINTER(Actors, i * sizeof(void*)));
 
 		if (pActor != nullptr)
 		{
 			//printf("\n[Actor %i] %ls, Class : %ls\n", i, GetObjectFullName(pActor).c_str(), GetObjectFullName(pActor->Class).c_str());
 
-			/*if (UE4::GetObjectFullName(pActor).starts_with(name))
+			if (UE4::GetObjectFullName(pActor).starts_with(name))
 			{
 				if (toSkip > 0)
 				{
@@ -158,7 +158,7 @@ UObject* ObjectFinder::FindActor(std::wstring name, int toSkip)
 					printf("\n[NeoRoyale] %ls was found!.\n", name.c_str());
 					return pActor;
 				}
-			}*/
+			}
 		}
 	}
 

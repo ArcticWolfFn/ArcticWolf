@@ -5,7 +5,7 @@ AGameStateBase::AGameStateBase()
 {
 }
 
-AGameStateBase::AGameStateBase(UObject* InternalObject) : InternalObject(InternalObject)
+AGameStateBase::AGameStateBase(InternalUObject* InternalObject) : InternalObject(InternalObject)
 {
 }
 
@@ -14,7 +14,7 @@ void AGameStateBase::Setup()
 	__super::Setup();
 }
 
-UObject* AGameStateBase::GetInternalObject()
+InternalUObject* AGameStateBase::GetInternalObject()
 {
 	return this->InternalObject;
 }

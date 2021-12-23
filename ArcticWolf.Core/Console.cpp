@@ -14,9 +14,9 @@ bool Console::CheatManager()
 
 	ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
-	UObject*& pcCheatManager = reinterpret_cast<UObject*&>(CheatManagerFinder.GetObj());
+	InternalUObject*& pcCheatManager = reinterpret_cast<InternalUObject*&>(CheatManagerFinder.GetObj());
 
-	auto cCheatManager = UE4::FindObject<UClass*>(XOR(L"Class /Script/Engine.CheatManager"));
+	auto cCheatManager = UE4::FindObject<InternalUClass*>(XOR(L"Class /Script/Engine.CheatManager"));
 
 	if (!pcCheatManager && cCheatManager)
 	{
@@ -52,11 +52,11 @@ bool Console::Unlock()
 	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
 	ObjectFinder ViewportConsoleFinder = GameViewPortClientFinder.Find(XOR(L"ViewportConsole"));
 
-	UObject*& ViewportConsole = reinterpret_cast<UObject*&>(ViewportConsoleFinder.GetObj());
+	InternalUObject*& ViewportConsole = reinterpret_cast<InternalUObject*&>(ViewportConsoleFinder.GetObj());
 
 	auto Console = StaticConstructObject(
-		static_cast<UClass*>(ConsoleClassFinder.GetObj()),
-		reinterpret_cast<UObject*>(GameViewPortClientFinder.GetObj()),
+		static_cast<InternalUClass*>(ConsoleClassFinder.GetObj()),
+		reinterpret_cast<InternalUObject*>(GameViewPortClientFinder.GetObj()),
 		nullptr,
 		RF_NoFlags,
 		EInternalObjectFlags::None,

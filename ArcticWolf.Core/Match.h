@@ -7,7 +7,7 @@
 inline std::vector<std::wstring> gWeapons;
 inline std::vector<std::wstring> gBlueprints;
 inline std::vector<std::wstring> gMeshes;
-inline UFortPlaylistAthena* gPlaylist;
+inline InternalUObject* gPlaylist;
 
 class Match
 {

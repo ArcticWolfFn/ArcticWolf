@@ -10,12 +10,12 @@ void FPlaylistPropertyArray::Setup()
 	__super::Setup();
 }
 
-void FPlaylistPropertyArray::SetBasePlaylist(UFortPlaylistAthena* Playlist)
+void FPlaylistPropertyArray::SetBasePlaylist(InternalUObject* Playlist)
 {
 	InternalObject->BasePlaylist = Playlist;
 }
 
-void FPlaylistPropertyArray::SetOverridePlaylist(UFortPlaylistAthena* Playlist)
+void FPlaylistPropertyArray::SetOverridePlaylist(InternalUObject* Playlist)
 {
 	InternalObject->OverridePlaylist = Playlist;
 }
