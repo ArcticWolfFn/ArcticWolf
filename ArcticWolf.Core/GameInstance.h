@@ -6,7 +6,7 @@ class UGameInstance : GIObject
 {
 public:
 
-	std::vector<ULocalPlayer*> LocalPlayers;
+	std::vector<ULocalPlayer> LocalPlayers;
 
 	virtual void Setup() override;
 };

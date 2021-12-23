@@ -8,9 +8,9 @@ class UPlayer : public UObject
 public:
 	UPlayer(ObjectFinder PlayerFinder);
 
-	APlayerController* PlayerController;
+	APlayerController* PlayerController = nullptr;
 
-	void Setup() override;
+	virtual void Setup() override;
 
 private:
 	ObjectFinder PlayerFinder;

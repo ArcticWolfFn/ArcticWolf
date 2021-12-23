@@ -24,7 +24,7 @@ void APlayerController::Setup()
 
 void APlayerController::SwitchLevel(FString URL)
 {
-	if (!CanExec_SwitchLevel) return;
+	if (!this->CanExec_SwitchLevel) return;
 
 	struct Params
 	{
