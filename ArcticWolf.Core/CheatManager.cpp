@@ -48,5 +48,17 @@ void UCheatManager::DestroyAll(AActor* aClass)
 	auto params = new Params();
 	params->aClass = aClass;
 
+	if (Util::IsBadReadPtr(aClass)) {
+		PLOGE << "aClass is nullptr";
+	}
+
+	if (Util::IsBadReadPtr(InternalCheatManager)) {
+		PLOGE << "InternalCheatManager is nullptr";
+	}
+
+	if (Util::IsBadReadPtr(Fn_DestroyAll)) {
+		PLOGE << "Fn_DestroyAll is nullptr";
+	}
+
 	ProcessEvent(InternalCheatManager, Fn_DestroyAll, &params);
 }

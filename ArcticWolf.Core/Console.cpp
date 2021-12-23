@@ -1,6 +1,7 @@
 #include "pch.h"
 #include "Console.h"
 #include "Finder.h"
+#include "CheatManager.h"
 
 bool Console::CheatManager()
 {
@@ -32,6 +33,10 @@ bool Console::CheatManager()
 		);
 
 		pcCheatManager = CheatManager;
+
+		// Set CheatManager to the new object
+		GetGame()->LocalPlayers[0].PlayerController.CheatManager = UCheatManager(CheatManager);
+		GetGame()->LocalPlayers[0].PlayerController.CheatManager.Setup();
 
 		PLOGI << "Player now has cheatmanager";
 

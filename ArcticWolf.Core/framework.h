@@ -24,7 +24,7 @@
 
 inline UEngine GGameEngine = UEngine();
 
-inline FortniteGameInstance GetGame()
+inline FortniteGameInstance* GetGame()
 {
-	return GGameEngine.GameInstance;
+	return &GGameEngine.GameInstance;
 }
