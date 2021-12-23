@@ -1,7 +1,7 @@
 #include "pch.h"
 #include "LocalPlayer.h"
 
-ULocalPlayer::ULocalPlayer(ObjectFinder LocalPlayerFinder) : UPlayer::UPlayer(LocalPlayerFinder)
+ULocalPlayer::ULocalPlayer(ObjectFinder* LocalPlayerFinder) : UPlayer::UPlayer(LocalPlayerFinder)
 {
 }
 

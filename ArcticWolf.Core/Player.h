@@ -6,13 +6,13 @@
 class UPlayer : public UObject
 {
 public:
-	UPlayer(ObjectFinder PlayerFinder);
+	UPlayer(ObjectFinder* PlayerFinder);
 
-	APlayerController* PlayerController = nullptr;
+	APlayerController PlayerController;
 
 	virtual void Setup() override;
 
 private:
-	ObjectFinder PlayerFinder;
+	ObjectFinder* PlayerFinder = nullptr;
 };
 

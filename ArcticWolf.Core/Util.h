@@ -69,7 +69,7 @@ inline void SetPointer(const wchar_t* objectToFind, T* objectToSet, bool* succes
 		return;
 	}
 
-	objectToSet = &obj;
+	*objectToSet = obj;
 	if (success != nullptr)
 	{
 		*success = true;

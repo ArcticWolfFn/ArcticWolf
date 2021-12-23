@@ -6,6 +6,7 @@
 class APlayerController : protected GIObject
 {
 public:
+	APlayerController();
 	APlayerController(ObjectFinder* PlayerControllerFinder);
 
 	void Setup() override;
@@ -19,7 +20,7 @@ protected:
 	UObject* InternalObject = nullptr;
 
 private:
-	ObjectFinder* PlayerControllerFinder = nullptr;
+	ObjectFinder* PlayerControllerFinder;
 
 	UFunction* Fn_SwitchLevel = nullptr;
 

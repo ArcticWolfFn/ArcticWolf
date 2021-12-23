@@ -3,6 +3,9 @@
 #include "Finder.h"
 
 
+APlayerController::APlayerController()
+{
+}
 
 APlayerController::APlayerController(ObjectFinder* PlayerControllerFinder) : PlayerControllerFinder(PlayerControllerFinder)
 {
@@ -33,6 +36,16 @@ void APlayerController::SwitchLevel(FString URL)
 
 	auto params = Params();
 	params.URL = URL;
+
+	if (Util::IsBadReadPtr(InternalObject))
+	{
+		PLOGE << "InternalObject is nullptr";
+	}
+
+	if (Util::IsBadReadPtr(Fn_SwitchLevel))
+	{
+		PLOGE << "Fn_SwitchLevel is nullptr";
+	}
 
 	ProcessEvent(InternalObject, Fn_SwitchLevel, &params);
 }
