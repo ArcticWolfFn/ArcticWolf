@@ -10,6 +10,6 @@ class FortniteGameInstance : public UGameInstance
 public:
 	UFortKismetLibrary FortKismetLibrary;
 
-	void Setup();
+	void Setup() override;
 };
 

@@ -16,7 +16,7 @@ namespace CameraHook
 static class Detours
 {
 public:
-	static void* ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams);
+	static void* ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc, void* pParams);
 
 private:
 	inline static bool bIsDebugCamera = false;

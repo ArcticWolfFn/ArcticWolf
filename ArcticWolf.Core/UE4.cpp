@@ -30,7 +30,7 @@ std::wstring UE4::GetFirstName(FField* object)
 	return objectNameW;
 }
 
-std::wstring UE4::GetObjectFirstName(UObject* object)
+std::wstring UE4::GetObjectFirstName(InternalUObject* object)
 {
 	const FString internalName = GetObjectNameInternal(object);
 	if (!internalName.ToWString()) {
@@ -130,41 +130,22 @@ struct InternalFString : private InternalTArray<wchar_t>
 	}
 };
 
-std::wstring UE4::GetObjectName(UObject* object)
+std::wstring UE4::GetObjectName(InternalUObject* object)
 {
 	std::wstring name(L"");
 
-	// ToDo: function not found
-	auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Object:GetName"));
-
-	if (Util::IsBadReadPtr(fn))
-	{
-		PLOGE << "Function is bad";
-		return name;
-	}
-
 	for (auto i = 0; object; object = object->Outer, ++i)
 	{
-		struct Params {
-			InternalFString ReturnValue;
-		};
-
-		auto params = Params();
-		ProcessEvent(object, fn, &params);
-
-		InternalFString internalName = params.ReturnValue;
+		FString internalName = GetObjectNameInternal(object);
 
 		if (!internalName.ToWString())
 			break;
 
 		name = internalName.ToWString() + std::wstring(i > 0 ? L"." : L"") + name;
-		PLOGI.printf("NamePart: %s", name.c_str());
 
 
 		Free((void*)internalName.ToWString());
 	}
-
-	PLOGI.printf("Name: %s", name.c_str());
 
 	return name;
 }
@@ -181,7 +162,7 @@ std::wstring UE4::GetFieldClassName(FField* obj)
 	return className;
 }
 
-std::wstring UE4::GetObjectFullName(UObject* object)
+std::wstring UE4::GetObjectFullName(InternalUObject* object)
 {
 	if (Util::IsBadReadPtr(object)) {
 		return L"";
@@ -229,7 +210,7 @@ void UE4::DumpGObjects()
 		{
 			continue;
 		}
-		std::wstring className = GetObjectName(static_cast<UObject*>(object->Class)).c_str();
+		std::wstring className = GetObjectName(static_cast<InternalUObject*>(object->Class)).c_str();
 		std::wstring objectName = GetObjectFullName(object).c_str();
 		std::wstring item = L"\n[" + std::to_wstring(i) + L"] Object:[" + objectName + L"] Class:[" + className + L"]\n";
 		log << item;

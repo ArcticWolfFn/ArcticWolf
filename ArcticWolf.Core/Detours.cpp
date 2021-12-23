@@ -97,12 +97,12 @@ static auto str2enum(const std::wstring& str)
 	else return NONE;
 }
 
-void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
+void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc, void* pParams)
 {
 	auto nObj = UE4::GetObjectName(pObj);
+
 	auto nFunc = UE4::GetObjectName(pFunc);
-
-
+	
 	//If the game requested matchmaking we open the game mode
 	if (wcsstr(nFunc.c_str(), XOR(L"OnSetPlayButtonText")) && wcsstr(nObj.c_str(), XOR(L"Matchmaking_AthenaLegacy")) && !GMatch.bIsStarted)
 	{
@@ -171,8 +171,8 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 		auto CurrentParams = (ServerAttemptInteract*)pParams;
 
-		// ToDo: names are invalid
-		if (!Util::IsBadReadPtr(CurrentParams->ReceivingActor)) {
+	// ToDo: names are invalid
+		/*if (!Util::IsBadReadPtr(CurrentParams->ReceivingActor)) {
 			PLOGI.printf("Player wants to interact with %s", UE4::GetObjectFullName(CurrentParams->ReceivingActor).c_str());
 
 			if (!Util::IsBadReadPtr(CurrentParams->ReceivingActor->Class)) {
@@ -192,7 +192,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 		}
 		else {
 			PLOGE << "ServerAttemptInteract: CurrentParams->InteractComponent is nullptr";
-		}
+		}*/
 	}
 
 	else if (GMatch.bIsInit)
@@ -283,7 +283,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 			{
 				arg = ScriptNameW.substr(ScriptNameW.find(L" ") + 1);
 			}
-
+			
 			auto CMD = str2enum(ScriptNameW.c_str());
 
 			switch (CMD)
@@ -582,7 +582,7 @@ void* Detours::ProcessEventDetour(UObject* pObj, UObject* pFunc, void* pParams)
 
 			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
 		{
-			std::thread log(Log, nObj, nFunc, UE4::GetObjectFullName(static_cast<UObject*>(pObj)->Class));
+			std::thread log(Log, nObj, nFunc, UE4::GetObjectFullName(static_cast<InternalUObject*>(pObj)->Class));
 			log.detach();
 		}
 	}

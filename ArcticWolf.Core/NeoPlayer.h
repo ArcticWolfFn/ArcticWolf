@@ -495,14 +495,14 @@ public:
 
 		auto CurrentPlayingMontage = GetCurrentActiveMontage_Params.ReturnValue;
 
-		if (CurrentPlayingMontage && UE4::GetObjectFirstName(CurrentPlayingMontage).starts_with(XOR(L"Emote_")))
+		/*if (CurrentPlayingMontage && UE4::GetObjectFirstName(CurrentPlayingMontage).starts_with(XOR(L"Emote_")))
 		{
 			UAnimInstance_Montage_Stop_Params Montage_Stop_Params;
 			Montage_Stop_Params.InBlendOutTime = 0;
 			Montage_Stop_Params.Montage = CurrentPlayingMontage;
 
 			ProcessEvent(this->AnimInstance, Montage_Stop, &Montage_Stop_Params);
-		}
+		}*/
 	}
 
 	bool IsSkydiving()
@@ -601,31 +601,31 @@ public:
 
 		if (WeaponData && !Util::IsBadReadPtr(WeaponData))
 		{
-			std::wstring objectName = UE4::GetObjectFullName(WeaponData);
+			//std::wstring objectName = UE4::GetObjectFullName(WeaponData);
 
-			if (objectName.starts_with(L"FortWeapon") || objectName.starts_with(L"AthenaGadget") || objectName.starts_with(L"FortPlayset"))
-			{
-				if (objectName.starts_with(L"AthenaGadget"))
-				{
-					auto FUN_weapondef = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGadgetItemDefinition:GetWeaponItemDefinition"));
+			//if (objectName.starts_with(L"FortWeapon") || objectName.starts_with(L"AthenaGadget") || objectName.starts_with(L"FortPlayset"))
+			//{
+			//	if (objectName.starts_with(L"AthenaGadget"))
+			//	{
+			//		auto FUN_weapondef = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGadgetItemDefinition:GetWeaponItemDefinition"));
 
-					UFortGadgetItemDefinition_GetWeaponItemDefinition_Params prm_ReturnValue;
+			//		UFortGadgetItemDefinition_GetWeaponItemDefinition_Params prm_ReturnValue;
 
-					ProcessEvent(WeaponData, FUN_weapondef, &prm_ReturnValue);
+			//		ProcessEvent(WeaponData, FUN_weapondef, &prm_ReturnValue);
 
-					if (prm_ReturnValue.ReturnValue && !Util::IsBadReadPtr(prm_ReturnValue.ReturnValue))
-					{
-						WeaponData = prm_ReturnValue.ReturnValue;
-					}
-				}
+			//		if (prm_ReturnValue.ReturnValue && !Util::IsBadReadPtr(prm_ReturnValue.ReturnValue))
+			//		{
+			//			WeaponData = prm_ReturnValue.ReturnValue;
+			//		}
+			//	}
 
-				//weapon found equip it
-				AFortPawn_EquipWeaponDefinition_Params params;
-				params.WeaponData = WeaponData;
-				params.ItemEntryGuid = GUID;
+			//	//weapon found equip it
+			//	AFortPawn_EquipWeaponDefinition_Params params;
+			//	params.WeaponData = WeaponData;
+			//	params.ItemEntryGuid = GUID;
 
-				ProcessEvent(this->Pawn, fn, &params);
-			}
+			//	ProcessEvent(this->Pawn, fn, &params);
+			//}
 		}
 		else
 		{
@@ -843,7 +843,7 @@ public:
 
 	void ShowPickaxe()
 	{
-		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
+		/*if (!this->Controller || Util::IsBadReadPtr(this->Controller))
 		{
 			UpdatePlayerController();
 		}
@@ -863,6 +863,6 @@ public:
 			this->EquipWeapon(Weapon.c_str());
 
 			PLOGI << "Equiped pickaxe";
-		}
+		}*/
 	}
 };

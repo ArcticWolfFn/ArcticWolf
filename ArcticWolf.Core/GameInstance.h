@@ -8,6 +8,6 @@ public:
 
 	ULocalPlayer* LocalPlayers[1];
 
-	void Setup() override;
+	virtual void Setup() override;
 };
 

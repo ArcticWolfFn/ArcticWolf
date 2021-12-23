@@ -147,7 +147,7 @@ UObject* ObjectFinder::FindActor(std::wstring name, int toSkip)
 		{
 			//printf("\n[Actor %i] %ls, Class : %ls\n", i, GetObjectFullName(pActor).c_str(), GetObjectFullName(pActor->Class).c_str());
 
-			if (UE4::GetObjectFullName(pActor).starts_with(name))
+			/*if (UE4::GetObjectFullName(pActor).starts_with(name))
 			{
 				if (toSkip > 0)
 				{
@@ -158,7 +158,7 @@ UObject* ObjectFinder::FindActor(std::wstring name, int toSkip)
 					printf("\n[NeoRoyale] %ls was found!.\n", name.c_str());
 					return pActor;
 				}
-			}
+			}*/
 		}
 	}
 
@@ -185,13 +185,13 @@ void ObjectFinder::DestroyActor(std::wstring name)
 		{
 			//printf("\n[Actor %i] %ls, Class : %ls\n", i, GetObjectFullName(pActor).c_str(), GetObjectFullName(pActor->Class).c_str());
 
-			if (UE4::GetObjectFullName(pActor).starts_with(name))
+			/*if (UE4::GetObjectFullName(pActor).starts_with(name))
 			{
 				auto fn = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor:K2_DestroyActor"));
 
 				ProcessEvent(pActor, fn, nullptr);
 				printf("\n[NeoRoyale] %ls was destroyed!.\n", name.c_str());
-			}
+			}*/
 		}
 	}
 }

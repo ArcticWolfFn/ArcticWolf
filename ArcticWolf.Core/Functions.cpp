@@ -44,9 +44,13 @@ void UFunctions::Travel(const wchar_t* url)
 		return;
 	}
 
-	PLOGD.printf("Travel: To Url: %s", std::wstring(url).c_str());
+	PLOGD.printf("Travel: To Url: %ws", std::wstring(url));
 
-	GetGame().LocalPlayers[0]->PlayerController->SwitchLevel(FString(url));
+	FString fUrl(url);
+
+	ULocalPlayer* player = GetGame().LocalPlayers[0];
+
+	player->PlayerController->SwitchLevel(fUrl);
 }
 
 void UFunctions::StartMatch()

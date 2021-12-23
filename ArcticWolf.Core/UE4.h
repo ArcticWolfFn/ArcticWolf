@@ -20,10 +20,10 @@ class Util;
 
 inline void* (*ProcessEvent)(void*, void*, void*);
 inline int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE);
-inline FString(*GetObjectNameInternal)(const UObject* Object);
+inline FString(*GetObjectNameInternal)(const InternalUObject* Object);
 inline UObject* (*SpawnActor)(UObject* UWorld, UClass* Class, FTransform const* UserTransformPtr, const FActorSpawnParameters& SpawnParameters);
 inline void (*GetFullName)(FField* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
-inline void (*GetObjectFullNameInternal)(UObject* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
+inline void (*GetObjectFullNameInternal)(InternalUObject* Obj, FString& ResultString, const InternalUObject* StopOuter, EObjectFullNameFlags Flags);
 inline void (*FreeInternal)(void*);
 inline GObjects* GObjs;
 inline struct UEngine* GEngine;
@@ -69,15 +69,15 @@ public:
 	static std::wstring GetFirstName(FField* object);
 
 	//Returns the very first name of the object (E.G: BP_PlayButton).
-	static std::wstring GetObjectFirstName(UObject* object);
+	static std::wstring GetObjectFirstName(InternalUObject* object);
 
-	static std::wstring GetObjectName(UObject* object);
+	static std::wstring GetObjectName(InternalUObject* object);
 
 	//Returns FField's type.
 	static std::wstring GetFieldClassName(FField* obj);
 
 	//Return FULL Object name including it's type.
-	static std::wstring GetObjectFullName(UObject* object);
+	static std::wstring GetObjectFullName(InternalUObject* object);
 
 	static void DumpBPs();
 

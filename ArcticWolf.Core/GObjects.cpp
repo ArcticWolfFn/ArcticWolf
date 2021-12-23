@@ -34,7 +34,7 @@ void GObjects::NumChunks(int* start, int* end) const
 	*end = cEnd;
 }
 
-UObject* GObjects::GetByIndex(int32_t index) const
+InternalUObject* GObjects::GetByIndex(int32_t index) const
 {
 	int cStart = 0, cEnd = 0;
 	int chunkIndex, chunkSize = 0xFFFF, chunkPos;

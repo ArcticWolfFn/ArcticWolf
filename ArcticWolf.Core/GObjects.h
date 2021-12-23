@@ -4,7 +4,7 @@
 
 struct FUObjectItem
 {
-	UObject* Object;
+	InternalUObject* Object;
 	DWORD Flags;
 	DWORD ClusterIndex;
 	DWORD SerialNumber;
@@ -26,6 +26,6 @@ public:
 
 	void NumChunks(int* start, int* end) const;
 
-	UObject* GetByIndex(int32_t index) const;
+	InternalUObject* GetByIndex(int32_t index) const;
 };
 

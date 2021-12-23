@@ -233,14 +233,14 @@ public:
 
 		auto Map = XOR(L"Apollo_Terrain?game=/Game/Athena/Athena_GameMode.Athena_GameMode_C");
 
-		gPlaylist = UE4::FindObject<UFortPlaylistAthena*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+		/*gPlaylist = UE4::FindObject<UFortPlaylistAthena*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
 		if (gPlaylist == nullptr) {
 			PLOGE << "Hooks: Playlist is null";
 		}
 		else {
 			auto nObj = UE4::GetObjectFullName(gPlaylist);
 			PLOGV.printf("Hooks: Playlist points to %s", nObj.c_str());
-		}
+		}*/
 
 		GGameEngine.Setup();
 
