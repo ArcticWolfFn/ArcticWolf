@@ -16,8 +16,8 @@ public:
 	void Say(FString Msg);
 
 private:
-	UFunction* Fn_StartMatch;
-	UFunction* Fn_Say;
+	UFunction* Fn_StartMatch = nullptr;
+	UFunction* Fn_Say = nullptr;
 
 	bool CanExec_StartMatch = false;
 	bool CanExec_Say = false;

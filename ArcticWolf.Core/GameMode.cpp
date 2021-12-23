@@ -17,6 +17,16 @@ void AGameMode::StartMatch()
 {
 	if (!CanExec_StartMatch) return;
 
+	if (Util::IsBadReadPtr(InternalObject))
+	{
+		PLOGE << "InternalObject is nullptr";
+	}
+
+	if (Util::IsBadReadPtr(Fn_StartMatch))
+	{
+		PLOGE << "Fn_StartMatch is nullptr";
+	}
+
 	ProcessNoParamsEvent(InternalObject, Fn_StartMatch);
 }
 

@@ -63,7 +63,12 @@ void UFunctions::Travel(const wchar_t* url)
 
 void UFunctions::StartMatch()
 {
-	auto GameMode = dynamic_cast<AGameMode*>(GGameEngine.GameViewport.World.AuthorityGameMode);
+	auto GameMode = dynamic_cast<AGameMode*>(&GGameEngine.GameViewport.World.AuthorityGameMode);
+	if (!GameMode)
+	{
+		PLOGE << "Failed to cast GameMode";
+	}
+
 	GameMode->StartMatch();
 
 	PLOGI << "Match started!";
@@ -158,7 +163,7 @@ void UFunctions::Play(const wchar_t* AnimationPlayerFullName)
 
 void UFunctions::ConsoleLog(std::wstring message)
 {
-	auto gameMode = dynamic_cast<AGameMode*>(GGameEngine.GameViewport.World.AuthorityGameMode);
+	auto gameMode = dynamic_cast<AGameMode*>(&GGameEngine.GameViewport.World.AuthorityGameMode);
 
 	gameMode->Say(FString(message.c_str()));
 }

@@ -19,9 +19,8 @@ UWorld::UWorld(ObjectFinder* WorldFinder) : InternalFinder(WorldFinder)
 
 void UWorld::Setup()
 {
-    auto authorityGameMode = AGameMode(InternalFinder->Find(L"AuthorityGameMode").GetObj());
-    authorityGameMode.Setup();
-    AuthorityGameMode = &authorityGameMode;
+    AuthorityGameMode = AGameMode(InternalFinder->Find(L"AuthorityGameMode").GetObj());
+    AuthorityGameMode.Setup();
 
     this->GameState = AGameStateBase(InternalFinder->Find(XOR(L"GameState")).GetObj());
     this->GameState.Setup();

@@ -63,7 +63,7 @@ public:
 
 	AGameStateBase* GetGameState();
 
-	AGameModeBase* AuthorityGameMode = nullptr;
+	AGameModeBase AuthorityGameMode = NULL;
 
 private:
 	ObjectFinder* InternalFinder = nullptr;
