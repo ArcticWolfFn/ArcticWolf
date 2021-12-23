@@ -44,13 +44,25 @@ void UFunctions::Travel(const wchar_t* url)
 		return;
 	}
 
-	PLOGD.printf("Travel: To Url: %ws", std::wstring(url));
+	PLOGD.printf("Travel: To Url: %ws", std::wstring(url).c_str());
 
 	FString fUrl(url);
 
 	ULocalPlayer* player = GetGame().LocalPlayers[0];
 
-	player->PlayerController->SwitchLevel(fUrl);
+	if (Util::IsBadReadPtr(player))
+	{
+		PLOGE << "Player is nullptr";
+	}
+
+	APlayerController* pContoller = player->PlayerController;
+
+	if (Util::IsBadReadPtr(pContoller))
+	{
+		PLOGE << "pContoller is nullptr";
+	}
+
+	pContoller->SwitchLevel(fUrl);
 }
 
 void UFunctions::StartMatch()

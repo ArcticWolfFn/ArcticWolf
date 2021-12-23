@@ -13,5 +13,6 @@ void UGameInstance::Setup()
 	// Players is plural, but it works for now
 	auto localPlayer = ULocalPlayer(GameInstanceFinder.Find(XOR(L"LocalPlayers")));
 	localPlayer.Setup();
-	LocalPlayers[0] = &localPlayer;
+	// ToDo: doesn't seem to actually work. Maybe use objects instead of pointers
+	LocalPlayers.push_back(&localPlayer);
 }
