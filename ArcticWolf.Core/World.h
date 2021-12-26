@@ -57,16 +57,20 @@ public:
 class UWorld : public UObject
 {
 public:
-	UWorld(ObjectFinder WorldFinder);
+	UWorld(ObjectFinder GameViewportFinder);
 
 	void Setup() override;
 
 	AGameStateBase* GetGameState();
 
-	AGameModeBase AuthorityGameMode = NULL;
+	AGameModeBase* AuthorityGameMode = nullptr;
+
+	// Custom function for refreshing internal stuff
+	void UpdateProps();
 
 private:
 	ObjectFinder InternalFinder;
+	ObjectFinder GameViewportFinder;
 
 	AGameStateBase* GameState = nullptr;
 };

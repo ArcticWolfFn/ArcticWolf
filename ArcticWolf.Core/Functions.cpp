@@ -13,19 +13,19 @@ auto UFunctions::SetTimeOfDay(float Time)
 
 void UFunctions::TeleportToSpawn()
 {
-	GetGame()->LocalPlayers[0].PlayerController.CheatManager.BugItGo(-156128.36, -159492.78, -2996.30, 0, 0, 0);
+	GetGame()->LocalPlayers[0].GetPlayerController()->CheatManager->BugItGo(-156128.36, -159492.78, -2996.30, 0, 0, 0);
 
 	PLOGI << "Teleported to spawn island";
 }
 
 void UFunctions::TeleportToMain()
 {
-	GetGame()->LocalPlayers[0].PlayerController.CheatManager.BugItGo(0, 0, 0, 0, 0, 0);
+	GetGame()->LocalPlayers[0].GetPlayerController()->CheatManager->BugItGo(0, 0, 0, 0, 0, 0);
 }
 
 void UFunctions::TeleportToCoords(float X, float Y, float Z)
 {
-	GetGame()->LocalPlayers[0].PlayerController.CheatManager.BugItGo(X, Y, Z, 0, 0, 0);
+	GetGame()->LocalPlayers[0].GetPlayerController()->CheatManager->BugItGo(X, Y, Z, 0, 0, 0);
 }
 
 void UFunctions::DestroyAllHLODs()
@@ -37,7 +37,7 @@ void UFunctions::DestroyAllHLODs()
 		PLOGE << "Failed to get HLODSMActor";
 	}
 
-	GetGame()->LocalPlayers[0].PlayerController.CheatManager.DestroyAll(HLODSMActor);
+	GetGame()->LocalPlayers[0].GetPlayerController()->CheatManager->DestroyAll(HLODSMActor);
 
 	PLOGD << "HLODSM Actor was destroyed.";
 }
@@ -56,9 +56,11 @@ void UFunctions::Travel(const wchar_t* url)
 
 	ULocalPlayer player = GetGame()->LocalPlayers[0];
 
-	APlayerController pContoller = player.PlayerController;
+	APlayerController* pContoller = player.GetPlayerController();
 
-	pContoller.SwitchLevel(fUrl);
+	pContoller->SwitchLevel(fUrl);
+
+	GGameEngine.GameViewport->World->UpdateProps();
 }
 
 void UFunctions::StartMatch()
@@ -73,8 +75,9 @@ void UFunctions::StartMatch()
 //Simulates the server telling the game that it's ready to start match
 void UFunctions::ServerReadyToStartMatch()
 {
-	auto playerController = dynamic_cast<AFortPlayerController*>(&GetGame()->LocalPlayers[0].PlayerController);
-	playerController->ServerReadyToStartMatch();
+	auto playerController = AFortPlayerController(GetGame()->LocalPlayers[0].GetPlayerController());
+
+	playerController.ServerReadyToStartMatch();
 
 	PLOGI << "Server reported ReadyToStartMatch";
 }
@@ -159,7 +162,7 @@ void UFunctions::Play(const wchar_t* AnimationPlayerFullName)
 
 void UFunctions::ConsoleLog(std::wstring message)
 {
-	auto gameMode = dynamic_cast<AGameMode*>(&GGameEngine.GameViewport->World->AuthorityGameMode);
+	auto gameMode = dynamic_cast<AGameMode*>(GGameEngine.GameViewport->World->AuthorityGameMode);
 
 	gameMode->Say(FString(message.c_str()));
 }

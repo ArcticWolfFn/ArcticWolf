@@ -14,14 +14,14 @@ public:
 	// (Exec|Native|Public)
 	void SwitchLevel(FString URL);
 
-	UCheatManager CheatManager = NULL;
+	UCheatManager* CheatManager = nullptr;
+
+	ObjectFinder* PlayerControllerFinder = nullptr;
 
 protected:
-	InternalUObject* InternalObject = nullptr;
+	InternalUObject*& InternalObject;
 
 private:
-	ObjectFinder* PlayerControllerFinder;
-
 	UFunction* Fn_SwitchLevel = nullptr;
 
 	bool CanExec_SwitchLevel = false;

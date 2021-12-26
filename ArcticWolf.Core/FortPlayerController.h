@@ -5,6 +5,9 @@
 class AFortPlayerController : public APlayerController
 {
 public:
+	AFortPlayerController();
+	AFortPlayerController(APlayerController* PlayerController);
+
 	void Setup() override;
 
 	// (Net|NetReliableNative|Event|Protected|NetServer|NetValidate)

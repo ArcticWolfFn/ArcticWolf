@@ -10,7 +10,8 @@ public:
 
 	virtual void Setup() override;
 
-	InternalUObject*& GetInternalObject();
+	InternalUObject*& GetInternalObjectRef();
+	InternalUObject* GetInternalObject();
 
 protected:
 	InternalUObject*& InternalObject;

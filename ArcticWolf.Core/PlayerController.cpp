@@ -2,27 +2,24 @@
 #include "PlayerController.h"
 #include "Finder.h"
 
-
-APlayerController::APlayerController()
+APlayerController::APlayerController() : InternalObject(toPointerReference(nullptr))
 {
 }
 
-APlayerController::APlayerController(ObjectFinder* PlayerControllerFinder) : PlayerControllerFinder(PlayerControllerFinder)
+APlayerController::APlayerController(ObjectFinder* PlayerControllerFinder) : PlayerControllerFinder(PlayerControllerFinder), InternalObject(toPointerReference(nullptr))
 {
+	InternalObject = PlayerControllerFinder->GetObj();
 }
 
 void APlayerController::Setup()
 {
 	__super::Setup();
 
-	InternalObject = PlayerControllerFinder->GetObj();
-
 	if (Util::IsBadReadPtr(InternalObject)) return;
 
 	SetPointer(XOR(L"Function /Script/Engine.PlayerController:SwitchLevel"), &Fn_SwitchLevel, &CanExec_SwitchLevel);
-
-	CheatManager = UCheatManager(PlayerControllerFinder->Find(XOR(L"CheatManager")).GetObj());
-	CheatManager.Setup();
+	CheatManager = new UCheatManager(PlayerControllerFinder->Find(XOR(L"CheatManager")).GetObj());
+	CheatManager->Setup();
 }
 
 void APlayerController::SwitchLevel(FString URL)

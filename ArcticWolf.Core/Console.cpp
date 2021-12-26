@@ -35,8 +35,17 @@ bool Console::CheatManager()
 		pcCheatManager = CheatManager;
 
 		// Set CheatManager to the new object
-		GetGame()->LocalPlayers[0].PlayerController.CheatManager = UCheatManager(CheatManager);
-		GetGame()->LocalPlayers[0].PlayerController.CheatManager.Setup();
+		auto PlayerController = GetGame()->LocalPlayers[0].GetPlayerController();
+		if (Util::IsBadReadPtr(PlayerController)) {
+			PLOGE << "PlayerController is nullptr";
+			return true;
+		}
+		if (Util::IsBadReadPtr(PlayerController->CheatManager)) {
+			PLOGE << "PlayerController->CheatManager is nullptr";
+			return true;
+		}
+		PlayerController->CheatManager = new UCheatManager(CheatManager);
+		PlayerController->CheatManager->Setup();
 
 		PLOGI << "Player now has cheatmanager";
 

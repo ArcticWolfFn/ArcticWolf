@@ -14,7 +14,12 @@ void AGameStateBase::Setup()
 	__super::Setup();
 }
 
-InternalUObject*& AGameStateBase::GetInternalObject()
+InternalUObject*& AGameStateBase::GetInternalObjectRef()
+{
+	return this->InternalObject;
+}
+
+InternalUObject* AGameStateBase::GetInternalObject()
 {
 	return this->InternalObject;
 }

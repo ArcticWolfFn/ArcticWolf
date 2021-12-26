@@ -1,6 +1,16 @@
 #include "pch.h"
 #include "FortPlayerController.h"
 
+AFortPlayerController::AFortPlayerController()
+{
+}
+
+AFortPlayerController::AFortPlayerController(APlayerController* PlayerController)
+{
+	APlayerController::APlayerController(PlayerController->PlayerControllerFinder);
+	Setup();
+}
+
 void AFortPlayerController::Setup()
 {
 	__super::Setup();

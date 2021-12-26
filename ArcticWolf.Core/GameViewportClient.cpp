@@ -7,6 +7,6 @@ UGameViewportClient::UGameViewportClient(ObjectFinder GameViewportClientFinder) 
 
 void UGameViewportClient::Setup()
 {
-	World = new UWorld(InternalFinder.Find(L"World"));
+	World = new UWorld(InternalFinder);
 	World->Setup();
 }

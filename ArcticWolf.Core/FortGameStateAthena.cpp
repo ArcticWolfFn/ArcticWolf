@@ -11,8 +11,8 @@ AFortGameStateAthena::AFortGameStateAthena()
 // Only used for manual casting
 AFortGameStateAthena::AFortGameStateAthena(AGameStateBase* GameStateBase)
 {
-	this->InternalObject = GameStateBase->GetInternalObject();
-	this->Setup();
+	InternalObject = GameStateBase->GetInternalObjectRef();
+	Setup();
 }
 
 void AFortGameStateAthena::Setup()
@@ -22,14 +22,22 @@ void AFortGameStateAthena::Setup()
 	if (Offset_CurrentPlaylistInfo == 0)
 	{
 		Offset_CurrentPlaylistInfo = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortGameStateAthena"), XOR(L"CurrentPlaylistInfo"));
+		if (Offset_CurrentPlaylistInfo == 0)
+		{
+			PLOGE << "Couldn't find Offset_CurrentPlaylistInfo";
+		}
 	}
 
 	if (Offset_GamePhase == 0)
 	{
 		Offset_GamePhase = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortGameStateAthena"), XOR(L"GamePhase"));
+		if (Offset_GamePhase == 0)
+		{
+			PLOGE << "Couldn't find Offset_GamePhase";
+		}
 	}
 
-	auto InternalCurrentPlaylistInfo = reinterpret_cast<INTERNALFPlaylistPropertyArray*>(reinterpret_cast<uintptr_t>(InternalObject) + Offset_CurrentPlaylistInfo);
+	auto InternalCurrentPlaylistInfo = reinterpret_cast<INTERNALFPlaylistPropertyArray*>(reinterpret_cast<uintptr_t>(GetInternalObject()) + Offset_CurrentPlaylistInfo);
 
 	if (Util::IsBadReadPtr(InternalCurrentPlaylistInfo)) {
 		PLOGE << "InternalCurrentPlaylistInfo is nullptr";
@@ -38,7 +46,11 @@ void AFortGameStateAthena::Setup()
 	CurrentPlaylistInfo = new FPlaylistPropertyArray(InternalCurrentPlaylistInfo);
 	CurrentPlaylistInfo->Setup();
 
-	GamePhase = reinterpret_cast<EAthenaGamePhase*>(reinterpret_cast<uintptr_t>(InternalObject) + Offset_GamePhase);
+	GamePhase = reinterpret_cast<EAthenaGamePhase*>(reinterpret_cast<uintptr_t>(GetInternalObject()) + Offset_GamePhase);
+
+	if (Util::IsBadReadPtr(GamePhase)) {
+		PLOGE << "InternalCurrentPlaylistInfo is nullptr";
+	}
 
 	SetPointer(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_CurrentPlaylistInfo"), &Fn_OnRep_CurrentPlaylistInfo, &CanExec_OnRep_CurrentPlaylistInfo);
 	SetPointer(XOR(L"Function /Script/FortniteGame.FortGameStateAthena:OnRep_GamePhase"), &Fn_OnRep_GamePhase, &CanExec_OnRep_GamePhase);
