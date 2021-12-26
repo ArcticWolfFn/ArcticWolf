@@ -2,14 +2,14 @@
 #include "Engine.h"
 #include "Finder.h"
 
-UEngine::UEngine() : GameViewport(UGameViewportClient(ObjectFinder::EntryPoint(uintptr_t(GEngine)).Find(XOR(L"GameViewport"))))
-{
-}
-
 void UEngine::Setup()
 {
 	__super::Setup();
 
+	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+
+	auto GameViewPortFinder = EngineFinder.Find(XOR(L"GameViewport"));
+	GameViewport = UGameViewportClient(&GameViewPortFinder);
 	GameViewport.Setup();
 
 	GameInstance.Setup();

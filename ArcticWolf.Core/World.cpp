@@ -13,15 +13,16 @@ bool FActorSpawnParameters::IsRemoteOwned() const
     return bRemoteOwned;
 }
 
-UWorld::UWorld(ObjectFinder WorldFinder) : InternalFinder(WorldFinder), GameState(AGameStateBase(InternalFinder.Find(XOR(L"GameState")).GetObj()))
+UWorld::UWorld(ObjectFinder* WorldFinder) : InternalFinder(WorldFinder)
 {
 }
 
 void UWorld::Setup()
 {
-    AuthorityGameMode = AGameMode(InternalFinder.Find(L"AuthorityGameMode").GetObj());
+    AuthorityGameMode = AGameMode(InternalFinder->Find(L"AuthorityGameMode").GetObj());
     AuthorityGameMode.Setup();
 
+    this->GameState = AGameStateBase(InternalFinder->Find(XOR(L"GameState")).GetObj());
     this->GameState.Setup();
 }
 

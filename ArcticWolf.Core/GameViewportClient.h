@@ -5,13 +5,13 @@
 class UGameViewportClient : GIObject
 {
 public:
-	UGameViewportClient(ObjectFinder GameViewportClientFinder);
+	UGameViewportClient(ObjectFinder* GameViewportClientFinder);
 
 	void Setup() override;
 
-	UWorld World;
+	UWorld World = NULL;
 
 private:
-	ObjectFinder InternalFinder;
+	ObjectFinder* InternalFinder = nullptr;
 };
 

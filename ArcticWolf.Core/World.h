@@ -57,7 +57,7 @@ public:
 class UWorld : public UObject
 {
 public:
-	UWorld(ObjectFinder WorldFinder);
+	UWorld(ObjectFinder* WorldFinder);
 
 	void Setup() override;
 
@@ -66,8 +66,8 @@ public:
 	AGameModeBase AuthorityGameMode = NULL;
 
 private:
-	ObjectFinder InternalFinder;
+	ObjectFinder* InternalFinder = nullptr;
 
-	AGameStateBase GameState;
+	AGameStateBase GameState = NULL;
 };
 
