@@ -4,12 +4,12 @@
 int32_t AFortGameStateAthena::Offset_CurrentPlaylistInfo = 0;
 int32_t AFortGameStateAthena::Offset_GamePhase = 0;
 
-AFortGameStateAthena::AFortGameStateAthena()
+AFortGameStateAthena::AFortGameStateAthena(InternalUObject*& InternalObject) : AFortGameStateZone(InternalObject)
 {
 }
 
 // Only used for manual casting
-AFortGameStateAthena::AFortGameStateAthena(AGameStateBase GameStateBase)
+AFortGameStateAthena::AFortGameStateAthena(AGameStateBase GameStateBase) : AFortGameStateZone(GameStateBase.GetInternalObject())
 {
 	this->InternalObject = GameStateBase.GetInternalObject();
 	this->Setup();

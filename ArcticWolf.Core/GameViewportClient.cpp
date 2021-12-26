@@ -1,13 +1,12 @@
 #include "pch.h"
 #include "GameViewportClient.h"
 
-UGameViewportClient::UGameViewportClient(ObjectFinder* GameViewportClientFinder) : InternalFinder(GameViewportClientFinder)
+UGameViewportClient::UGameViewportClient(ObjectFinder GameViewportClientFinder) : InternalFinder(GameViewportClientFinder),
+World(UWorld(InternalFinder.Find(L"World")))
 {
 }
 
 void UGameViewportClient::Setup()
 {
-	auto worldFinder = InternalFinder->Find(L"World");
-	World = UWorld(&worldFinder);
 	World.Setup();
 }

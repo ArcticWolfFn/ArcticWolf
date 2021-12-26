@@ -5,6 +5,8 @@
 class AFortGameState : public AFortGameStateBase
 {
 public:
+	AFortGameState(InternalUObject*& InternalObject);
+
 	virtual void Setup() override;
 };
 

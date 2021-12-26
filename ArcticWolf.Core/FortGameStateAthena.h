@@ -17,7 +17,7 @@ enum class EAthenaGamePhase : uint8_t {
 class AFortGameStateAthena : public AFortGameStateZone
 {
 public:
-	AFortGameStateAthena();
+	AFortGameStateAthena(InternalUObject*& InternalObject);
 	AFortGameStateAthena(AGameStateBase GameStateBase);
 
 	void Setup() override;
