@@ -63,13 +63,9 @@ void UFunctions::Travel(const wchar_t* url)
 
 void UFunctions::StartMatch()
 {
-	auto GameMode = dynamic_cast<AGameMode*>(&GGameEngine.GameViewport.World.AuthorityGameMode);
-	if (!GameMode)
-	{
-		PLOGE << "Failed to cast GameMode";
-	}
+	auto GameMode = AGameMode(GGameEngine.GameViewport.World.AuthorityGameMode);
 
-	GameMode->StartMatch();
+	GameMode.StartMatch();
 
 	PLOGI << "Match started!";
 }

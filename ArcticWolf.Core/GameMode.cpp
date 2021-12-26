@@ -1,6 +1,11 @@
 #include "pch.h"
 #include "GameMode.h"
 
+AGameMode::AGameMode(AGameModeBase GameModeBase) : AGameModeBase(GameModeBase.InternalObject)
+{
+	this->Setup();
+}
+
 AGameMode::AGameMode(InternalUObject* InternalObject) : AGameModeBase(InternalObject)
 {
 }

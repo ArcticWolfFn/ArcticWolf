@@ -6,7 +6,7 @@ public:
 
 	virtual void Setup() override;
 
-protected:
+public:
 	InternalUObject* InternalObject = nullptr;
 };
 
