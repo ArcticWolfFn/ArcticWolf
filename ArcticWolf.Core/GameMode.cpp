@@ -15,7 +15,7 @@ void AGameMode::Setup()
 	__super::Setup();
 
 	SetPointer(XOR(L"Function /Script/Engine.GameMode:StartMatch"), &Fn_StartMatch, &CanExec_StartMatch);
-	SetPointer(XOR(L"Function /Script/Engine.GameMode:Say"), &Fn_StartMatch, &CanExec_Say);
+	SetPointer(XOR(L"Function /Script/Engine.GameMode:Say"), &Fn_Say, &CanExec_Say);
 }
 
 void AGameMode::StartMatch()
