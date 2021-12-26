@@ -2,6 +2,8 @@
 
 struct EmptyParams {};
 
+class InternalUObject;
+
 // Game Internal Object
 class GIObject
 {
@@ -12,6 +14,9 @@ public:
 	virtual void Setup();
 
 	static void ProcessNoParamsEvent(void* obj, void* fn);
+
+	// hack for compile errors or something like that
+	InternalUObject*& toPointerReference(InternalUObject* pointer);
 
 private:
 	static EmptyParams emptyParams;

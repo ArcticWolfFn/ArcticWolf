@@ -9,9 +9,9 @@ AFortGameStateAthena::AFortGameStateAthena()
 }
 
 // Only used for manual casting
-AFortGameStateAthena::AFortGameStateAthena(AGameStateBase GameStateBase)
+AFortGameStateAthena::AFortGameStateAthena(AGameStateBase* GameStateBase)
 {
-	this->InternalObject = GameStateBase.GetInternalObject();
+	this->InternalObject = GameStateBase->GetInternalObject();
 	this->Setup();
 }
 
@@ -30,8 +30,13 @@ void AFortGameStateAthena::Setup()
 	}
 
 	auto InternalCurrentPlaylistInfo = reinterpret_cast<INTERNALFPlaylistPropertyArray*>(reinterpret_cast<uintptr_t>(InternalObject) + Offset_CurrentPlaylistInfo);
-	CurrentPlaylistInfo = FPlaylistPropertyArray(InternalCurrentPlaylistInfo);
-	CurrentPlaylistInfo.Setup();
+
+	if (Util::IsBadReadPtr(InternalCurrentPlaylistInfo)) {
+		PLOGE << "InternalCurrentPlaylistInfo is nullptr";
+	}
+
+	CurrentPlaylistInfo = new FPlaylistPropertyArray(InternalCurrentPlaylistInfo);
+	CurrentPlaylistInfo->Setup();
 
 	GamePhase = reinterpret_cast<EAthenaGamePhase*>(reinterpret_cast<uintptr_t>(InternalObject) + Offset_GamePhase);
 

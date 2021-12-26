@@ -18,7 +18,7 @@ class AFortGameStateAthena : public AFortGameStateZone
 {
 public:
 	AFortGameStateAthena();
-	AFortGameStateAthena(AGameStateBase GameStateBase);
+	AFortGameStateAthena(AGameStateBase* GameStateBase);
 
 	void Setup() override;
 
@@ -28,7 +28,7 @@ public:
 	// (Final|Native|Protected)
 	void OnRep_GamePhase(EAthenaGamePhase OldGamePhase);
 
-	FPlaylistPropertyArray CurrentPlaylistInfo = NULL;
+	FPlaylistPropertyArray* CurrentPlaylistInfo = nullptr;
 	EAthenaGamePhase* GamePhase = nullptr;
 
 private:

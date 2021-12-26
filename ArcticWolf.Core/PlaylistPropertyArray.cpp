@@ -12,6 +12,14 @@ void FPlaylistPropertyArray::Setup()
 
 void FPlaylistPropertyArray::SetBasePlaylist(InternalUObject* Playlist)
 {
+	if (Util::IsBadReadPtr(Playlist)) {
+		PLOGE << "Playlist is nullptr";
+		return;
+	}
+	if (Util::IsBadReadPtr(InternalObject)) {
+		PLOGE << "InternalObject is nullptr";
+		return;
+	}
 	InternalObject->BasePlaylist = Playlist;
 }
 

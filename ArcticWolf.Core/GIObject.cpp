@@ -16,3 +16,8 @@ void GIObject::ProcessNoParamsEvent(void* obj, void* fn)
 {
 	ProcessEvent(obj, fn, &emptyParams);
 }
+
+InternalUObject*& GIObject::toPointerReference(InternalUObject* pointer)
+{
+	return *&pointer;
+}
