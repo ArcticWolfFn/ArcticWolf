@@ -78,6 +78,9 @@ void UFunctions::ServerReadyToStartMatch()
 	auto playerController = AFortPlayerController(GetGame()->LocalPlayers[0].GetPlayerController());
 
 	playerController.ServerReadyToStartMatch();
+	playerController.ServerSetClientHasFinishedLoading(true);
+	playerController.SetbHasServerFinishedLoading(true);
+	playerController.OnRep_bHasServerFinishedLoading();
 
 	PLOGI << "Server reported ReadyToStartMatch";
 }
