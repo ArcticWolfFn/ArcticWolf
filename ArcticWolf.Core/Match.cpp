@@ -229,8 +229,6 @@ void Match::Init()
 
 		UFunctions::ServerReadyToStartMatch();
 
-		UFunctions::DestroyAllHLODs();
-
 		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(*ThreadEntry), this, NULL, nullptr);
 
 		bIsInit = !bIsInit;
