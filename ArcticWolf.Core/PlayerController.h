@@ -8,6 +8,7 @@ class APlayerController : protected GIObject
 public:
 	APlayerController();
 	APlayerController(ObjectFinder* PlayerControllerFinder);
+	APlayerController(APlayerController* PlayerController);
 
 	void Setup() override;
 

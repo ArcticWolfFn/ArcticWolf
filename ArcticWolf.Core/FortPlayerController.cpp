@@ -7,7 +7,7 @@ AFortPlayerController::AFortPlayerController()
 
 AFortPlayerController::AFortPlayerController(APlayerController* PlayerController)
 {
-	APlayerController::APlayerController(PlayerController->PlayerControllerFinder);
+	APlayerController::APlayerController(PlayerController);
 	Setup();
 }
 

@@ -55,13 +55,22 @@ public:
 };
 
 template <class T>
-inline void SetPointer(const wchar_t* objectToFind, T* objectToSet, bool* success = nullptr)
+inline void SetPointer(const wchar_t* objectToFind, T* objectToSet, bool* success = nullptr, bool overrideObjectToSet = false)
 {
+	if (!overrideObjectToSet)
+	{
+		if (objectToSet != nullptr)
+		{
+			PLOGV.printf("Skipped setting %ws, because it's already set", objectToFind);
+			return;
+		}
+	}
+
 	T obj = UE4::FindObject<T>(objectToFind);
 
 	if (Util::IsBadReadPtr(obj))
 	{
-		PLOGE.printf("%s is nullptr", objectToFind);
+		PLOGE.printf("%ws is nullptr", objectToFind);
 		if (success != nullptr)
 		{
 			*success = false;
