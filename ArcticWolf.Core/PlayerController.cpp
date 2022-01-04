@@ -15,6 +15,7 @@ APlayerController::APlayerController(APlayerController* PlayerController) : Play
 InternalObject(PlayerController->InternalObject)
 {
 	CheatManager = PlayerController->CheatManager;
+	Setup();
 }
 
 void APlayerController::Setup()
@@ -24,13 +25,19 @@ void APlayerController::Setup()
 	if (Util::IsBadReadPtr(InternalObject)) return;
 
 	SetPointer(XOR(L"Function /Script/Engine.PlayerController:SwitchLevel"), &Fn_SwitchLevel, &CanExec_SwitchLevel);
+	SetPointer(XOR(L"Function /Script/Engine.PlayerController:LocalTravel"), &Fn_LocalTravel, &CanExec_LocalTravel);
+
 	CheatManager = new UCheatManager(PlayerControllerFinder->Find(XOR(L"CheatManager")).GetObj());
 	CheatManager->Setup();
 }
 
 void APlayerController::SwitchLevel(FString URL)
 {
-	if (!this->CanExec_SwitchLevel) return;
+	if (!this->CanExec_SwitchLevel)
+	{
+		PLOGE << "CanExec_SwitchLevel is false";
+		return;
+	}
 
 	struct Params
 	{
@@ -51,4 +58,19 @@ void APlayerController::SwitchLevel(FString URL)
 	}
 
 	ProcessEvent(InternalObject, Fn_SwitchLevel, &params);
+}
+
+void APlayerController::LocalTravel(FString URL)
+{
+	if (!this->CanExec_LocalTravel) return;
+
+	struct Params
+	{
+		FString URL;
+	};
+
+	auto params = Params();
+	params.URL = URL;
+
+	ProcessEvent(InternalObject, Fn_LocalTravel, &params);
 }

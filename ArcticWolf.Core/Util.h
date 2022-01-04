@@ -59,7 +59,7 @@ inline void SetPointer(const wchar_t* objectToFind, T* objectToSet, bool* succes
 {
 	if (!overrideObjectToSet)
 	{
-		if (objectToSet != nullptr)
+		if (*objectToSet != nullptr)
 		{
 			PLOGV.printf("Skipped setting %ws, because it's already set", objectToFind);
 			return;
