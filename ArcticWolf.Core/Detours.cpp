@@ -104,7 +104,7 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 	auto nFunc = UE4::GetObjectName(pFunc);
 	
 	//If the game requested matchmaking we open the game mode
-	if (wcsstr(nFunc.c_str(), XOR(L"OnSetPlayButtonText")) && wcsstr(nObj.c_str(), XOR(L"Matchmaking_AthenaLegacy")) && !GMatch.bIsStarted)
+	if (wcsstr(nFunc.c_str(), XOR(L"HandleButtonPressed")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby.WidgetTree.Matchmaking_AthenaLegacy.WidgetTree.Button_Play")) && !GMatch.bIsStarted)
 	{
 		PLOGI << XOR("[NeoRoyale] Start!");
 
