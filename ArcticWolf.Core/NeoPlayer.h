@@ -309,8 +309,8 @@ public:
 	// not working in season 15
 	// idk what this does tbh
 	void SetupAbilities() {
-		/*if (!Util::IsBadReadPtr(Pawn)) {
-			UObject* jumpAbility = UE4::FindObject<UObject*>(L"Class /Script/FortniteGame.FortGameplayAbility_Jump");
+		if (!Util::IsBadReadPtr(Pawn)) {
+			InternalUObject* jumpAbility = UE4::FindObject<InternalUObject*>(L"Class /Script/FortniteGame.FortGameplayAbility_Jump");
 			if (!Util::IsBadReadPtr(jumpAbility)) {
 				SDK::GrantGameplayAbility(Pawn, jumpAbility);
 				PLOGD << "Granted Jump Ability";
@@ -319,7 +319,7 @@ public:
 				PLOGE << "jumpAbility is null";
 			}
 
-			UObject* sprintAbility = UE4::FindObject<UObject*>(L"Class /Script/FortniteGame.FortGameplayAbility_Sprint");
+			InternalUObject* sprintAbility = UE4::FindObject<InternalUObject*>(L"Class /Script/FortniteGame.FortGameplayAbility_Sprint");
 			if (!Util::IsBadReadPtr(sprintAbility)) {
 				SDK::GrantGameplayAbility(Pawn, sprintAbility);
 				PLOGD << "Granted Sprint Ability";
@@ -328,7 +328,7 @@ public:
 				PLOGE << "sprintAbility is null";
 			}
 
-			UObject* interactAbility = UE4::FindObject<UObject*>(L"BlueprintGeneratedClass /Game/Abilities/Player/Generic/Traits/DefaultPlayer/GA_DefaultPlayer_InteractUse.GA_DefaultPlayer_InteractUse_C");
+			InternalUObject* interactAbility = UE4::FindObject<InternalUObject*>(L"BlueprintGeneratedClass /Game/Abilities/Player/Generic/Traits/DefaultPlayer/GA_DefaultPlayer_InteractUse.GA_DefaultPlayer_InteractUse_C");
 			if (!Util::IsBadReadPtr(interactAbility)) {
 				SDK::GrantGameplayAbility(Pawn, interactAbility);
 				PLOGD << "Granted Interact Ability";
@@ -337,7 +337,7 @@ public:
 				PLOGE << "interactAbility is null";
 			}
 
-			UObject* searchAbility = UE4::FindObject<UObject*>(L"BlueprintGeneratedClass /Game/Abilities/Player/Generic/Traits/DefaultPlayer/GA_DefaultPlayer_InteractSearch.GA_DefaultPlayer_InteractSearch_C");
+			InternalUObject* searchAbility = UE4::FindObject<InternalUObject*>(L"BlueprintGeneratedClass /Game/Abilities/Player/Generic/Traits/DefaultPlayer/GA_DefaultPlayer_InteractSearch.GA_DefaultPlayer_InteractSearch_C");
 			if (!Util::IsBadReadPtr(searchAbility)) {
 				SDK::GrantGameplayAbility(Pawn, searchAbility);
 				PLOGD << "Granted Search Ability";
@@ -348,7 +348,7 @@ public:
 		}
 		else {
 			PLOGE << "Pawn is null";
-		}*/
+		}
 	}
 
 	void UpdatePlayerController()

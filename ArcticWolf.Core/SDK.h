@@ -16,7 +16,7 @@ struct FActiveGameplayEffectHandle
 
 struct FGameplayAbilitySpecDef
 {
-	UObject* Ability;
+	InternalUObject* Ability;
 	unsigned char Unk00[0x90];
 };
 
@@ -27,7 +27,7 @@ enum class EGameplayEffectDurationType : uint8_t
 
 namespace SDK {
 
-	inline static void BP_ApplyGameplayEffectToSelf(UObject* AbilitySystemComponent, UObject* GameplayEffectClass)
+	inline static void BP_ApplyGameplayEffectToSelf(InternalUObject* AbilitySystemComponent, InternalUObject* GameplayEffectClass)
 	{
 		if (Util::IsBadReadPtr(AbilitySystemComponent)) {
 			PLOGE << "AbilitySystemComponent is null";
@@ -45,7 +45,7 @@ namespace SDK {
 
 		struct
 		{
-			UObject* GameplayEffectClass;
+			InternalUObject* GameplayEffectClass;
 			float Level;
 			FGameplayEffectContextHandle EffectContext;
 			FActiveGameplayEffectHandle ret;
@@ -58,15 +58,15 @@ namespace SDK {
 		ProcessEvent(AbilitySystemComponent, BP_ApplyGameplayEffectToSelf, &Params);
 	}
 
-	static UObject** AbilitySystemComponent = nullptr;
-	static UObject* DefaultGameplayEffect = nullptr;
+	static InternalUObject** AbilitySystemComponent = nullptr;
+	static InternalUObject* DefaultGameplayEffect = nullptr;
 	static TArray<struct FGameplayAbilitySpecDef>* GrantedAbilities = nullptr;
 
-	inline static void GrantGameplayAbility(UObject* TargetPawn, UObject* GameplayAbilityClass)
+	inline static void GrantGameplayAbility(InternalUObject* TargetPawn, InternalUObject* GameplayAbilityClass)
 	{
 		if (Util::IsBadReadPtr(AbilitySystemComponent))
 		{
-			AbilitySystemComponent = reinterpret_cast<UObject**>(__int64(TargetPawn) + static_cast<__int64>(ObjectFinder::FindOffset(L"Class /Script/FortniteGame.FortPawn", L"AbilitySystemComponent")));
+			AbilitySystemComponent = reinterpret_cast<InternalUObject**>(__int64(TargetPawn) + static_cast<__int64>(ObjectFinder::FindOffset(L"Class /Script/FortniteGame.FortPawn", L"AbilitySystemComponent")));
 		}
 
 		if (Util::IsBadReadPtr(AbilitySystemComponent)) {
@@ -76,12 +76,12 @@ namespace SDK {
 
 		if (Util::IsBadReadPtr(DefaultGameplayEffect))
 		{
-			DefaultGameplayEffect = UE4::FindObject<UObject*>(L"GE_Athena_PurpleStuff_C /Game/Athena/Items/Consumables/PurpleStuff/GE_Athena_PurpleStuff.Default__GE_Athena_PurpleStuff_C");
+			DefaultGameplayEffect = UE4::FindObject<InternalUObject*>(L"GE_Athena_PurpleStuff_C /Game/Athena/Items/Consumables/PurpleStuff/GE_Athena_PurpleStuff.Default__GE_Athena_PurpleStuff_C");
 		}
 
 		if (!DefaultGameplayEffect)
 		{
-			DefaultGameplayEffect = UE4::FindObject<UObject*>(L"GE_Athena_PurpleStuff_Health_C /Game/Athena/Items/Consumables/PurpleStuff/GE_Athena_PurpleStuff_Health.Default__GE_Athena_PurpleStuff_Health_C");
+			DefaultGameplayEffect = UE4::FindObject<InternalUObject*>(L"GE_Athena_PurpleStuff_Health_C /Game/Athena/Items/Consumables/PurpleStuff/GE_Athena_PurpleStuff_Health.Default__GE_Athena_PurpleStuff_Health_C");
 		}
 
 		if (Util::IsBadReadPtr(DefaultGameplayEffect))
@@ -107,10 +107,10 @@ namespace SDK {
 		*reinterpret_cast<EGameplayEffectDurationType*>(__int64(DefaultGameplayEffect) + static_cast<__int64>(ObjectFinder::FindOffset(L"EnumProperty /Script/GameplayAbilities.GameplayEffect", L"DurationPolicy"))) = EGameplayEffectDurationType::Infinite;
 
 		// apply modified gameplay effect to ability system component
-		static auto GameplayEffectClass = UE4::FindObject<UObject*>(L"BlueprintGeneratedClass /Game/Athena/Items/Consumables/PurpleStuff/GE_Athena_PurpleStuff.GE_Athena_PurpleStuff_C");
+		static auto GameplayEffectClass = UE4::FindObject<InternalUObject*>(L"BlueprintGeneratedClass /Game/Athena/Items/Consumables/PurpleStuff/GE_Athena_PurpleStuff.GE_Athena_PurpleStuff_C");
 		if (!GameplayEffectClass)
 		{
-			GameplayEffectClass = UE4::FindObject<UObject*>(L"BlueprintGeneratedClass /Game/Athena/Items/Consumables/PurpleStuff/GE_Athena_PurpleStuff_Health.GE_Athena_PurpleStuff_Health_C");
+			GameplayEffectClass = UE4::FindObject<InternalUObject*>(L"BlueprintGeneratedClass /Game/Athena/Items/Consumables/PurpleStuff/GE_Athena_PurpleStuff_Health.GE_Athena_PurpleStuff_Health_C");
 		}
 
 		if (Util::IsBadReadPtr(GameplayEffectClass)) {
