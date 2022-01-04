@@ -186,8 +186,6 @@ void Match::Init()
 
 	Console::CheatManager();
 
-	UFunctions::DestroyAllHLODs();
-
 	NeoPlayer.Summon(XOR(L"PlayerPawn_Athena_C"));
 
 	NeoPlayer.Pawn = ObjectFinder::FindActor(XOR(L"PlayerPawn_Athena_C"));
@@ -229,6 +227,8 @@ void Match::Init()
 		UFunctions::StartMatch();
 
 		UFunctions::ServerReadyToStartMatch();
+
+		UFunctions::DestroyAllHLODs();
 
 		CreateThread(nullptr, NULL, reinterpret_cast<LPTHREAD_START_ROUTINE>(*ThreadEntry), this, NULL, nullptr);
 

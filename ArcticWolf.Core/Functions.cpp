@@ -30,14 +30,17 @@ void UFunctions::TeleportToCoords(float X, float Y, float Z)
 
 void UFunctions::DestroyAllHLODs()
 {
-	auto HLODSMActor = UE4::FindObject<AActor*>(XOR(L"Class /Script/FortniteGame.FortHLODSMActor"));
+	auto HLODSMActor = UE4::FindObject<InternalUObject*>(XOR(L"Class /Script/FortniteGame.FortHLODSMActor"));
 
 	if (Util::IsBadReadPtr(HLODSMActor))
 	{
 		PLOGE << "Failed to get HLODSMActor";
+		return;
 	}
 
-	GetGame()->LocalPlayers[0].GetPlayerController()->CheatManager->DestroyAll(HLODSMActor);
+	auto convertedHLODSMActor = AActor(HLODSMActor);
+
+	GetGame()->LocalPlayers[0].GetPlayerController()->CheatManager->DestroyAll(&convertedHLODSMActor);
 
 	PLOGD << "HLODSM Actor was destroyed.";
 }
