@@ -53,6 +53,14 @@ enablecheats - Enables cheatmanager.
 
 void Detours::Log(std::wstring nObj, std::wstring nFunc, std::wstring nObjClass)
 {
+	const wchar_t* nFunc2 = nFunc.c_str();
+
+	for (const wchar_t* ignoredFunc : ignoredFunctionNames)
+	{
+		if (wcsstr(nFunc2, ignoredFunc)) {
+			return;
+		}
+	}
 	PLOGV.printf(XOR("[Object]: %ws [Function]: %ws [Class]: %ws\n"), nObj.c_str(), nFunc.c_str(), nObjClass.c_str());
 }
 
@@ -509,15 +517,6 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 
 	//Logging
 	if (true) {
-		const wchar_t* nFunc2 = nFunc.c_str();
-
-		for (const wchar_t* ignoredFunc : ignoredFunctionNames)
-		{
-			if (wcsstr(nFunc2, ignoredFunc)) {
-				return ProcessEvent(pObj, pFunc, pParams);
-			}
-		}
-
 		std::thread log(Log, nObj, nFunc, UE4::GetObjectFullName(static_cast<InternalUObject*>(pObj)->Class));
 		log.detach();
 	}
