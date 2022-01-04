@@ -509,98 +509,17 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 
 	//Logging
 	if (true) {
-		if (!wcsstr(nFunc.c_str(), L"EvaluateGraphExposedInputs") &&
-			!wcsstr(nFunc.c_str(), L"Tick") &&
-			!wcsstr(nFunc.c_str(), L"OnSubmixEnvelope") &&
-			!wcsstr(nFunc.c_str(), L"OnSubmixSpectralAnalysis") &&
-			!wcsstr(nFunc.c_str(), L"OnMouse") &&
-			!wcsstr(nFunc.c_str(), L"Pulse") &&
-			!wcsstr(nFunc.c_str(), L"BlueprintUpdateAnimation") &&
-			!wcsstr(nFunc.c_str(), L"BlueprintPostEvaluateAnimation") &&
-			!wcsstr(nFunc.c_str(), L"BlueprintModifyCamera") &&
-			!wcsstr(nFunc.c_str(), L"BlueprintModifyPostProcess") &&
-			!wcsstr(nFunc.c_str(), L"Loop Animation Curve") &&
-			!wcsstr(nFunc.c_str(), L"UpdateTime") &&
-			!wcsstr(nFunc.c_str(), L"GetMutatorByClass") &&
-			!wcsstr(nFunc.c_str(), L"UpdatePreviousPositionAndVelocity") &&
-			!wcsstr(nFunc.c_str(), L"IsCachedIsProjectileWeapon") &&
-			!wcsstr(nFunc.c_str(), L"LockOn") &&
-			!wcsstr(nFunc.c_str(), L"GetAbilityTargetingLevel") &&
-			!wcsstr(nFunc.c_str(), L"ServerTouchActiveTime") &&
+		const wchar_t* nFunc2 = nFunc.c_str();
 
-			//UI
-			!wcsstr(nFunc.c_str(), L"OnAnimationFinished") &&
-			!wcsstr(nFunc.c_str(), L"OnAnimationStarted") &&
-			!wcsstr(nFunc.c_str(), L"SetColorAndOpacity") &&
-			!wcsstr(nFunc.c_str(), L"OnHover") &&
-			!wcsstr(nFunc.c_str(), L"OnHovered") &&
-			!wcsstr(nFunc.c_str(), L"OnUnhover") &&
-			!wcsstr(nFunc.c_str(), L"OnUnhovered") &&
-			!wcsstr(nFunc.c_str(), L"HandleButtonReleased") &&
-			!wcsstr(nFunc.c_str(), L"HandleButtonClicked") &&
-			!wcsstr(nFunc.c_str(), L"ScrollNextItem") &&
-			!wcsstr(nFunc.c_str(), L"OnCurrentTextStyleChanged") &&
-			!wcsstr(nFunc.c_str(), L"OnButtonUnhovered") &&
-			!wcsstr(nFunc.c_str(), L"OnButtonHovered") &&
-			!wcsstr(nFunc.c_str(), L"OnRemovedFromFocusPath") &&
-			!wcsstr(nFunc.c_str(), L"OnFocusLost") &&
-			!wcsstr(nFunc.c_str(), L"OnUpdateNameplateVis") &&
-			!wcsstr(nFunc.c_str(), L"/Script/UMG.Border.SetBrushColor") &&
-			!wcsstr(nFunc.c_str(), L"AthenaMOTDTeaserWidget.AthenaMOTDTeaserWidget_C.HandleEntryWidgetHoveredChanged") &&
-			!wcsstr(nFunc.c_str(), L"/Script/UMG.UserWidget.Destruct") &&
-
-			// Camera
-			!wcsstr(nFunc.c_str(), L"OnFrontEndCameraChanged") &&
-			!wcsstr(nFunc.c_str(), L"FrontEndCameraSwitchFadeAthena__UpdateFunc") &&
-
-			// Loading stuff
-			!wcsstr(nFunc.c_str(), L"OnBuildingActorInitialized") &&
-			!wcsstr(nFunc.c_str(), L"OnReady") &&
-			!wcsstr(nFunc.c_str(), L"ReceiveBeginPlay") &&
-			!wcsstr(nFunc.c_str(), L"Construct") &&
-			!wcsstr(nFunc.c_str(), L"FortClientSettingsRecord") &&
-
-			// ingame
-			!wcsstr(nFunc.c_str(), L"BlueprintGetInteractionTime") &&
-			!wcsstr(nFunc.c_str(), L"BGA_IslandPortal_C.CheckShouldDisplayUI") &&
-			!wcsstr(nFunc.c_str(), L"PortalInfoPlate_C.OnUpdateNameplateVis") &&
-			!wcsstr(nFunc.c_str(), L"FlopperSpawn") &&
-			!wcsstr(nFunc.c_str(), L"SetRuntimeStats") &&
-			!wcsstr(nFunc.c_str(), L"HandleSimulatingComponentHit") &&
-			!wcsstr(nFunc.c_str(), L"ReceiveHit") &&
-			!wcsstr(nFunc.c_str(), L"BGA_SuperSilkyWolf_C") &&
-			!wcsstr(nFunc.c_str(), L"ServerFireAIDirectorEvent") &&
-			!wcsstr(nFunc.c_str(), L"AnimNotify_FootStep") &&
-			!wcsstr(nFunc.c_str(), L"ReceiveDestroyed") &&
-			!wcsstr(nFunc.c_str(), L"AnimNotify") &&
-
-			// Player
-			!wcsstr(nFunc.c_str(), L"/Script/Engine.Character.CanJumpInternal") &&
-
-			// Interaction
-			!wcsstr(nFunc.c_str(), L"BlueprintCanInteract") &&
-			!wcsstr(nFunc.c_str(), L"BlueprintGetInteractionString") &&
-
-			//ingame ui
-			!wcsstr(nFunc.c_str(), L"PopupCenterMessageWidget_C.UpdateStateEvent") &&
-			!wcsstr(nFunc.c_str(), L"FortInteractInterface.GetFocusedSocketLocation") &&
-
-			// BattlePass UI
-
-			// Called when a new item is sliding in
-			!wcsstr(nFunc.c_str(), L"BattlePassVaultWorld_C.Floor-Visibility__UpdateFunc") &&
-
-			// I think this gets called if it shows a music pack, but music is muted
-			!wcsstr(nFunc.c_str(), L"B_MusicPackPreviewDisplay_C.UpdateMuteSetting") &&
-
-			// Shutdown
-			!wcsstr(nFunc.c_str(), L"/Script/Engine.ActorComponent.ReceiveEndPlay") &&
-
-			!wcsstr(nFunc.c_str(), L"ReadyToEndMatch"))
+		for (const wchar_t* ignoredFunc : ignoredFunctionNames)
 		{
-			std::thread log(Log, nObj, nFunc, UE4::GetObjectFullName(static_cast<InternalUObject*>(pObj)->Class));
-			log.detach();
+			if (wcsstr(nFunc2, ignoredFunc)) {
+				return ProcessEvent(pObj, pFunc, pParams);
+			}
 		}
+
+		std::thread log(Log, nObj, nFunc, UE4::GetObjectFullName(static_cast<InternalUObject*>(pObj)->Class));
+		log.detach();
 	}
 
 	return ProcessEvent(pObj, pFunc, pParams);
