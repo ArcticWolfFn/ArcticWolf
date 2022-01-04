@@ -76,6 +76,7 @@ enum ECommands
 	DUMPBPS,
 	TEST,
 	LOADBPC,
+	DESTROY_HLODSM,
 	NONE
 };
 
@@ -100,6 +101,7 @@ static auto str2enum(const std::wstring& str)
 	else if (str.starts_with(L"test")) return TEST;
 	else if (str.starts_with(L"dumpbps")) return DUMPBPS;
 	else if (str.starts_with(L"loadbpc")) return LOADBPC;
+	else if (str.starts_with(L"destroyhlodsm")) return DESTROY_HLODSM;
 	else return NONE;
 }
 
@@ -108,9 +110,36 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 	auto nObj = UE4::GetObjectName(pObj);
 
 	auto nFunc = UE4::GetObjectName(pFunc);
+
+	if (GMatch.bIsInit)
+	{
+		if (GMatch.bWantsToJump)
+		{
+			// ToDo: add jump function
+			GMatch.bWantsToJump = false;
+		}
+
+		else if (GMatch.bWantsToOpenGlider)
+		{
+			GMatch.NeoPlayer.ForceOpenParachute();
+			GMatch.bWantsToOpenGlider = false;
+		}
+
+		else if (GMatch.bWantsToSkydive)
+		{
+			GMatch.NeoPlayer.Skydive();
+			GMatch.bWantsToSkydive = false;
+		}
+
+		else if (GMatch.bWantsToShowPickaxe)
+		{
+			GMatch.NeoPlayer.ShowPickaxe();
+			GMatch.bWantsToShowPickaxe = false;
+		}
+	}
 	
 	//If the game requested matchmaking we open the game mode
-	if (wcsstr(nFunc.c_str(), XOR(L"HandleButtonPressed")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby.WidgetTree.Matchmaking_AthenaLegacy.WidgetTree.Button_Play")) && !GMatch.bIsStarted)
+	if (wcsstr(nFunc.c_str(), XOR(L"HandleButtonClicked")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby.WidgetTree.Matchmaking_AthenaLegacy.WidgetTree.Button_Play")) && !GMatch.bIsStarted)
 	{
 		PLOGI << XOR("[NeoRoyale] Start!");
 
@@ -197,33 +226,6 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 		}
 		else {
 			PLOGE << "ServerAttemptInteract: CurrentParams->InteractComponent is nullptr";
-		}
-	}
-
-	else if (GMatch.bIsInit)
-	{
-		if (GMatch.bWantsToJump)
-		{
-			// ToDo: add jump function
-			GMatch.bWantsToJump = false;
-		}
-
-		else if (GMatch.bWantsToOpenGlider)
-		{
-			GMatch.NeoPlayer.ForceOpenParachute();
-			GMatch.bWantsToOpenGlider = false;
-		}
-
-		else if (GMatch.bWantsToSkydive)
-		{
-			GMatch.NeoPlayer.Skydive();
-			GMatch.bWantsToSkydive = false;
-		}
-
-		else if (GMatch.bWantsToShowPickaxe)
-		{
-			GMatch.NeoPlayer.ShowPickaxe();
-			GMatch.bWantsToShowPickaxe = false;
 		}
 	}
 
@@ -491,6 +493,12 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 					UFunctions::ConsoleLog(XOR(L"This command requires an argument"));
 				}
 				break;
+			}
+
+			case DESTROY_HLODSM:
+			{
+				UFunctions::DestroyAllHLODs();
+				UFunctions::ConsoleLog(XOR(L"Destroyed all HLODs!"));
 			}
 
 			default:
