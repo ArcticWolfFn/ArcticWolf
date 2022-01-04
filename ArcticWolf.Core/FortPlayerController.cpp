@@ -22,5 +22,17 @@ void AFortPlayerController::ServerReadyToStartMatch()
 {
 	if (!CanExec_ServerReadyToStartMatch) return;
 
-	ProcessNoParamsEvent(InternalObject, Fn_ServerReadyToStartMatch);
+	if (Util::IsBadReadPtr(Fn_ServerReadyToStartMatch))
+	{
+		PLOGE << "Fn_ServerReadyToStartMatch is nullptr";
+		return;
+	}
+
+	if (Util::IsBadReadPtr(GetGame()->LocalPlayers[0].GetPlayerController()->InternalObject))
+	{
+		PLOGE << "InternalObject is nullptr";
+		return;
+	}
+
+	ProcessNoParamsEvent(GetGame()->LocalPlayers[0].GetPlayerController()->InternalObject, Fn_ServerReadyToStartMatch);
 }

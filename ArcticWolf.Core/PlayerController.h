@@ -22,7 +22,6 @@ public:
 
 	ObjectFinder* PlayerControllerFinder = nullptr;
 
-protected:
 	InternalUObject*& InternalObject;
 
 private:

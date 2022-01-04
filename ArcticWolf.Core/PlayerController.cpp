@@ -12,7 +12,7 @@ APlayerController::APlayerController(ObjectFinder* PlayerControllerFinder) : Pla
 }
 
 APlayerController::APlayerController(APlayerController* PlayerController) : PlayerControllerFinder(PlayerController->PlayerControllerFinder), 
-InternalObject(PlayerController->InternalObject)
+InternalObject(PlayerController->PlayerControllerFinder->GetObj())
 {
 	CheatManager = PlayerController->CheatManager;
 	Setup();
