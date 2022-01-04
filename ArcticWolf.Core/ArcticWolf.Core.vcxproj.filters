@@ -300,6 +300,12 @@
     <ClInclude Include="SDK.h">
       <Filter>Headerdateien\game</Filter>
     </ClInclude>
+    <ClInclude Include="FortPawn.h">
+      <Filter>Headerdateien\FortniteGame</Filter>
+    </ClInclude>
+    <ClInclude Include="Character.h">
+      <Filter>Headerdateien\UnrealEngine\GameFramework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -460,6 +466,12 @@
     </ClCompile>
     <ClCompile Include="SDK.cpp">
       <Filter>Quelldateien\game</Filter>
+    </ClCompile>
+    <ClCompile Include="FortPawn.cpp">
+      <Filter>Quelldateien\FortniteGame</Filter>
+    </ClCompile>
+    <ClCompile Include="Character.cpp">
+      <Filter>Quelldateien\UnrealEngine\GameFramework</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

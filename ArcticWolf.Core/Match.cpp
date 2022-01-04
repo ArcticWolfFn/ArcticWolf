@@ -3,6 +3,7 @@
 
 #include "Functions.h"
 #include "Console.h"
+#include "FortPawn.h"
 
 void Match::Start(const wchar_t* MapToPlayOn)
 {
