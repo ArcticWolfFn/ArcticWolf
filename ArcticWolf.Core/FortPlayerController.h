@@ -14,8 +14,8 @@ public:
 	void ServerReadyToStartMatch();
 
 private:
-	UFunction* Fn_ServerReadyToStartMatch = nullptr;
+	static UFunction* Fn_ServerReadyToStartMatch;
 
-	bool CanExec_ServerReadyToStartMatch = false;
+	static bool CanExec_ServerReadyToStartMatch;
 };
 

@@ -25,10 +25,10 @@ public:
 	InternalUObject*& InternalObject;
 
 private:
-	UFunction* Fn_SwitchLevel = nullptr;
-	UFunction* Fn_LocalTravel = nullptr;
+	static UFunction* Fn_SwitchLevel;
+	static UFunction* Fn_LocalTravel;
 
-	bool CanExec_SwitchLevel = false;
-	bool CanExec_LocalTravel = false;
+	static bool CanExec_SwitchLevel;
+	static bool CanExec_LocalTravel;
 };
 

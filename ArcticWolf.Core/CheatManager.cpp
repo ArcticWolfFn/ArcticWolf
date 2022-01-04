@@ -1,6 +1,12 @@
 #include "pch.h"
 #include "CheatManager.h"
 
+UFunction* UCheatManager::Fn_BugItGo = nullptr;
+UFunction* UCheatManager::Fn_DestroyAll = nullptr;
+
+bool UCheatManager::CanExec_BugItGo = false;
+bool UCheatManager::CanExec_DestroyAll = false;
+
 UCheatManager::UCheatManager(InternalUObject* InternalCheatManager) : InternalCheatManager(InternalCheatManager)
 {
 }

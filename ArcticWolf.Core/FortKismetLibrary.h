@@ -13,7 +13,7 @@ namespace FortniteGame
 	private:
 		UObject* InternalFortKismetLibrary = nullptr;
 
-		UFunction* Fn_SetTimeOfDay = nullptr;
+		static UFunction* Fn_SetTimeOfDay;
 	};
 }
 

@@ -1,7 +1,9 @@
 #include "pch.h"
 #include "Actor.h"
 
+UFunction* AActor::Fn_K2_DestroyActor = nullptr;
 
+bool AActor::CanExec_K2_DestroyActor = false;
 
 AActor::AActor()
 {

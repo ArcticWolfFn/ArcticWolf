@@ -16,12 +16,12 @@ public:
 	void DestroyAll(AActor* aClass);
 
 private:
-	UFunction* Fn_BugItGo = nullptr;
-	UFunction* Fn_DestroyAll = nullptr;
+	static UFunction* Fn_BugItGo;
+	static UFunction* Fn_DestroyAll;
 
 	InternalUObject* InternalCheatManager = nullptr;
 
-	bool CanExec_BugItGo = false;
-	bool CanExec_DestroyAll = false;
+	static bool CanExec_BugItGo;
+	static bool CanExec_DestroyAll;
 };
 

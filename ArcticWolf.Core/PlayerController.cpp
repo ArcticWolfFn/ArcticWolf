@@ -2,6 +2,12 @@
 #include "PlayerController.h"
 #include "Finder.h"
 
+UFunction* APlayerController::Fn_SwitchLevel = nullptr;
+UFunction* APlayerController::Fn_LocalTravel = nullptr;
+
+bool APlayerController::CanExec_SwitchLevel = false;
+bool APlayerController::CanExec_LocalTravel = false;
+
 APlayerController::APlayerController() : InternalObject(toPointerReference(nullptr))
 {
 }
@@ -46,16 +52,6 @@ void APlayerController::SwitchLevel(FString URL)
 
 	auto params = Params();
 	params.URL = URL;
-
-	if (Util::IsBadReadPtr(InternalObject))
-	{
-		PLOGE << "InternalObject is nullptr";
-	}
-
-	if (Util::IsBadReadPtr(Fn_SwitchLevel))
-	{
-		PLOGE << "Fn_SwitchLevel is nullptr";
-	}
 
 	ProcessEvent(InternalObject, Fn_SwitchLevel, &params);
 }

@@ -1,6 +1,9 @@
 #include "pch.h"
 #include "FortPlayerController.h"
 
+UFunction* AFortPlayerController::Fn_ServerReadyToStartMatch = nullptr;
+bool AFortPlayerController::CanExec_ServerReadyToStartMatch = false;
+
 AFortPlayerController::AFortPlayerController()
 {
 }

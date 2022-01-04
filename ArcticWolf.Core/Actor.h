@@ -14,8 +14,8 @@ protected:
 	UObject* InternalObject = nullptr;
 
 private:
-	UFunction* Fn_K2_DestroyActor = nullptr;
+	static UFunction* Fn_K2_DestroyActor;
 
-	bool CanExec_K2_DestroyActor = false;
+	static bool CanExec_K2_DestroyActor;
 };
 

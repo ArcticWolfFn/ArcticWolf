@@ -1,6 +1,8 @@
 #include "pch.h"
 #include "FortKismetLibrary.h"
 
+UFunction* FortniteGame::UFortKismetLibrary::Fn_SetTimeOfDay = nullptr;
+
 void FortniteGame::UFortKismetLibrary::SetTimeOfDay(UObject* WorldContextObject, float TimeOfDay)
 {
 	struct Params
