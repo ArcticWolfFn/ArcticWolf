@@ -4,12 +4,12 @@
 
 struct USkeletalMeshComponent_GetAnimInstance_Params
 {
-	UObject* ReturnValue;
+	InternalUObject* ReturnValue;
 };
 
 struct UFortGadgetItemDefinition_GetWeaponItemDefinition_Params
 {
-	UObject* ReturnValue;
+	InternalUObject* ReturnValue;
 };
 
 struct UKismetSystemLibrary_ExecuteConsoleCommand_Params
@@ -235,9 +235,9 @@ struct FGuid
 
 struct AFortPawn_EquipWeaponDefinition_Params
 {
-	UObject* WeaponData;
+	InternalUObject* WeaponData;
 	FGuid ItemEntryGuid;
-	UObject* ReturnValue;
+	InternalUObject* ReturnValue;
 };
 
 struct ACharacter_IsParachuteForcedOpen_Params
@@ -256,7 +256,7 @@ public:
 	InternalUObject* Controller;
 	InternalUObject* Pawn;
 	InternalUObject* Mesh;
-	UObject* AnimInstance;;
+	InternalUObject* AnimInstance;;
 	std::wstring SkinOverride;
 
 	// Cached Functions
@@ -597,35 +597,35 @@ public:
 
 		std::wstring name = WeaponName + L"." + WeaponName;
 
-		auto WeaponData = UE4::FindObject<UObject*>(name.c_str(), true);
+		auto WeaponData = UE4::FindObject<InternalUObject*>(name.c_str(), true);
 
 		if (WeaponData && !Util::IsBadReadPtr(WeaponData))
 		{
-			//std::wstring objectName = UE4::GetObjectFullName(WeaponData);
+			std::wstring objectName = UE4::GetObjectFullName(WeaponData);
 
-			//if (objectName.starts_with(L"FortWeapon") || objectName.starts_with(L"AthenaGadget") || objectName.starts_with(L"FortPlayset"))
-			//{
-			//	if (objectName.starts_with(L"AthenaGadget"))
-			//	{
-			//		auto FUN_weapondef = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGadgetItemDefinition:GetWeaponItemDefinition"));
+			if (objectName.starts_with(L"FortWeapon") || objectName.starts_with(L"AthenaGadget") || objectName.starts_with(L"FortPlayset"))
+			{
+				if (objectName.starts_with(L"AthenaGadget"))
+				{
+					auto FUN_weapondef = UE4::FindObject<UFunction*>(XOR(L"Function /Script/FortniteGame.FortGadgetItemDefinition:GetWeaponItemDefinition"));
 
-			//		UFortGadgetItemDefinition_GetWeaponItemDefinition_Params prm_ReturnValue;
+					UFortGadgetItemDefinition_GetWeaponItemDefinition_Params prm_ReturnValue;
 
-			//		ProcessEvent(WeaponData, FUN_weapondef, &prm_ReturnValue);
+					ProcessEvent(WeaponData, FUN_weapondef, &prm_ReturnValue);
 
-			//		if (prm_ReturnValue.ReturnValue && !Util::IsBadReadPtr(prm_ReturnValue.ReturnValue))
-			//		{
-			//			WeaponData = prm_ReturnValue.ReturnValue;
-			//		}
-			//	}
+					if (prm_ReturnValue.ReturnValue && !Util::IsBadReadPtr(prm_ReturnValue.ReturnValue))
+					{
+						WeaponData = prm_ReturnValue.ReturnValue;
+					}
+				}
 
-			//	//weapon found equip it
-			//	AFortPawn_EquipWeaponDefinition_Params params;
-			//	params.WeaponData = WeaponData;
-			//	params.ItemEntryGuid = GUID;
+				//weapon found equip it
+				AFortPawn_EquipWeaponDefinition_Params params;
+				params.WeaponData = WeaponData;
+				params.ItemEntryGuid = GUID;
 
-			//	ProcessEvent(this->Pawn, fn, &params);
-			//}
+				ProcessEvent(this->Pawn, fn, &params);
+			}
 		}
 		else
 		{
