@@ -3,7 +3,7 @@ class AActor : public UObject
 {
 public:
 	AActor();
-	AActor(UObject object);
+	AActor(InternalUObject* object);
 
 	virtual void Setup() override;
 
@@ -11,7 +11,7 @@ public:
 	virtual void K2_DestroyActor();
 
 protected:
-	UObject* InternalObject = nullptr;
+	InternalUObject* InternalObject = nullptr;
 
 private:
 	static UFunction* Fn_K2_DestroyActor;

@@ -33,7 +33,7 @@ public:
 
 	static void ConsoleLog(std::wstring message);
 
-	static void DestoryActor(UObject* actor);
+	static void DestoryActor(AActor* actor);
 
 	//static void PlayCustomPlayPhaseAlert();
 

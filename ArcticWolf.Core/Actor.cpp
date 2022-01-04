@@ -10,9 +10,9 @@ AActor::AActor()
 }
 
 // Casting
-AActor::AActor(UObject object)
+AActor::AActor(InternalUObject* object)
 {
-	InternalObject = &object;
+	InternalObject = object;
 	Setup();
 }
 

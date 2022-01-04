@@ -165,11 +165,9 @@ void UFunctions::ConsoleLog(std::wstring message)
 	gameMode->Say(FString(message.c_str()));
 }
 
-// ToDo: take AActor as param
-void UFunctions::DestoryActor(UObject* actor)
+void UFunctions::DestoryActor(AActor* actor)
 {
-	auto convActor = AActor(*actor);
-	convActor.K2_DestroyActor();
+	actor->K2_DestroyActor();
 }
 
 /*void UFunctions::PlayCustomPlayPhaseAlert()

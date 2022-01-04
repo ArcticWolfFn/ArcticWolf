@@ -12,10 +12,16 @@ enum class EInteractionBeingAttempted : uint8_t {
 	EInteractionBeingAttempted_MAX,
 };
 
+struct Internal_AFortPawn_OnWeaponEquipped_Params
+{
+	InternalUObject* NewWeapon;
+	InternalUObject* PrevWeapon;
+};
+
 struct AFortPawn_OnWeaponEquipped_Params
 {
-	UObject* NewWeapon;
-	UObject* PrevWeapon;
+	AActor* NewWeapon;
+	AActor* PrevWeapon;
 };
 
 struct UCheatManager_CheatScript_Params
@@ -228,9 +234,13 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 
 	else if (wcsstr(nFunc.c_str(), XOR(L"OnWeaponEquipped")))
 	{
-		auto params = static_cast<AFortPawn_OnWeaponEquipped_Params*>(pParams);
+		auto params = static_cast<Internal_AFortPawn_OnWeaponEquipped_Params*>(pParams);
 
-		auto OldWeapon = params->PrevWeapon;
+		auto convertedParams = AFortPawn_OnWeaponEquipped_Params();
+		convertedParams.NewWeapon = new AActor(params->NewWeapon);
+		convertedParams.PrevWeapon = new AActor(params->PrevWeapon);
+
+		auto OldWeapon = convertedParams.PrevWeapon;
 
 		if (OldWeapon && !Util::IsBadReadPtr(OldWeapon))
 		{
