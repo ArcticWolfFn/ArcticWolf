@@ -843,7 +843,7 @@ public:
 
 	void ShowPickaxe()
 	{
-		/*if (!this->Controller || Util::IsBadReadPtr(this->Controller))
+		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
 		{
 			UpdatePlayerController();
 		}
@@ -863,6 +863,6 @@ public:
 			this->EquipWeapon(Weapon.c_str());
 
 			PLOGI << "Equiped pickaxe";
-		}*/
+		}
 	}
 };
