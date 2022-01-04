@@ -161,22 +161,21 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 	{
 		struct ServerAttemptInteract
 		{
-			UObject* ReceivingActor;
-			UObject* InteractComponent;
+			InternalUObject* ReceivingActor;
+			InternalUObject* InteractComponent;
 			std::byte InteractType;
-			struct UObject* OptionalObjectData;
+			InternalUObject* OptionalObjectData;
 			EInteractionBeingAttempted InteractionBeingAttempted;
 			int32_t RequestID;
 		};
 
 		auto CurrentParams = (ServerAttemptInteract*)pParams;
 
-	// ToDo: names are invalid
-		/*if (!Util::IsBadReadPtr(CurrentParams->ReceivingActor)) {
-			PLOGI.printf("Player wants to interact with %s", UE4::GetObjectFullName(CurrentParams->ReceivingActor).c_str());
+		if (!Util::IsBadReadPtr(CurrentParams->ReceivingActor)) {
+			PLOGI.printf("Player wants to interact with %ws", UE4::GetObjectFullName(CurrentParams->ReceivingActor).c_str());
 
 			if (!Util::IsBadReadPtr(CurrentParams->ReceivingActor->Class)) {
-				PLOGI.printf("Interactable object Class: %s", UE4::GetObjectFullName(CurrentParams->ReceivingActor->Class).c_str());
+				PLOGI.printf("Interactable object Class: %ws", UE4::GetObjectFullName(CurrentParams->ReceivingActor->Class).c_str());
 			}
 		}
 		else {
@@ -184,15 +183,15 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 		}
 
 		if (!Util::IsBadReadPtr(CurrentParams->InteractComponent)) {
-			PLOGI.printf("InteractComponent: %s", UE4::GetObjectFullName(CurrentParams->InteractComponent).c_str());
+			PLOGI.printf("InteractComponent: %ws", UE4::GetObjectFullName(CurrentParams->InteractComponent).c_str());
 
 			if (!Util::IsBadReadPtr(CurrentParams->InteractComponent->Class)) {
-				PLOGI.printf("InteractComponent Class: %s", UE4::GetObjectFullName(CurrentParams->InteractComponent->Class).c_str());
+				PLOGI.printf("InteractComponent Class: %ws", UE4::GetObjectFullName(CurrentParams->InteractComponent->Class).c_str());
 			}
 		}
 		else {
 			PLOGE << "ServerAttemptInteract: CurrentParams->InteractComponent is nullptr";
-		}*/
+		}
 	}
 
 	else if (GMatch.bIsInit)
