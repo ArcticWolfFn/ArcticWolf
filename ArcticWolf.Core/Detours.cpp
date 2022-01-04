@@ -242,7 +242,7 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 
 		auto OldWeapon = convertedParams.PrevWeapon;
 
-		if (OldWeapon && !Util::IsBadReadPtr(OldWeapon))
+		if (OldWeapon && !Util::IsBadReadPtr(params->PrevWeapon))
 		{
 			UFunctions::DestoryActor(OldWeapon);
 			OldWeapon = nullptr;
