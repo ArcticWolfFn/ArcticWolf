@@ -105,7 +105,6 @@ void UFunctions::SetGamePhase()
 
 	*gameState.GamePhase = EAthenaGamePhase::None;
 
-	// ToDo: this is currently causing an access violation while reading an address
 	gameState.OnRep_GamePhase(EAthenaGamePhase::Setup);
 
 	PLOGD << "Game phase was set";
