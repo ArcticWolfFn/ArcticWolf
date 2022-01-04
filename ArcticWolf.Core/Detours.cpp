@@ -199,8 +199,7 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 	{
 		if (GMatch.bWantsToJump)
 		{
-			// ToDo: fix this
-			//FortniteGame::PlayerCharacter.Jump();
+			// ToDo: add jump function
 			GMatch.bWantsToJump = false;
 		}
 
