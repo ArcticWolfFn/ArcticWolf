@@ -572,7 +572,7 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 			// Called when a new item is sliding in
 			!wcsstr(nFunc.c_str(), L"BattlePassVaultWorld_C.Floor-Visibility__UpdateFunc") &&
 
-			// ToDo: I think this gets called if it shows a music pack, but music is muted
+			// I think this gets called if it shows a music pack, but music is muted
 			!wcsstr(nFunc.c_str(), L"B_MusicPackPreviewDisplay_C.UpdateMuteSetting") &&
 
 			// Shutdown
