@@ -28,8 +28,11 @@ void UFunctions::TeleportToCoords(float X, float Y, float Z)
 	GetGame()->LocalPlayers[0].GetPlayerController()->CheatManager->BugItGo(X, Y, Z, 0, 0, 0);
 }
 
+// ToDo: this is currently not working. Do research
 void UFunctions::DestroyAllHLODs()
 {
+	// 1. Wrong cheatmanager?
+	// 2. Is there a better function?
 	auto HLODSMActor = UE4::FindObject<InternalUObject*>(XOR(L"Class /Script/FortniteGame.FortHLODSMActor"));
 
 	auto HLODSMActorconv = new AActor(HLODSMActor);
