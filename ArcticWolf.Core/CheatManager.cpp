@@ -64,6 +64,11 @@ void UCheatManager::Summon(FString ClassName)
 {
 	if (!CanExec_Summon) return;
 
+	if (Util::IsBadReadPtr(InternalCheatManager))
+	{
+		PLOGV << "InternalCheatManager is not valid. Trying to "
+	}
+
 	struct Params
 	{
 		FString ClassName;
