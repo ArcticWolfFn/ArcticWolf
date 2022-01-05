@@ -17,7 +17,6 @@ void Match::Stop()
 	UFunctions::Travel(XOR(L"Frontend?game=/Script/FortniteGame.FortGameModeFrontEnd"));
 	bIsStarted = false;
 	bIsInit = false;
-	NeoPlayer.Controller = nullptr;
 	NeoPlayer.Pawn = nullptr;
 	NeoPlayer.Mesh = nullptr;
 	NeoPlayer.AnimInstance = nullptr;
@@ -53,7 +52,7 @@ void Match::LoadMoreClasses()
 
 	auto HasServerFinishedLoadingOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"bHasServerFinishedLoading"));
 
-	auto bHasServerFinishedLoading = reinterpret_cast<bool*>(reinterpret_cast<uintptr_t>(NeoPlayer.Controller) + HasServerFinishedLoadingOffset);
+	auto bHasServerFinishedLoading = reinterpret_cast<bool*>(reinterpret_cast<uintptr_t>(GetGame()->LocalPlayers[0].GetPlayerController()->InternalObject) + HasServerFinishedLoadingOffset);
 
 	if (Util::IsBadReadPtr(bHasServerFinishedLoading))
 	{
@@ -65,7 +64,7 @@ void Match::LoadMoreClasses()
 
 		auto bHasClientFinishedLoadingOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"bHasClientFinishedLoading"));
 
-		auto bHasClientFinishedLoading = reinterpret_cast<bool*>(reinterpret_cast<uintptr_t>(NeoPlayer.Controller) + bHasClientFinishedLoadingOffset);
+		auto bHasClientFinishedLoading = reinterpret_cast<bool*>(reinterpret_cast<uintptr_t>(GetGame()->LocalPlayers[0].GetPlayerController()->InternalObject) + bHasClientFinishedLoadingOffset);
 
 		if (!Util::IsBadReadPtr(bHasClientFinishedLoading)) {
 			bool HasFinishedLoading = true;

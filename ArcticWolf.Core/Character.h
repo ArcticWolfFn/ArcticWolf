@@ -1,5 +1,8 @@
 #pragma once
-class ACharacter : GIObject
+
+#include "Pawn.h"
+
+class ACharacter : public APawn
 {
 public:
 	ACharacter();

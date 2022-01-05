@@ -5,14 +5,13 @@ UFunction* AActor::Fn_K2_DestroyActor = nullptr;
 
 bool AActor::CanExec_K2_DestroyActor = false;
 
-AActor::AActor()
+AActor::AActor() : InternalObject(toPointerReference(nullptr))
 {
 }
 
 // Casting
-AActor::AActor(InternalUObject* object)
+AActor::AActor(InternalUObject* object) : InternalObject(object)
 {
-	InternalObject = object;
 	Setup();
 }
 

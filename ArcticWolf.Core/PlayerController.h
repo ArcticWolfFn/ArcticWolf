@@ -2,8 +2,9 @@
 
 #include "CheatManager.h"
 #include "Finder.h"
+#include "Controller.h"
 
-class APlayerController : protected GIObject
+class APlayerController : public AController
 {
 public:
 	APlayerController();
@@ -21,8 +22,6 @@ public:
 	UCheatManager* CheatManager = nullptr;
 
 	ObjectFinder* PlayerControllerFinder = nullptr;
-
-	InternalUObject*& InternalObject;
 
 private:
 	static UFunction* Fn_SwitchLevel;

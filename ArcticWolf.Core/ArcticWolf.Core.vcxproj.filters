@@ -306,6 +306,12 @@
     <ClInclude Include="Character.h">
       <Filter>Headerdateien\UnrealEngine\GameFramework</Filter>
     </ClInclude>
+    <ClInclude Include="Controller.h">
+      <Filter>Headerdateien\UnrealEngine\GameFramework</Filter>
+    </ClInclude>
+    <ClInclude Include="Pawn.h">
+      <Filter>Headerdateien\UnrealEngine\GameFramework</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -471,6 +477,12 @@
       <Filter>Quelldateien\FortniteGame</Filter>
     </ClCompile>
     <ClCompile Include="Character.cpp">
+      <Filter>Quelldateien\UnrealEngine\GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="Controller.cpp">
+      <Filter>Quelldateien\UnrealEngine\GameFramework</Filter>
+    </ClCompile>
+    <ClCompile Include="Pawn.cpp">
       <Filter>Quelldateien\UnrealEngine\GameFramework</Filter>
     </ClCompile>
   </ItemGroup>

@@ -54,6 +54,7 @@ public:
 	static std::wstring sSplit(std::wstring s, std::wstring delimiter);
 };
 
+// ToDo: rework: no success bool. Set pointer to nullptr
 template <class T>
 inline void SetPointer(const wchar_t* objectToFind, T* objectToSet, bool* success = nullptr, bool overrideObjectToSet = false)
 {

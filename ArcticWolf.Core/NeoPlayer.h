@@ -1,6 +1,7 @@
 #pragma once
 #include "finder.h"
 #include "SDK.h"
+#include "Pawn.h"
 
 struct USkeletalMeshComponent_GetAnimInstance_Params
 {
@@ -253,7 +254,6 @@ struct UFortKismetLibrary_UpdatePlayerCustomCharacterPartsVisualization_Params
 class NeoPlayerClass
 {
 public:
-	InternalUObject* Controller;
 	InternalUObject* Pawn;
 	InternalUObject* Mesh;
 	InternalUObject* AnimInstance;;
@@ -351,15 +351,6 @@ public:
 		}
 	}
 
-	void UpdatePlayerController()
-	{
-		ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-		ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-		ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-		this->Controller = PlayerControllerFinder.GetObj();
-	}
-
 	void UpdateMesh()
 	{
 		ObjectFinder PawnFinder = ObjectFinder::EntryPoint(uintptr_t(this->Pawn));
@@ -429,36 +420,18 @@ public:
 
 	void Summon(const wchar_t* ClassToSummon)
 	{
-		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
-		{
-			UpdatePlayerController();
-		}
-
-		ObjectFinder PlayerControllerFinder = ObjectFinder::EntryPoint(uintptr_t(this->Controller));
-
-		ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
-
 		const FString ClassName = ClassToSummon;
 
-		UCheatManager_Summon_Params params;
-		params.ClassName = ClassName;
-
-		ProcessEvent(CheatManagerFinder.GetObj(), CM_Summon, &params);
+		GetGame()->LocalPlayers[0].GetPlayerController()->CheatManager->Summon(ClassName);
 
 		PLOGI.printf("%ls was summoned!", ClassToSummon);
 	}
 
 	void Possess()
 	{
-		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
-		{
-			UpdatePlayerController();
-		}
+		auto pawn = APawn(Pawn);
+		GetGame()->LocalPlayers[0].GetPlayerController()->Possess(&pawn);
 
-		AController_Possess_Params params;
-		params.InPawn = this->Pawn;
-
-		ProcessEvent(this->Controller, PossessFn, &params);
 		PLOGD << "PlayerPawn was possessed";
 	}
 
@@ -777,16 +750,11 @@ public:
 
 	auto ToggleInfiniteAmmo()
 	{
-		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
-		{
-			UpdatePlayerController();
-		}
-
 		auto bEnableVoiceChatPTTOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"bEnableVoiceChatPTT"));
 
 		// TECHNICAL EXPLINATION: (kemo) We are doing this because InfiniteAmmo bool and some other bools live in the same offset
 		// the offset has 8 bits (a bitfield), bools are only one bit as it's only 0\1 so we have a struct with 8 bools (1 byte) to be able to edit that specific bool
-		auto PlayerControllerBools = reinterpret_cast<PlayerControllerBoolsForInfiniteAmmo*>(reinterpret_cast<uintptr_t>(this->Controller) + bEnableVoiceChatPTTOffset);
+		auto PlayerControllerBools = reinterpret_cast<PlayerControllerBoolsForInfiniteAmmo*>(reinterpret_cast<uintptr_t>(GetGame()->LocalPlayers[0].GetPlayerController()->InternalObject) + bEnableVoiceChatPTTOffset);
 
 		PlayerControllerBools->bInfiniteAmmo = true;
 		PlayerControllerBools->bInfiniteMagazine = true;
@@ -806,7 +774,7 @@ public:
 		UKismetSystemLibrary_ExecuteConsoleCommand_Params params;
 		params.WorldContextObject = WorldFinder.GetObj();
 		params.Command = command;
-		params.SpecificPlayer = this->Controller;
+		params.SpecificPlayer = GetGame()->LocalPlayers[0].GetPlayerController()->InternalObject;
 
 		ProcessEvent(KismetSysLib, fn, &params);
 		PLOGD << "Executed a console command";
@@ -824,11 +792,6 @@ public:
 
 	bool IsInAircraft()
 	{
-		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
-		{
-			UpdatePlayerController();
-		}
-
 		if (Util::IsBadReadPtr(IsInAircraftFn)) {
 			PLOGE << "Failed to check if player is in aircraft: Function is nullptr";
 			return NULL;
@@ -836,21 +799,16 @@ public:
 
 		ACharacter_IsInAircraft_Params params;
 
-		ProcessEvent(this->Controller, IsInAircraftFn, &params);
+		ProcessEvent(GetGame()->LocalPlayers[0].GetPlayerController()->InternalObject, IsInAircraftFn, &params);
 		return params.ReturnValue;
 	}
 
 
 	void ShowPickaxe()
 	{
-		if (!this->Controller || Util::IsBadReadPtr(this->Controller))
-		{
-			UpdatePlayerController();
-		}
-
 		auto CosmeticLoadoutPCOffset = ObjectFinder::FindOffset(XOR(L"Class /Script/FortniteGame.FortPlayerController"), XOR(L"CosmeticLoadoutPC"));
 
-		auto CosmeticLoadoutPC = reinterpret_cast<FFortAthenaLoadout*>(reinterpret_cast<uintptr_t>(this->Controller) + CosmeticLoadoutPCOffset);
+		auto CosmeticLoadoutPC = reinterpret_cast<FFortAthenaLoadout*>(reinterpret_cast<uintptr_t>(GetGame()->LocalPlayers[0].GetPlayerController()->InternalObject) + CosmeticLoadoutPCOffset);
 
 		if (!Util::IsBadReadPtr(CosmeticLoadoutPC))
 		{

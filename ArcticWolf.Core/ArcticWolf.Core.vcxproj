@@ -162,6 +162,7 @@
     <ClInclude Include="CheatManager.h" />
     <ClInclude Include="Class.h" />
     <ClInclude Include="Console.h" />
+    <ClInclude Include="Controller.h" />
     <ClInclude Include="CoreNetTypes.h" />
     <ClInclude Include="curl.h" />
     <ClInclude Include="curlver.h" />
@@ -201,6 +202,7 @@
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectMacros.h" />
     <ClInclude Include="Patterns.h" />
+    <ClInclude Include="Pawn.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="PlayerController.h" />
@@ -230,6 +232,7 @@
     <ClCompile Include="Character.cpp" />
     <ClCompile Include="CheatManager.cpp" />
     <ClCompile Include="Console.cpp" />
+    <ClCompile Include="Controller.cpp" />
     <ClCompile Include="CoreNetTypes.cpp" />
     <ClCompile Include="Detours.cpp" />
     <ClCompile Include="dllmain.cpp" />
@@ -263,6 +266,7 @@
     <ClCompile Include="NameTypes.cpp" />
     <ClCompile Include="NeoPlayer.cpp" />
     <ClCompile Include="Object.cpp" />
+    <ClCompile Include="Pawn.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

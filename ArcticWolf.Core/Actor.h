@@ -10,8 +10,7 @@ public:
 	// (Native|Public|BlueprintCallable)
 	virtual void K2_DestroyActor();
 
-protected:
-	InternalUObject* InternalObject = nullptr;
+	InternalUObject*& InternalObject;
 
 private:
 	static UFunction* Fn_K2_DestroyActor;
