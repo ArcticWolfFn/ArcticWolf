@@ -5,7 +5,7 @@
 class UCheatManager : GIObject
 {
 public:
-	UCheatManager(InternalUObject* InternalCheatManager);
+	UCheatManager(InternalUObject*& InternalCheatManager);
 
 	void Setup() override;
 
@@ -19,7 +19,7 @@ private:
 	static UFunction* Fn_BugItGo;
 	static UFunction* Fn_DestroyAll;
 
-	InternalUObject* InternalCheatManager = nullptr;
+	InternalUObject*& InternalCheatManager;
 
 	static bool CanExec_BugItGo;
 	static bool CanExec_DestroyAll;
