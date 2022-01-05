@@ -7,6 +7,7 @@
 
 void Match::Start(const wchar_t* MapToPlayOn)
 {
+	MatchState = EMatchState::Loading;
 	UFunctions::Travel(MapToPlayOn);
 	bIsStarted = !bIsStarted;
 }
@@ -21,6 +22,7 @@ void Match::Stop()
 	NeoPlayer.Mesh = nullptr;
 	NeoPlayer.AnimInstance = nullptr;
 	gPlaylist = nullptr;
+	MatchState = EMatchState::InLobby;
 }
 
 void Match::LoadMoreClasses()
@@ -166,6 +168,30 @@ void Match::Thread()
 		{
 			Stop();
 			break;
+		}
+
+		if (GMatch.bWantsToJump)
+		{
+			// ToDo: add jump function
+			GMatch.bWantsToJump = false;
+		}
+
+		else if (GMatch.bWantsToOpenGlider)
+		{
+			GMatch.NeoPlayer.ForceOpenParachute();
+			GMatch.bWantsToOpenGlider = false;
+		}
+
+		else if (GMatch.bWantsToSkydive)
+		{
+			GMatch.NeoPlayer.Skydive();
+			GMatch.bWantsToSkydive = false;
+		}
+
+		else if (GMatch.bWantsToShowPickaxe)
+		{
+			GMatch.NeoPlayer.ShowPickaxe();
+			GMatch.bWantsToShowPickaxe = false;
 		}
 
 		Sleep(1000 / 30);

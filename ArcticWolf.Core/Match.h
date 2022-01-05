@@ -9,6 +9,12 @@ inline std::vector<std::wstring> gBlueprints;
 inline std::vector<std::wstring> gMeshes;
 inline InternalUObject* gPlaylist;
 
+enum class EMatchState : uint8_t {
+	InLobby,
+	Loading,
+	InMatch
+};
+
 class Match
 {
 public:
@@ -23,6 +29,8 @@ public:
 	bool bWantsToSkydive;
 	bool bWantsToOpenGlider;
 	bool bWantsToShowPickaxe;
+
+	EMatchState MatchState = EMatchState::InLobby;
 
 	NeoPlayerClass NeoPlayer;
 
