@@ -43,6 +43,4 @@ void UWorld::UpdateProps()
 
     AuthorityGameMode = new AGameMode(WorldFinder.Find(L"AuthorityGameMode").GetObj());
     AuthorityGameMode->Setup();
-
-    PLOGV.printf("World is %ws", UE4::GetObjectName(WorldFinder.GetObj()));
 }
