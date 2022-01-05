@@ -116,6 +116,9 @@ private:
 	static void Log(std::wstring nObj, std::wstring nFunc, std::wstring nObjClass);
 
 	static int GetViewPointDetour(void* pPlayer, FMinimalViewInfo* pViewInfo, BYTE stereoPass);
+
+	inline static unsigned long long Total_Exec_time = 0;
+	inline static unsigned long long Count_Exec_time = 0;
 };
 
 

@@ -4,6 +4,7 @@
 #include "FortPlaylistAthena.h"
 #include "Functions.h"
 #include "Console.h"
+#include <chrono>
 
 enum class EInteractionBeingAttempted : uint8_t {
 	FirstInteraction,
@@ -115,181 +116,168 @@ static auto str2enum(const std::wstring& str)
 
 void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc, void* pParams)
 {
+	auto start = std::chrono::high_resolution_clock::now();
+
 	auto nObj = UE4::GetObjectName(pObj);
+	auto nObj_c_str = nObj.c_str();
 
 	auto nFunc = UE4::GetObjectName(pFunc);
+	auto nFunc_c_str = nFunc.c_str();
 
-	if (GMatch.bIsInit)
+	if (GMatch.MatchState == EMatchState::InLobby)
 	{
-		if (GMatch.bWantsToJump)
+		//If the game requested matchmaking we open the game mode
+		if (wcscmp(nFunc_c_str, XOR(L"/Script/CommonUI.CommonButton.HandleButtonClicked")) == 0 && nObj.ends_with(XOR(L"Matchmaking_AthenaLegacy.WidgetTree.Button_Play")) && !GMatch.bIsStarted)
 		{
-			// ToDo: add jump function
-			GMatch.bWantsToJump = false;
-		}
+			PLOGI.printf("HandleButtonClicked detour called: Func: '%ws' Obj: '%ws' ObjFirstName: '%ws' ObjFullName: '%ws'", nFunc_c_str, nObj_c_str, UE4::GetObjectFirstName(pObj).c_str(), UE4::GetObjectFullName(pObj).c_str());
 
-		else if (GMatch.bWantsToOpenGlider)
-		{
-			GMatch.NeoPlayer.ForceOpenParachute();
-			GMatch.bWantsToOpenGlider = false;
-		}
+			PLOGI << XOR("Start!");
 
-		else if (GMatch.bWantsToSkydive)
-		{
-			GMatch.NeoPlayer.Skydive();
-			GMatch.bWantsToSkydive = false;
-		}
+			auto Playlist = UE4::FindObject<InternalUObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
+			gPlaylist = Playlist;
+			auto Map = XOR(L"Apollo_Terrain?game=/Game/Athena/Athena_GameMode.Athena_GameMode_C");
 
-		else if (GMatch.bWantsToShowPickaxe)
-		{
-			GMatch.NeoPlayer.ShowPickaxe();
-			GMatch.bWantsToShowPickaxe = false;
+			GMatch.Start(Map);
 		}
 	}
-	
-	//If the game requested matchmaking we open the game mode
-	if (wcsstr(nFunc.c_str(), XOR(L"HandleButtonClicked")) && wcsstr(nObj.c_str(), XOR(L"AthenaLobby.WidgetTree.Matchmaking_AthenaLegacy.WidgetTree.Button_Play")) && !GMatch.bIsStarted)
+	else if (GMatch.MatchState == EMatchState::Loading)
 	{
-		PLOGI << XOR("[NeoRoyale] Start!");
-
-		auto Playlist = UE4::FindObject<InternalUObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
-		gPlaylist = Playlist;
-		auto Map = XOR(L"Apollo_Terrain?game=/Game/Athena/Athena_GameMode.Athena_GameMode_C");
-
-		GMatch.Start(Map);
-	}
-
-	else if (wcsstr(nFunc.c_str(), XOR(L"ReadyToStartMatch")) && GMatch.bIsStarted && !GMatch.bIsInit)
-	{
-		PLOGI << XOR("ReadyToStartMatch called");
-		GMatch.Init();
-	}
-
-	else if (wcsstr(nFunc.c_str(), XOR(L"ServerLoadingScreenDropped")) && GMatch.bIsInit && GMatch.bIsStarted)
-	{
-		PLOGD << "ServerLoadingScreenDropped called";
-
-		//UFunctions::PlayCustomPlayPhaseAlert();
-
-		GMatch.LoadMoreClasses();
-	}
-
-	else if (wcsstr(nFunc.c_str(), XOR(L"SetRenderingAPI")))
-	{
-		return nullptr;
-	}
-
-	else if (wcsstr(nFunc.c_str(), XOR(L"SetFullscreenMode")))
-	{
-		return nullptr;
-	}
-
-	// Fly Command
-	else if (wcsstr(nFunc.c_str(), XOR(L"Fly")) && nObj.starts_with(XOR(L"CheatManager_")))
-	{
-		GMatch.NeoPlayer.Fly(bIsFlying);
-		bIsFlying = !bIsFlying;
-	}
-
-	else if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptAircraftJump")))
-	{
-		GMatch.NeoPlayer.ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
-		GMatch.NeoPlayer.Respawn();
-		auto currentLocation = GMatch.NeoPlayer.GetLocation();
-		UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
-	}
-
-	// Interact with a specific object (for example open/close door)
-	// This currently doesn't really work
-	else if (wcsstr(nFunc.c_str(), XOR(L"ServerAttemptInteract")))
-	{
-		struct ServerAttemptInteract
+		if (wcscmp(nFunc_c_str, XOR(L"/Script/Engine.GameMode.ReadyToStartMatch")) == 0 && GMatch.bIsStarted && !GMatch.bIsInit)
 		{
-			InternalUObject* ReceivingActor;
-			InternalUObject* InteractComponent;
-			std::byte InteractType;
-			InternalUObject* OptionalObjectData;
-			EInteractionBeingAttempted InteractionBeingAttempted;
-			int32_t RequestID;
-		};
+			PLOGI.printf("ReadyToStartMatch detour called: %ws", nFunc_c_str);
 
-		auto CurrentParams = (ServerAttemptInteract*)pParams;
+			PLOGI << XOR("ReadyToStartMatch called");
+			GMatch.Init();
+		}
+		else if (wcscmp(nFunc_c_str, XOR(L"/Script/FortniteGame.FortPlayerController.ServerLoadingScreenDropped")) == 0 && GMatch.bIsInit && GMatch.bIsStarted)
+		{
+			PLOGI.printf("ServerLoadingScreenDropped detour called: %ws", nFunc_c_str);
 
-		if (!Util::IsBadReadPtr(CurrentParams->ReceivingActor)) {
-			PLOGI.printf("Player wants to interact with %ws", UE4::GetObjectFullName(CurrentParams->ReceivingActor).c_str());
+			PLOGD << "ServerLoadingScreenDropped called";
 
-			if (!Util::IsBadReadPtr(CurrentParams->ReceivingActor->Class)) {
-				PLOGI.printf("Interactable object Class: %ws", UE4::GetObjectFullName(CurrentParams->ReceivingActor->Class).c_str());
+			//UFunctions::PlayCustomPlayPhaseAlert();
+
+			GMatch.LoadMoreClasses();
+
+			GMatch.MatchState = EMatchState::InMatch;
+
+			auto microsec = Total_Exec_time / Count_Exec_time;
+			PLOGI.printf("Average Execution time during Loading: %i µs (%i ms)", microsec, microsec / 1000);
+		}
+	}
+	else if (GMatch.MatchState == EMatchState::InMatch)
+	{
+		// Fly Command
+		if (wcsstr(nFunc_c_str, XOR(L"Fly")) && nObj.starts_with(XOR(L"CheatManager_")))
+		{
+			GMatch.NeoPlayer.Fly(bIsFlying);
+			bIsFlying = !bIsFlying;
+		}
+
+		else if (wcsstr(nFunc_c_str, XOR(L"ServerAttemptAircraftJump")))
+		{
+			GMatch.NeoPlayer.ExecuteConsoleCommand(XOR(L"PAUSESAFEZONE"));
+			GMatch.NeoPlayer.Respawn();
+			auto currentLocation = GMatch.NeoPlayer.GetLocation();
+			UFunctions::TeleportToCoords(currentLocation.X, currentLocation.Y, currentLocation.Z);
+		}
+
+		// Interact with a specific object (for example open/close door)
+		// This currently doesn't really work
+		else if (wcsstr(nFunc_c_str, XOR(L"ServerAttemptInteract")))
+		{
+			struct ServerAttemptInteract
+			{
+				InternalUObject* ReceivingActor;
+				InternalUObject* InteractComponent;
+				std::byte InteractType;
+				InternalUObject* OptionalObjectData;
+				EInteractionBeingAttempted InteractionBeingAttempted;
+				int32_t RequestID;
+			};
+
+			auto CurrentParams = (ServerAttemptInteract*)pParams;
+
+			if (!Util::IsBadReadPtr(CurrentParams->ReceivingActor)) {
+				PLOGI.printf("Player wants to interact with %ws", UE4::GetObjectFullName(CurrentParams->ReceivingActor).c_str());
+
+				if (!Util::IsBadReadPtr(CurrentParams->ReceivingActor->Class)) {
+					PLOGI.printf("Interactable object Class: %ws", UE4::GetObjectFullName(CurrentParams->ReceivingActor->Class).c_str());
+				}
+			}
+			else {
+				PLOGE << "ServerAttemptInteract: CurrentParams->ReceivingActor is nullptr";
+			}
+
+			if (!Util::IsBadReadPtr(CurrentParams->InteractComponent)) {
+				PLOGI.printf("InteractComponent: %ws", UE4::GetObjectFullName(CurrentParams->InteractComponent).c_str());
+
+				if (!Util::IsBadReadPtr(CurrentParams->InteractComponent->Class)) {
+					PLOGI.printf("InteractComponent Class: %ws", UE4::GetObjectFullName(CurrentParams->InteractComponent->Class).c_str());
+				}
+			}
+			else {
+				PLOGE << "ServerAttemptInteract: CurrentParams->InteractComponent is nullptr";
 			}
 		}
-		else {
-			PLOGE << "ServerAttemptInteract: CurrentParams->ReceivingActor is nullptr";
-		}
+		else if (wcsstr(nFunc_c_str, XOR(L"OnWeaponEquipped")))
+		{
+			PLOGI.printf("OnWeaponEquipped detour called: %ws", nFunc_c_str);
 
-		if (!Util::IsBadReadPtr(CurrentParams->InteractComponent)) {
-			PLOGI.printf("InteractComponent: %ws", UE4::GetObjectFullName(CurrentParams->InteractComponent).c_str());
+			auto params = static_cast<Internal_AFortPawn_OnWeaponEquipped_Params*>(pParams);
 
-			if (!Util::IsBadReadPtr(CurrentParams->InteractComponent->Class)) {
-				PLOGI.printf("InteractComponent Class: %ws", UE4::GetObjectFullName(CurrentParams->InteractComponent->Class).c_str());
+			auto convertedParams = AFortPawn_OnWeaponEquipped_Params();
+			convertedParams.NewWeapon = new AActor(params->NewWeapon);
+			convertedParams.PrevWeapon = new AActor(params->PrevWeapon);
+
+			auto OldWeapon = convertedParams.PrevWeapon;
+
+			if (OldWeapon && !Util::IsBadReadPtr(params->PrevWeapon))
+			{
+				UFunctions::DestoryActor(OldWeapon);
+				OldWeapon = nullptr;
 			}
 		}
-		else {
-			PLOGE << "ServerAttemptInteract: CurrentParams->InteractComponent is nullptr";
+
+		else if (wcsstr(nFunc_c_str, XOR(L"BP_OnDeactivated")) && wcsstr(nObj_c_str, XOR(L"PickerOverlay_EmoteWheel")))
+		{
+			if (GMatch.NeoPlayer.Pawn)
+			{
+				ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+				ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+
+				ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+
+				ObjectFinder LastEmotePlayedFinder = PlayerControllerFinder.Find(XOR(L"LastEmotePlayed"));
+
+				auto LastEmotePlayed = LastEmotePlayedFinder.GetObj();
+
+				if (LastEmotePlayed && !Util::IsBadReadPtr(LastEmotePlayed))
+				{
+					GMatch.NeoPlayer.Emote(LastEmotePlayed);
+				}
+			}
+		}
+
+		else if (wcsstr(nFunc_c_str, XOR(L"BlueprintOnInteract")) && nObj.starts_with(XOR(L"BGA_FireExtinguisher_Pickup_C_")))
+		{
+			GMatch.NeoPlayer.EquipWeapon(XOR(L"WID_FireExtinguisher_Spray"));
 		}
 	}
 
-	else if (wcsstr(nFunc.c_str(), XOR(L"EnableCheats")))
+	if (wcsstr(nFunc_c_str, XOR(L"EnableCheats")))
 	{
+		PLOGI.printf("EnableCheats detour called: %ws", nFunc_c_str);
 		Console::CheatManager();
 	}
 
-	else if (wcsstr(nFunc.c_str(), XOR(L"OnWeaponEquipped")))
+	else if (wcscmp(nFunc_c_str, XOR(L"/Script/Engine.CheatManager.CheatScript")) == 0)
 	{
-		auto params = static_cast<Internal_AFortPawn_OnWeaponEquipped_Params*>(pParams);
+		PLOGI.printf("CheatScript detour called: %ws", nFunc_c_str);
 
-		auto convertedParams = AFortPawn_OnWeaponEquipped_Params();
-		convertedParams.NewWeapon = new AActor(params->NewWeapon);
-		convertedParams.PrevWeapon = new AActor(params->PrevWeapon);
-
-		auto OldWeapon = convertedParams.PrevWeapon;
-
-		if (OldWeapon && !Util::IsBadReadPtr(params->PrevWeapon))
-		{
-			UFunctions::DestoryActor(OldWeapon);
-			OldWeapon = nullptr;
-		}
-	}
-
-	else if (wcsstr(nFunc.c_str(), XOR(L"BP_OnDeactivated")) && wcsstr(nObj.c_str(), XOR(L"PickerOverlay_EmoteWheel")))
-	{
-		if (GMatch.NeoPlayer.Pawn)
-		{
-			ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-			ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-			ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-			ObjectFinder LastEmotePlayedFinder = PlayerControllerFinder.Find(XOR(L"LastEmotePlayed"));
-
-			auto LastEmotePlayed = LastEmotePlayedFinder.GetObj();
-
-			if (LastEmotePlayed && !Util::IsBadReadPtr(LastEmotePlayed))
-			{
-				GMatch.NeoPlayer.Emote(LastEmotePlayed);
-			}
-		}
-	}
-
-	else if (wcsstr(nFunc.c_str(), XOR(L"BlueprintOnInteract")) && nObj.starts_with(XOR(L"BGA_FireExtinguisher_Pickup_C_")))
-	{
-		GMatch.NeoPlayer.EquipWeapon(XOR(L"WID_FireExtinguisher_Spray"));
-	}
-
-
-	else if (wcsstr(nFunc.c_str(), XOR(L"CheatScript")))
-	{
 		FString ScriptNameF = static_cast<UCheatManager_CheatScript_Params*>(pParams)->ScriptName;
 
-		PLOGI.printf("Called script %s", ScriptNameF.ToWString());
+		PLOGI.printf("Called script %ws", ScriptNameF.ToWString());
 
 		if (ScriptNameF.IsValid())
 		{
@@ -314,6 +302,8 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 
 			case TEST:
 			{
+				auto microsec = Total_Exec_time / Count_Exec_time;
+				PLOGI.printf("Average Execution time: %i µs (%i ms)", microsec, microsec / 1000);
 				break;
 			}
 
@@ -516,10 +506,15 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 	}
 
 	//Logging
-	if (true) {
+	if (false) {
 		std::thread log(Log, nObj, nFunc, UE4::GetObjectFullName(static_cast<InternalUObject*>(pObj)->Class));
 		log.detach();
 	}
+
+	auto finish = std::chrono::high_resolution_clock::now();
+	auto microseconds = std::chrono::duration_cast<std::chrono::microseconds>(finish - start);
+	Total_Exec_time = Total_Exec_time + microseconds.count();
+	Count_Exec_time++;
 
 	return ProcessEvent(pObj, pFunc, pParams);
 }
