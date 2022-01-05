@@ -30,13 +30,6 @@ void UFunctions::TeleportToCoords(float X, float Y, float Z)
 
 void UFunctions::DestroyAllHLODs()
 {
-	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-	ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
-
-	ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
-
-	ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
-
 	auto HLODSMActor = UE4::FindObject<InternalUObject*>(XOR(L"Class /Script/FortniteGame.FortHLODSMActor"));
 
 	auto HLODSMActorconv = new AActor(HLODSMActor);
