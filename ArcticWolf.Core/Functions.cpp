@@ -28,47 +28,20 @@ void UFunctions::TeleportToCoords(float X, float Y, float Z)
 	GetGame()->LocalPlayers[0].GetPlayerController()->CheatManager->BugItGo(X, Y, Z, 0, 0, 0);
 }
 
-//ToDo: not working. Fix this. Causes a crash
 void UFunctions::DestroyAllHLODs()
 {
+	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+	ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+
+	ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+
+	ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
+
 	auto HLODSMActor = UE4::FindObject<InternalUObject*>(XOR(L"Class /Script/FortniteGame.FortHLODSMActor"));
 
-	if (Util::IsBadReadPtr(HLODSMActor))
-	{
-		PLOGE << "Failed to get HLODSMActor";
-		return;
-	}
+	auto HLODSMActorconv = new AActor(HLODSMActor);
 
-	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
-	ObjectFinder GameViewPortClientFinder = EngineFinder.Find(XOR(L"GameViewport"));
-	ObjectFinder WorldFinder = GameViewPortClientFinder.Find(XOR(L"World"));
-
-	auto GameplayStatics = UE4::FindObject<InternalUObject*>(XOR(L"GameplayStatics /Script/Engine.Default__GameplayStatics"));
-	auto GetAllActorsOfClass = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.GameplayStatics.GetAllActorsOfClass"));
-
-	struct GetAllActorsOfClass_Params
-	{
-		InternalUObject* WorldContextObject;
-		InternalUObject* ActorClass; //AActor
-		TArray<InternalUObject*> OutActors; //AActor
-	};
-
-	GetAllActorsOfClass_Params params;
-	params.ActorClass = HLODSMActor;
-	params.WorldContextObject = WorldFinder.GetObj();
-
-	ProcessEvent(GameplayStatics, GetAllActorsOfClass, &params);
-
-	auto Actors = params.OutActors;
-
-	const auto K2_DestroyActor = UE4::FindObject<UFunction*>(XOR(L"Function /Script/Engine.Actor.K2_DestroyActor"));
-
-	for (auto i = 0; i < Actors.Num(); i++)
-	{
-		auto actor = AActor(Actors[i]);
-		actor.Setup();
-		actor.K2_DestroyActor();
-	}
+	GetGame()->LocalPlayers[0].GetPlayerController()->CheatManager->DestroyAll(HLODSMActorconv);
 
 	PLOGD << "HLODSM Actor were destroyed.";
 }
