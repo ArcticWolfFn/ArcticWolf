@@ -129,8 +129,6 @@ void* Detours::ProcessEventDetour(InternalUObject* pObj, InternalUObject* pFunc,
 		//If the game requested matchmaking we open the game mode
 		if (wcscmp(nFunc_c_str, XOR(L"/Script/CommonUI.CommonButton.HandleButtonClicked")) == 0 && nObj.ends_with(XOR(L"Matchmaking_AthenaLegacy.WidgetTree.Button_Play")) && !GMatch.bIsStarted)
 		{
-			PLOGI.printf("HandleButtonClicked detour called: Func: '%ws' Obj: '%ws' ObjFirstName: '%ws' ObjFullName: '%ws'", nFunc_c_str, nObj_c_str, UE4::GetObjectFirstName(pObj).c_str(), UE4::GetObjectFullName(pObj).c_str());
-
 			PLOGI << XOR("Start!");
 
 			auto Playlist = UE4::FindObject<InternalUObject*>(XOR(L"FortPlaylistAthena /Game/Athena/Playlists/BattleLab/Playlist_BattleLab.Playlist_BattleLab"));
