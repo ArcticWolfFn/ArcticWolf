@@ -13,7 +13,6 @@ namespace ArcticWolfApi.Controllers
         [HttpGet("/fortnite/api/game/v2/events/tournamentandhistory/{accountId}/{region}/{clientType}")]
         public object GetUserSetting(string accountId, string region, string clientType)
         {
-            Console.WriteLine("Hit tournamentandhistory");
             return (
                 eventTournaments: new List<object>(),
                 eventWindowHistories: new List<object>()

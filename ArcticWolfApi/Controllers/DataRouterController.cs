@@ -1,8 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Controllers
 {
@@ -11,6 +7,6 @@ namespace ArcticWolfApi.Controllers
     public class DataRouterController : ControllerBase
     {
         [HttpPost("public/data")]
-        public ActionResult PostDatarouter() => (ActionResult)this.NoContent();
+        public ActionResult PostDatarouter() => this.NoContent();
     }
 }

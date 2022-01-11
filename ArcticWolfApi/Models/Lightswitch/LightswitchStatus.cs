@@ -1,8 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Lightswitch
 {
@@ -10,12 +7,14 @@ namespace ArcticWolfApi.Models.Lightswitch
     {
         [JsonProperty("banned")]
         public bool Banned;
+
         [JsonProperty("maintenanceUrl")]
         public string MaintenanceUrl;
+
         [JsonProperty("overrideCatalogIds")]
         public string[] OverrideCatalogIds = new string[1]
         {
-      "a7f138b2e51945ffbfdacc1af0541053"
+            "a7f138b2e51945ffbfdacc1af0541053"
         };
 
         [JsonProperty("serviceInstanceId")]
@@ -31,8 +30,8 @@ namespace ArcticWolfApi.Models.Lightswitch
         public string[] AllowedActions => Array.Empty<string>();
 
         [JsonProperty("launcherInfoDTO")]
-        public LauncherInfo LauncherInfoDTO => new LauncherInfo();
+        public LauncherInfo LauncherInfoDTO => new();
 
-        public LightswitchStatus(string serviceId) => this.ServiceInstanceId = serviceId;
+        public LightswitchStatus(string serviceId) => ServiceInstanceId = serviceId;
     }
 }

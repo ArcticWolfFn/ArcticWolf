@@ -1,9 +1,6 @@
 ﻿using ArcticWolfApi.Models.Profile;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Collections.Generic;;
 
 namespace ArcticWolfApi.Models.Fortnite
 {
@@ -12,6 +9,6 @@ namespace ArcticWolfApi.Models.Fortnite
         [JsonProperty("variants")]
         public List<ItemVariant> Variants { get; set; }
 
-        public AthenaLockerSlotActiveVariant(List<ItemVariant> variants) => this.Variants = variants;
+        public AthenaLockerSlotActiveVariant(List<ItemVariant> variants) => Variants = variants;
     }
 }

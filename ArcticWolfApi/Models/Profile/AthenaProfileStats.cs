@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Profile
 {
@@ -15,7 +13,7 @@ namespace ArcticWolfApi.Models.Profile
         public object PastSeasons => new();
 
         [JsonProperty("season")]
-        public object Season => (object)new
+        public object Season => new
         {
             numWins = 0,
             numLowBracket = 0,
@@ -32,7 +30,7 @@ namespace ArcticWolfApi.Models.Profile
         public bool MfaRewardClaimed => true;
 
         [JsonProperty("quest_manager")]
-        public object QuestManager => (object)new
+        public object QuestManager => new
         {
             dailyLoginInterval = DateTime.UtcNow.AddDays(1.0),
             dailyQuestRerolls = 1
@@ -57,7 +55,7 @@ namespace ArcticWolfApi.Models.Profile
         public bool BookPurchased { get; set; }
 
         [JsonProperty("purchased_battle_pass_tier_offers")]
-        public object PurchasedBattlePassTierOffers => (object)new
+        public object PurchasedBattlePassTierOffers => new
         {
         };
 
@@ -65,7 +63,7 @@ namespace ArcticWolfApi.Models.Profile
         public string[] Permissions => Array.Empty<string>();
 
         [JsonProperty("vote_data")]
-        public object VoteData => (object)new { };
+        public object VoteData => new { };
 
         [JsonProperty("accountLevel")]
         public int AccountLevel { get; set; } = 1;
@@ -95,19 +93,19 @@ namespace ArcticWolfApi.Models.Profile
         public string[] SeasonFirstTrackingBits => Array.Empty<string>();
 
         [JsonProperty("competitiveIdentity")]
-        public object CompetitiveIdentity => (object)new { };
+        public object CompetitiveIdentity => new { };
 
         [JsonProperty("inventory_limit_bonus")]
         public int InventoryLimitBonus => 0;
 
         [JsonProperty("daily_rewards")]
-        public object DailyRewards => (object)new { };
+        public object DailyRewards => new { };
 
         [JsonProperty("loadouts")]
-        public List<string> Loadouts => new List<string>()
-    {
-      "CosmeticLocker:cosmeticlocker_athena"
-    };
+        public List<string> Loadouts => new()
+        {
+            "CosmeticLocker:cosmeticlocker_athena"
+        };
 
         [JsonProperty("last_applied_loadout")]
         public string LastAppliedLoadout => "CosmeticLocker:cosmeticlocker_athena";
@@ -147,16 +145,16 @@ namespace ArcticWolfApi.Models.Profile
 
         public AthenaProfileStats(int seasonNumber)
         {
-            this.SeasonNum = seasonNumber;
-            this.FavoriteCharacter = Program.CosmeticLoadout["character"].ToString();
-            this.FavoriteBackpack = Program.CosmeticLoadout["backpack"].ToString();
-            this.FavoritePickaxe = Program.CosmeticLoadout["pickaxe"].ToString();
-            this.FavoriteGlider = Program.CosmeticLoadout["glider"].ToString();
-            this.FavoriteSkyDiveContrail = Program.CosmeticLoadout["skydivecontrail"].ToString();
-            this.FavoriteDance = (string[])Program.CosmeticLoadout["dance"];
-            this.FavoriteItemWraps = (string[])Program.CosmeticLoadout["itemwrap"];
-            this.FavoriteLoadingScreen = Program.CosmeticLoadout["loadingscreen"].ToString();
-            this.FavoriteMusicpack = Program.CosmeticLoadout["musicpack"].ToString();
+            SeasonNum = seasonNumber;
+            FavoriteCharacter = Program.CosmeticLoadout["character"].ToString();
+            FavoriteBackpack = Program.CosmeticLoadout["backpack"].ToString();
+            FavoritePickaxe = Program.CosmeticLoadout["pickaxe"].ToString();
+            FavoriteGlider = Program.CosmeticLoadout["glider"].ToString();
+            FavoriteSkyDiveContrail = Program.CosmeticLoadout["skydivecontrail"].ToString();
+            FavoriteDance = (string[])Program.CosmeticLoadout["dance"];
+            FavoriteItemWraps = (string[])Program.CosmeticLoadout["itemwrap"];
+            FavoriteLoadingScreen = Program.CosmeticLoadout["loadingscreen"].ToString();
+            FavoriteMusicpack = Program.CosmeticLoadout["musicpack"].ToString();
         }
     }
 }

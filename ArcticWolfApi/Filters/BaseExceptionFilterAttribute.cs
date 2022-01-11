@@ -1,11 +1,7 @@
 ﻿using ArcticWolfApi.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
-using Microsoft.Extensions.Primitives;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Filters
 {
@@ -17,12 +13,15 @@ namespace ArcticWolfApi.Filters
             Console.WriteLine("Excpetion StackTrace: " + context.Exception.StackTrace);
             Console.WriteLine("Excpetion Source: " + context.Exception.Source);
 
-            if (!(context.Exception is BaseException))
-                context.Exception = (Exception)new UnhandledErrorException(context.Exception.Message ?? "");
+            if (context.Exception is not BaseException)
+            {
+                context.Exception = new UnhandledErrorException(context.Exception.Message ?? "");
+            }
+
             BaseException exception = (BaseException)context.Exception;
-            context.HttpContext.Response.Headers.Add("X-Epic-Error-Name", (StringValues)exception.Code);
-            context.HttpContext.Response.Headers.Add("X-Epic-Error-Code", (StringValues)exception.NumericCode.ToString());
-            context.Result = (IActionResult)new JsonResult((object)exception)
+            context.HttpContext.Response.Headers.Add("X-Epic-Error-Name", exception.Code);
+            context.HttpContext.Response.Headers.Add("X-Epic-Error-Code", exception.NumericCode.ToString());
+            context.Result = new JsonResult(exception)
             {
                 StatusCode = new int?(exception.Status)
             };

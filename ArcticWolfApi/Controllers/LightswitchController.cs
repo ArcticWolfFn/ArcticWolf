@@ -12,13 +12,12 @@ namespace ArcticWolfApi.Controllers
     public class LightswitchController : ControllerBase
     {
         [HttpGet("service/bulk/status")]
-        public ActionResult<List<LightswitchStatus>> GetLightswitchStatus(
-          [FromQuery] string serviceId)
+        public ActionResult<List<LightswitchStatus>> GetLightswitchStatus([FromQuery] string serviceId)
         {
-            return (ActionResult<List<LightswitchStatus>>)new List<LightswitchStatus>()
-      {
-        new LightswitchStatus(serviceId.ToLower())
-      };
+            return new List<LightswitchStatus>()
+            {
+                new LightswitchStatus(serviceId.ToLower())
+            };
         }
     }
 }

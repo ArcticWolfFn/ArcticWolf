@@ -1,22 +1,19 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Profile
 {
     public class CommonCoreProfileStats
     {
         [JsonProperty("survey_data")]
-        public object SurveyData => (object)new
+        public object SurveyData => new
         {
             allSurveysMetadata = new { },
             metadata = new { }
         };
 
         [JsonProperty("personal_offers")]
-        public object PersonalOffers => (object)new { };
+        public object PersonalOffers => new { };
 
         [JsonProperty("intro_game_played")]
         public bool IntroGamePlayed => true;
@@ -28,7 +25,7 @@ namespace ArcticWolfApi.Models.Profile
         public DateTime MtxAffiliateSetTime => DateTime.UtcNow.AddDays(-1.0);
 
         [JsonProperty("mtx_purchase_history")]
-        public object MtxPurchaseHistory => (object)new
+        public object MtxPurchaseHistory => new
         {
             refundsUsed = 0,
             refundCredits = 99,
@@ -39,10 +36,10 @@ namespace ArcticWolfApi.Models.Profile
         public string[] UndoCooldowns => Array.Empty<string>();
 
         [JsonProperty("in_app_purchases")]
-        public object InAppPurchases => (object)new { };
+        public object InAppPurchases => new { };
 
         [JsonProperty("import_friends_claimed")]
-        public object ImportFriendsClaimed => (object)new { };
+        public object ImportFriendsClaimed => new { };
 
         [JsonProperty("inventory_limit_bonus")]
         public int InventoryLimitBonus => 0;
@@ -51,28 +48,28 @@ namespace ArcticWolfApi.Models.Profile
         public string CurrentMtxPlatform => "EpicPC";
 
         [JsonProperty("daily_purchases")]
-        public object DailyPurchases => (object)new
+        public object DailyPurchases => new
         {
             lastInterval = DateTime.UtcNow,
             purchaseList = new { }
         };
 
         [JsonProperty("weekly_purchases")]
-        public object WeeklyPurchases => (object)new
+        public object WeeklyPurchases => new
         {
             lastInterval = DateTime.UtcNow,
             purchaseList = new { }
         };
 
         [JsonProperty("monthly_purchases")]
-        public object MonthlyPurchases => (object)new
+        public object MonthlyPurchases => new
         {
             lastInterval = DateTime.UtcNow,
             purchaseList = new { }
         };
 
         [JsonProperty("ban_history")]
-        public object BanHistory => (object)new { };
+        public object BanHistory => new { };
 
         [JsonProperty("undo_timeout")]
         public DateTime UndoTimeout => DateTime.UtcNow.AddDays(-7.0);
@@ -90,7 +87,7 @@ namespace ArcticWolfApi.Models.Profile
         public bool AllowedToReceiveGifts => false;
 
         [JsonProperty("gift_history")]
-        public object GiftHistory => (object)new
+        public object GiftHistory => new
         {
             numSent = 0,
             sentTo = new { },

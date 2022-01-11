@@ -1,8 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Profile.Changes
 {
@@ -11,6 +7,6 @@ namespace ArcticWolfApi.Models.Profile.Changes
         [JsonProperty("changeType", Order = -2)]
         public string ChangeType { get; set; }
 
-        public McpChange(string changeType) => this.ChangeType = changeType;
+        public McpChange(string changeType) => ChangeType = changeType;
     }
 }

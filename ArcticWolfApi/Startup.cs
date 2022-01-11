@@ -22,34 +22,35 @@ namespace ArcticWolfApi
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
         }
-
-        public IConfiguration Configuration { get; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddCors(options =>
             {
-                options.AddPolicy(name: "cors",
-                                  builder =>
-                                  {
-                                      builder.WithOrigins("http://localhost:3000");
-                                  });
+                options.AddPolicy(
+                    name: "cors",
+                    builder =>
+                    {
+                        builder.WithOrigins("http://localhost:3000");
+                    });
             });
 
-            services.AddMvc().AddNewtonsoftJson((Action<MvcNewtonsoftJsonOptions>)(options =>
+            services.AddMvc().AddNewtonsoftJson(options =>
             {
-                options.SerializerSettings.Converters.Add((Newtonsoft.Json.JsonConverter)new IsoDateTimeConverter()
+                options.SerializerSettings.Converters.Add(new IsoDateTimeConverter()
                 {
                     DateTimeFormat = "yyyy'-'MM'-'dd'T'HH':'mm':'ss.fff'Z'"
                 });
                 options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
-            }));
-            services.AddMvc((Action<MvcOptions>)(options => options.Filters.Add((IFilterMetadata)new BaseExceptionFilterAttribute())));
+            });
+            services.AddMvc(options => options.Filters.Add(new BaseExceptionFilterAttribute()));
             services.AddSingleton<IProfileService, ProfileService>();
             services.AddHttpContextAccessor();
             services.AddControllers();
@@ -68,6 +69,7 @@ namespace ArcticWolfApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ArcticWolfApi v1"));
             }
+
             app.UseEpicStatusErrors();
             app.UseHttpsRedirection();
 

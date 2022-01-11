@@ -1,8 +1,4 @@
-﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Newtonsoft.Json;;
 
 namespace ArcticWolfApi.Models.Fortnite
 {
@@ -14,6 +10,6 @@ namespace ArcticWolfApi.Models.Fortnite
         [JsonProperty("optOutOfPublicLeaderboards")]
         public bool OptOutOfPublicLeaderboards => false;
 
-        public PrivacySettings(string accountId) => this.AccountId = accountId;
+        public PrivacySettings(string accountId) => AccountId = accountId;
     }
 }

@@ -2,8 +2,6 @@
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Profile
 {
@@ -30,26 +28,26 @@ namespace ArcticWolfApi.Models.Profile
         [JsonProperty("responseVersion")]
         public int ResponseVersion { get; set; }
 
-        public McpResponse(
-          Profile profile,
-          int rvn,
-          string profileId,
-          List<object> changes,
-          bool isUpdated = false)
+        public McpResponse(Profile profile, int rvn, string profileId, List<object> changes, bool isUpdated = false)
         {
-            this.ProfileRevision = profile.Rvn;
-            this.ProfileId = profileId;
-            this.ProfileChangesBaseRevision = isUpdated ? profile.Rvn - 1 : profile.Rvn;
+            ProfileRevision = profile.Rvn;
+            ProfileId = profileId;
+            ProfileChangesBaseRevision = isUpdated ? profile.Rvn - 1 : profile.Rvn;
             if ((isUpdated ? (profile.Rvn - 1 == rvn ? 1 : 0) : (profile.Rvn == rvn ? 1 : 0)) != 0)
-                this.ProfileChanges = changes;
-            else
-                this.ProfileChanges = new List<object>()
-        {
-          (object) new McpFullProfileUpdate(profile)
-        };
-            this.ProfileCommandRevision = profile.Rvn;
-            this.ServerTime = DateTime.UtcNow.TrimDate();
-            this.ResponseVersion = 1;
+            {
+                ProfileChanges = changes;
+            }
+            else 
+            {
+                ProfileChanges = new List<object>()
+                {
+                    new McpFullProfileUpdate(profile)
+                };
+
+                ProfileCommandRevision = profile.Rvn;
+                ServerTime = DateTime.UtcNow.TrimDate();
+                ResponseVersion = 1;
+            }
         }
     }
 }

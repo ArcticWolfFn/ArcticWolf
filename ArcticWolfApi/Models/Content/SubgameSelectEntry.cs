@@ -1,15 +1,11 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Content
 {
     public class SubgameSelectEntry : BasePagesEntry
     {
         [JsonProperty("saveTheWorldUnowned", Order = -7)]
-        public PagesMessage SaveTheWorldUnowned => this.SaveTheWorld;
+        public PagesMessage SaveTheWorldUnowned => SaveTheWorld;
 
         [JsonProperty("battleRoyale", Order = -7)]
         public PagesMessage BattleRoyale { get; set; }
@@ -20,8 +16,7 @@ namespace ArcticWolfApi.Models.Content
         [JsonProperty("saveTheWorld", Order = -7)]
         public PagesMessage SaveTheWorld { get; set; }
 
-        public SubgameSelectEntry()
-          : base("subgameselectdata")
+        public SubgameSelectEntry() : base("subgameselectdata")
         {
         }
     }

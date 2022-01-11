@@ -15,7 +15,6 @@ namespace ArcticWolfApi.Controllers
         {
             StatsResponse response = new();
             response.accountId = accountId;
-
             return response;
         }
 

@@ -1,19 +1,9 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Content
 {
     public class BackgroundData
     {
-        public BackgroundData(string stage = null, string key = null)
-        {
-            this.Stage = stage;
-            this.Key = key;
-        }
-
         [JsonProperty("stage", NullValueHandling = NullValueHandling.Ignore)]
         public string Stage { get; set; }
 
@@ -22,5 +12,11 @@ namespace ArcticWolfApi.Models.Content
 
         [JsonProperty("_type")]
         public string Type => "DynamicBackground";
+
+        public BackgroundData(string stage = null, string key = null)
+        {
+            Stage = stage;
+            Key = key;
+        }
     }
 }

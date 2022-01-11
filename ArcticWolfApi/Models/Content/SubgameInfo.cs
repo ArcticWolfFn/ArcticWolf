@@ -35,18 +35,13 @@ namespace ArcticWolfApi.Models.Content
         [JsonProperty("standardMessageLine1")]
         public string StandardMessageLine1 { get; set; }
 
-        public SubgameInfo(
-          string title,
-          string description,
-          string subgame,
-          string image,
-          string color = null)
+        public SubgameInfo(string title, string description, string subgame, string image, string color = null)
         {
-            this.Image = image;
-            this.Title = title;
-            this.Description = description;
-            this.Subgame = subgame;
-            this.Color = color ?? "000000";
+            Image = image;
+            Title = title;
+            Description = description;
+            Subgame = subgame;
+            Color = color ?? "000000";
         }
     }
 }

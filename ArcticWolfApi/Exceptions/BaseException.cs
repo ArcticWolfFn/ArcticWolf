@@ -1,8 +1,5 @@
 ﻿using Newtonsoft.Json;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Exceptions
 {
@@ -10,13 +7,6 @@ namespace ArcticWolfApi.Exceptions
     public class BaseException : Exception
     {
         public int Status = 400;
-
-        public BaseException(int numericCode, string message, params string[] variables)
-          : base(string.Format(message, (object[])variables))
-        {
-            this.Variables = variables;
-            this.NumericCode = numericCode;
-        }
 
         [JsonProperty("errorCode")]
         public string Code => this.GetType().FullName.Replace(".Models", "").ToLower();
@@ -35,5 +25,12 @@ namespace ArcticWolfApi.Exceptions
 
         [JsonProperty("intent")]
         public string Intent => "prod";
+
+        public BaseException(int numericCode, string message, params string[] variables)
+          : base(string.Format(message, (object[])variables))
+        {
+            Variables = variables;
+            NumericCode = numericCode;
+        }
     }
 }

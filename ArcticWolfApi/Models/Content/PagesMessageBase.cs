@@ -1,8 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Content
 {
@@ -34,10 +30,10 @@ namespace ArcticWolfApi.Models.Content
 
         public PagesMessageBase(string title, string body, string image = null, string adspace = null)
         {
-            this.Title = title;
-            this.Body = body;
-            this.Image = image;
-            this.Adspace = adspace;
+            Title = title;
+            Body = body;
+            Image = image;
+            Adspace = adspace;
         }
     }
 }

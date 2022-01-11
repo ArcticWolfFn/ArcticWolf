@@ -16,7 +16,7 @@ namespace ArcticWolfApi.Controllers
         [HttpGet("/fortnite/api/game/v2/matchmakingservice/ticket/player/{playerId}")]
         public ActionResult<TicketResponse> Get(string playerId, [FromQuery(Name = "bucketId")] string bucketId, [FromQuery(Name = "accountId")] string accountId)
         {
-            ParsedBckt parsedBckt = new ParsedBckt();
+            ParsedBckt parsedBckt = new();
 
             try
             {
@@ -25,14 +25,15 @@ namespace ArcticWolfApi.Controllers
                 parsedBckt.HotfixVersion = int.Parse(splitted[1]);
                 parsedBckt.Region = splitted[2];
                 parsedBckt.Playlist = splitted[3];
-            } catch (Exception)
+            } 
+            catch (Exception)
             {
                 throw new UnhandledErrorException("Invalid bucketId");
             }
 
             Response.Cookies.Append("NetCL", parsedBckt.NetCL);
 
-            TicketResponsePayload data = new TicketResponsePayload
+            TicketResponsePayload data = new()
             {
                 playerId = accountId
             };
@@ -46,6 +47,7 @@ namespace ArcticWolfApi.Controllers
                 {
                     KeyValuePair<string, string> foundItem = data.attributes.Find(x => x.Value == "player.preferredSubregion");
                     data.attributes.Remove(foundItem);
+
                     data.attributes.Add(new KeyValuePair<string, string>("player.preferredSubregion", item.Value.ToString().Split(",")[0]));
                 }
 
@@ -59,7 +61,7 @@ namespace ArcticWolfApi.Controllers
                 payload = ""
             };
 
-            return (ActionResult<TicketResponse>)response;
+            return response;
         }
 
         [HttpGet("/fortnite/api/matchmaking/session/{sessionId}")]
@@ -71,7 +73,7 @@ namespace ArcticWolfApi.Controllers
                 buildUniqueId = Request.Cookies.First(x => x.Key == "NetCL").Value
             };
 
-            return (ActionResult<VerifySessionResponse>)response;
+            return response;
         }
 
         [HttpGet("/fortnite/api/game/v2/matchmaking/account/{accountId}/session/{sessionId}")]
@@ -119,9 +121,9 @@ namespace ArcticWolfApi.Controllers
     public class TicketResponsePayload
     {
         public string playerId;
-        public List<string> partyPlayerIds = new List<string>();
+        public List<string> partyPlayerIds = new();
         public string bucketId;
-        public List<KeyValuePair<string, string>> attributes = new List<KeyValuePair<string, string>>();
+        public List<KeyValuePair<string, string>> attributes = new();
         public DateTime expireAt;
         public string nonce;
 
@@ -134,18 +136,20 @@ namespace ArcticWolfApi.Controllers
             attributes.Add(new KeyValuePair<string, string>("player.teamFormat", "fun"));
 
             expireAt = new DateTime().AddHours(1);
-            nonce = randomString(32);
+            nonce = CreateRandomString(32);
         }
 
-        public string randomString(int length)
+        public string CreateRandomString(int length)
         {
-            List<char> result = new List<char>();
+            List<char> result = new();
             string characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
             int charactersLength = characters.Length;
+
             for (int i = 0; i < length; i++)
             {
                 result.Add(characters[new Random().Next(0, charactersLength)]);
             }
+
             return string.Join("", result.ToArray());
         }
     }
@@ -164,8 +168,8 @@ namespace ArcticWolfApi.Controllers
         public int maxPrivatePlayers { get; set; } = 0;
         public int openPrivatePlayers { get; set; } = 0;
         public object attributes { get; set; } = new object();
-        public List<object> publicPlayers { get; set; } = new List<object>();
-        public List<object> privatePlayers { get; set; } = new List<object>();
+        public List<object> publicPlayers { get; set; } = new();
+        public List<object> privatePlayers { get; set; } = new();
         public bool allowJoinInProgress { get; set; } = false;
         public bool shouldAdvertise { get; set; } = false;
         public bool isDedicated { get; set; } = false;

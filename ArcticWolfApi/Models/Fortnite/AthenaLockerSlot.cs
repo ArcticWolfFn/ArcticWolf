@@ -1,9 +1,6 @@
 ﻿using ArcticWolfApi.Models.Profile;
 using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Fortnite
 {
@@ -17,13 +14,15 @@ namespace ArcticWolfApi.Models.Fortnite
 
         public AthenaLockerSlot(List<ItemVariant> variants = null, params string[] items)
         {
-            this.Items = items;
+            Items = items;
             if (variants == null)
+            {
                 return;
-            this.ActiveVariants = new List<AthenaLockerSlotActiveVariant>()
-      {
-        new AthenaLockerSlotActiveVariant(variants)
-      };
+            }
+            ActiveVariants = new List<AthenaLockerSlotActiveVariant>()
+            {
+                new AthenaLockerSlotActiveVariant(variants)
+            };
         }
     }
 }

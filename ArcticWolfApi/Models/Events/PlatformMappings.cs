@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ArcticWolfApi.Models.Events
+﻿namespace ArcticWolfApi.Models.Events
 {
     public class PlatformMappings
     {

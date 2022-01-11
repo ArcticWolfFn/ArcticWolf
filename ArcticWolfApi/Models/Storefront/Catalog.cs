@@ -1,19 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Storefront
 {
     public class Catalog
     {
-        public Catalog() => this.Storefronts = new List<Storefront>()
-    {
-      new Storefront("BRDailyStorefront"),
-      new Storefront("BRWeeklyStorefront")
-    };
-
         [JsonProperty("refreshIntervalHrs")]
         public int RefreshIntervalHrs => 24;
 
@@ -25,5 +17,11 @@ namespace ArcticWolfApi.Models.Storefront
 
         [JsonProperty("storefronts")]
         public List<Storefront> Storefronts { get; set; }
+
+        public Catalog() => Storefronts = new List<Storefront>()
+        {
+            new("BRDailyStorefront"),
+            new("BRWeeklyStorefront")
+        };
     }
 }

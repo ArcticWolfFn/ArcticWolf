@@ -1,20 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Cloudstorage
 {
     public class Config
     {
-        public Config() => this.Transports = new Dictionary<string, ConfigTransport>()
-        {
-            ["McpProxyTransport"] = new ConfigTransport("McpProxyTransport", "ProxyStreamingFile", false, 10),
-            ["McpSignatoryTransport"] = new ConfigTransport("McpSignatoryTransport", "ProxySignatory", false, 20),
-            ["DssDirectTransport"] = new ConfigTransport("DssDirectTransport", "DirectDss", false, 30)
-        };
-
         [JsonProperty("lastUpdated")]
         public DateTime LastUpdated => DateTime.UtcNow;
 
@@ -29,5 +20,12 @@ namespace ArcticWolfApi.Models.Cloudstorage
 
         [JsonProperty("enumerateFilesPath")]
         public Dictionary<string, ConfigTransport> Transports { get; set; }
+
+        public Config() => Transports = new Dictionary<string, ConfigTransport>()
+        {
+            ["McpProxyTransport"] = new ConfigTransport("McpProxyTransport", "ProxyStreamingFile", false, 10),
+            ["McpSignatoryTransport"] = new ConfigTransport("McpSignatoryTransport", "ProxySignatory", false, 20),
+            ["DssDirectTransport"] = new ConfigTransport("DssDirectTransport", "DirectDss", false, 30)
+        };
     }
 }

@@ -1,8 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Profile
 {
@@ -19,9 +15,9 @@ namespace ArcticWolfApi.Models.Profile
 
         public ProfileItem(string templateId, object attributes = null, int quantity = 1)
         {
-            this.TemplateId = templateId;
-            this.Attributes = attributes ?? (object)new ItemAttributes();
-            this.Quantity = quantity;
+            TemplateId = templateId;
+            Attributes = attributes ?? new ItemAttributes();
+            Quantity = quantity;
         }
     }
 }

@@ -35,8 +35,7 @@ namespace ArcticWolfApi.Models.Content
         [JsonProperty("tournamentinformation", NullValueHandling = NullValueHandling.Ignore)]
         public TournamentInformationEntry TournamentInformation { get; set; }
 
-        public Pages()
-          : base("Fortnite Game")
+        public Pages() : base("Fortnite Game")
         {
         }
     }

@@ -1,8 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Fortnite
 {
@@ -11,6 +7,6 @@ namespace ArcticWolfApi.Models.Fortnite
         [JsonProperty("type")]
         public string Type { get; set; }
 
-        public VersionCheck(string type) => this.Type = type;
+        public VersionCheck(string type) => Type = type;
     }
 }

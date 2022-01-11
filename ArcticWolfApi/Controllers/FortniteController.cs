@@ -1,9 +1,6 @@
 ﻿using ArcticWolfApi.Models.Fortnite;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Controllers
 {
@@ -13,17 +10,17 @@ namespace ArcticWolfApi.Controllers
     {
         [HttpGet("versioncheck")]
         [HttpGet("v2/versioncheck/{platform}")]
-        public ActionResult<VersionCheck> CheckUpdateStatus(string platform) => (ActionResult<VersionCheck>)new VersionCheck("NO_UPDATE");
+        public ActionResult<VersionCheck> CheckUpdateStatus(string platform) => new VersionCheck("NO_UPDATE");
 
         [HttpPost("game/v2/tryPlayOnPlatform/account/{accountId}")]
         public ActionResult CheckIfPlatformPlayAllowed(string accountId)
         {
             this.Response.ContentType = "text/plain";
-            return (ActionResult)this.Content("true");
+            return this.Content("true");
         }
 
         [HttpGet("game/v2/enabled_features")]
-        public ActionResult<string[]> GetEnabledFeatures() => (ActionResult<string[]>)Array.Empty<string>();
+        public ActionResult<string[]> GetEnabledFeatures() => Array.Empty<string>();
 
         [HttpGet("game/v2/world/info")] // StW I guess
         public ActionResult<object> GetWorldInfo() => (ActionResult<object>)new object();
@@ -35,22 +32,20 @@ namespace ArcticWolfApi.Controllers
         public ActionResult<PrivacySettings> GetPrivacySettings(
           string accountId)
         {
-            return (ActionResult<PrivacySettings>)new PrivacySettings(accountId);
+            return new PrivacySettings(accountId);
         }
 
         // receipts for Epic Games purchases
         [HttpGet("receipts/v1/account/{accountId}/receipts")]
-        public ActionResult<string[]> GetReceipts(string accountId) => (ActionResult<string[]>)Array.Empty<string>();
+        public ActionResult<string[]> GetReceipts(string accountId) => Array.Empty<string>();
 
         [HttpGet("matchmaking/session/findPlayer/{accountId}")]
-        public ActionResult<string[]> FindMatchmakingSession(string accountId) => (ActionResult<string[]>)Array.Empty<string>();
+        public ActionResult<string[]> FindMatchmakingSession(string accountId) => Array.Empty<string>();
 
         [HttpGet("game/v2/br-inventory/account/{accountId}")]
         public ActionResult<BrInventory> GetBrInventory(string accountId)
         {
-            BrInventory response = new();
-
-            return response;
+            return new BrInventory();
         }
 
         public class BrInventory
@@ -61,7 +56,7 @@ namespace ArcticWolfApi.Controllers
         public class Stash
         {
             /// <summary>
-            ///     Gold Bars
+            /// Gold Bars
             /// </summary>
             public int globalcash = 0;
         }

@@ -1,8 +1,4 @@
 ﻿using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Content
 {
@@ -28,11 +24,11 @@ namespace ArcticWolfApi.Models.Content
 
         public PagesMOTD(string title, string body, string type = "Text", int sortingPriority = 0, string id = null)
         {
-            this.EntryType = type;
-            this.Title = title;
-            this.Body = body;
-            this.SortingPriority = sortingPriority;
-            this.Id = id ?? title;
+            EntryType = type;
+            Title = title;
+            Body = body;
+            SortingPriority = sortingPriority;
+            Id = id ?? title;
         }
     }
 }

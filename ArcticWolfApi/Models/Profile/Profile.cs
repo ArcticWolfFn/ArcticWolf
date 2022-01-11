@@ -1,8 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Profile
 {
@@ -30,7 +28,7 @@ namespace ArcticWolfApi.Models.Profile
         public string ProfileId { get; set; }
 
         [JsonProperty("version")]
-        public string Version => "rift_v2_release_july_2021";
+        public string Version => "arctic_wolf_dev_v1";
 
         [JsonProperty("items")]
         public Dictionary<string, object> Items { get; set; }

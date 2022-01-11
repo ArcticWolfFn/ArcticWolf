@@ -1,19 +1,11 @@
 ﻿using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Models.Calendar.States
 {
     public class ClientEventsState
     {
-        public ClientEventsState(int seasonNumber)
-        {
-            this.SeasonNumber = seasonNumber;
-            this.SeasonTemplateId = string.Format("AthenaSeason:athenaseason{0}", (object)seasonNumber);
-        }
-
         [JsonProperty("activeStorefronts")]
         public string[] ActiveStorefronts => Array.Empty<string>();
 
@@ -58,5 +50,11 @@ namespace ArcticWolfApi.Models.Calendar.States
 
         [JsonProperty("sectionStoreEnds")]
         public Dictionary<string, DateTime> SectionStoreEnds => new Dictionary<string, DateTime>();
+
+        public ClientEventsState(int seasonNumber)
+        {
+            this.SeasonNumber = seasonNumber;
+            this.SeasonTemplateId = string.Format("AthenaSeason:athenaseason{0}", (object)seasonNumber);
+        }
     }
 }
