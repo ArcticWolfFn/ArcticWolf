@@ -24,6 +24,9 @@ namespace ArcticWolf.DataMiner.Managers
             Log.Information("(EventFlags): Trying to retrive old event flags...");
             Program.NitestatsApiClient.LoadEventFlagsFromMessages();
 
+            Log.Information("(HotFixes): Trying to retrive hotfix data...");
+            Program.NitestatsApiClient.LoadHotFixesFromMessages();
+
             Log.Information("(AnalyseVersions): Starting analytics for older versions...");
             foreach (decimal version in Fortnite.Versions)
             {

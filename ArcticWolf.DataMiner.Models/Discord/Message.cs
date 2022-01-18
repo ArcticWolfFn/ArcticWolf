@@ -34,7 +34,7 @@ namespace ArcticWolf.DataMiner.Models.Discord
         public Author Author { get; set; }
 
         [JsonProperty("attachments")]
-        public List<object> Attachments { get; set; }
+        public List<Attachment> Attachments { get; set; }
 
         [JsonProperty("embeds")]
         public List<Embed> Embeds { get; set; }

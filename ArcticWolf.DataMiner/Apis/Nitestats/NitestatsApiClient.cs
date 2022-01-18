@@ -473,6 +473,83 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
             // ToDo: do validation: No duplicate time spans for each flag
         }
 
+        public void LoadHotFixesFromMessages()
+        {
+            DatabaseContext dbContext = Program.DbContext;
+
+            Log.Information("(HotfixLoader): Loading data...", LOG_PREFIX);
+
+            string jsonData;
+            try
+            {
+                jsonData = File.ReadAllText(Program.Configuration.HotfixDiscordChatHistoryFilePath);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("(HotfixLoader): An error occured while reading the hotfix chat history: " + ex.Message, LOG_PREFIX);
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(jsonData))
+            {
+                Log.Error("(HotfixLoader): An error occured while reading the hotfix chat history: File is empty", LOG_PREFIX);
+                return;
+            }
+
+            ChatHistory chatHistory;
+            try
+            {
+                chatHistory = JsonDeserializer.Deserialize<ChatHistory>(jsonData);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("(HotfixLoader): An error occured while parsing the hotfix chat history: " + ex.Message, LOG_PREFIX);
+                return;
+            }
+
+            Log.Information($"(HotfixLoader): Parsing hotfix data from '{chatHistory.Guild.Name} - {chatHistory.Channel.Name}'...", LOG_PREFIX);
+
+            foreach (Message msg in chatHistory.Messages)
+            {
+                if (msg.Attachments.Count < 1)
+                {
+                    continue;
+                }
+
+                foreach (Attachment attachment in msg.Attachments)
+                {
+                    Log.Debug($"(HotfixLoader): Loading file '{attachment.FileName}'");
+
+                    string hotFixFileContent = "";
+                    try
+                    {
+                        hotFixFileContent = File.ReadAllText(Path.Combine(Path.GetDirectoryName(Program.Configuration.HotfixDiscordChatHistoryFilePath), attachment.Url));
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("(HotfixLoader): An error occured while parsing a hotfix file: " + ex.Message, LOG_PREFIX);
+                        continue;
+                    }
+
+                    if (string.IsNullOrWhiteSpace(hotFixFileContent))
+                    {
+                        Log.Verbose("(HotfixLoader): Skipping file, because it's empty");
+                        continue;
+                    }
+
+                    // Category Regex
+                    MatchCollection categoryMatches = Regex.Matches(hotFixFileContent, @"\[.*\]\s");
+
+                    foreach (Match categoryMatch in categoryMatches)
+                    {
+                        Match nextMatch = categoryMatch.NextMatch();
+                        string catergoryName = categoryMatch.Value.Replace('\r', ' ').Replace('\n', ' ').Replace('[', ' ').Replace(']', ' ').Trim();
+                        Log.Information($"Found HotFix category '{catergoryName}', starting at index {categoryMatch.Index} and ending at index {nextMatch.Index}");
+                    }
+                }
+            }
+        }
+
         public Dictionary<string, Server> GetStagingServers()
         {
             HttpResponse response = new HttpClient().Request("https://api.nitestats.com/v1/epic/staging/fortnite");

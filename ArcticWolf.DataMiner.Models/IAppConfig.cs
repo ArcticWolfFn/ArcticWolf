@@ -21,5 +21,10 @@ namespace ArcticWolf.DataMiner.Models
         /// File, which contains the chat history of changes to event flags.
         /// </summary>
         string EventFlagsDiscordChatHistoryFilePath { get; set; }
+
+        /// <summary>
+        /// File, which contains the chat history of changes to hotfix (.ini) files.
+        /// </summary>
+        string HotfixDiscordChatHistoryFilePath { get; set; }
     }
 }

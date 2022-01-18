@@ -16,7 +16,7 @@ namespace ArcticWolf.DataMiner.Models.Discord
         public object Url { get; set; }
 
         [JsonProperty("timestamp")]
-        public DateTime Timestamp { get; set; }
+        public DateTime? Timestamp { get; set; }
 
         [JsonProperty("description")]
         public string Description { get; set; }
