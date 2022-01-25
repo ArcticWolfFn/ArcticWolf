@@ -1,6 +1,7 @@
 ﻿using Logging.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Text;
 
 public static class Log
 {
@@ -17,6 +18,8 @@ public static class Log
             _minLogLevels.AddRange(minLogLevels);
             return;
         }
+
+        Console.OutputEncoding = Encoding.Unicode;
 
         _logVisibilities = logVisibilities;
         _minLogLevels = minLogLevels;
