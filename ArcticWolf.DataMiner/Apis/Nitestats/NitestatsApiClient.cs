@@ -20,6 +20,7 @@ using System.Linq;
 using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace ArcticWolf.DataMiner.Apis.Nitestats
@@ -518,7 +519,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
                 foreach (Attachment attachment in msg.Attachments)
                 {
-                    Log.Debug($"(HotfixLoader): Loading file '{attachment.FileName}'");
+                    Log.Debug($"(HotfixLoader): Loading file '{attachment.Url}'");
 
                     string hotFixFileContent = "";
                     try
@@ -544,8 +545,69 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                     {
                         Match nextMatch = categoryMatch.NextMatch();
                         string catergoryName = categoryMatch.Value.Replace('\r', ' ').Replace('\n', ' ').Replace('[', ' ').Replace(']', ' ').Trim();
-                        Log.Information($"Found HotFix category '{catergoryName}', starting at index {categoryMatch.Index} and ending at index {nextMatch.Index}");
+
+                        int categoryEndIndex = nextMatch.Index;
+                        if (categoryEndIndex == 0)
+                        {
+                            categoryEndIndex = hotFixFileContent.Length;
+                            Log.Debug("(HotfixLoader): This is the last category of this hotfix file.");
+                        }
+
+                        Log.Debug($"Found hotfix category '{catergoryName}', starting at index {categoryMatch.Index} and ending at index {categoryEndIndex}");
+
+                        int categoryStartIndex = categoryMatch.Index + categoryMatch.Length;
+
+                        string categoryContent = hotFixFileContent.Substring(categoryStartIndex, categoryEndIndex - categoryStartIndex);
+
+                        MatchCollection variableMatches = Regex.Matches(hotFixFileContent, @".*=.*(\r\n|\r|\n|$)");
+
+                        foreach(Match variableMatch in variableMatches)
+                        {
+                            string variableContent = variableMatch.Value.Replace('\r', ' ').Replace('\n', ' ').Trim();
+
+                            // remove the diff prefix
+                            if (variableContent.StartsWith("+ ") || variableContent.StartsWith("- "))
+                            {
+                                variableContent = variableContent[2..];
+                            }
+
+                            Match variableNameMatch = Regex.Matches(variableContent, @"([^=])*=").First();
+                            string variableName = variableNameMatch.Value.Replace("=", "").Replace("+", "").Replace("-", "");
+
+                            Log.Debug($"(HotfixLoader): Found variable: '{variableName}'");
+
+                            string variableValue = variableContent.Replace(variableNameMatch.Value, "");
+
+                            Log.Debug($"(HotfixLoader): Found variable value: '{variableValue}'");
+
+                            if (variableValue.StartsWith("(") && variableValue.EndsWith(")"))
+                            {
+                                // Variable has multi params
+
+                                // remove first and last parenthesis
+                                variableValue = variableValue[1..];
+                                variableValue = variableValue.Remove(variableValue.Length - 1);
+
+                                MatchCollection variableParamMatches = Regex.Matches(variableValue, @"\w*=(\((\(.*\))*?\)|\(.*\)|\"".*?\""|\w*)");
+
+                                foreach (Match paramMatch in variableParamMatches)
+                                {
+                                    string paramName = Regex.Match(paramMatch.Value, @"\w*=").Value;
+                                    paramName = paramName.Remove(paramName.Length - 1); // remove '=' sign
+
+                                    string paramValue = Regex.Match(paramMatch.Value, @"=.*").Value[1..]; // remove '=' sign
+
+                                    Log.Debug($"(HotfixLoader): Found variable param '{paramName}' with value of '{paramValue}'");
+                                }
+                            }
+                            else // Variable Value
+                            {
+                                Log.Debug($"(HotfixLoader): Found variable value: '{variableValue}'");
+                            }
+                        }
                     }
+
+                    Thread.Sleep(3000);
                 }
             }
         }
