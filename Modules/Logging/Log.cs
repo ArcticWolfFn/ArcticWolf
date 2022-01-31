@@ -1,16 +1,34 @@
 ﻿using Logging.Extensions;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
+using Logging;
+using System.Linq;
+
+public struct MinLogLevelOption
+{
+    /// <summary>
+    /// Real Class Name
+    /// </summary>
+    public string ClassName { get; set; }
+
+    /// <summary>
+    /// Real Method Name
+    /// </summary>
+    public string MethodName { get; set; }
+
+    public LogLevel MinLogLevel { get; set; }
+}
 
 public static class Log
 {
     private static List<LogVisibility> _logVisibilities { get; set; }
-    private static Dictionary<string, LogLevel> _minLogLevels { get; set; }
+    private static List<MinLogLevelOption> _minLogLevels { get; set; }
     private static bool _initalized = false;
     private static readonly object _consoleLock = new object();
 
-    public static void Initalize(List<LogVisibility> logVisibilities, Dictionary<string, LogLevel> minLogLevels)
+    public static void Initalize(List<LogVisibility> logVisibilities, List<MinLogLevelOption> minLogLevels)
     {
         if (_initalized)
         {
@@ -51,23 +69,56 @@ public static class Log
 
     private static void Write(LogLevel logLevel, string message, string prefix = null)
     {
-        if (prefix != null && _minLogLevels.ContainsKey(prefix))
+        StackFrame frame = new StackFrame(2);
+        var method = frame.GetMethod();
+
+        string methodDefaultLogPrefix = "";
+        foreach(object attr in method.GetCustomAttributes(false))
         {
-            if (_minLogLevels.GetValueOrDefault(prefix) > logLevel)
+            if (attr is LogPrefixAttribute)
+            {
+                methodDefaultLogPrefix = ((LogPrefixAttribute)attr).Prefix;
+            }
+        }
+
+        string classDefaultLogPrefix = method.DeclaringType.Name;
+        foreach (object attr in method.DeclaringType.GetCustomAttributes(false))
+        {
+            if (attr is LogPrefixAttribute)
+            {
+                classDefaultLogPrefix = ((LogPrefixAttribute)attr).Prefix;
+            }
+        }
+
+        // first check if there is a custom log level setting for the specified function, then default to the class setting
+        if (_minLogLevels.Any(x => x.ClassName == method.DeclaringType.Name && x.MethodName == method.Name))
+        {
+            if (_minLogLevels.First(x => x.ClassName == method.DeclaringType.Name && x.MethodName == method.Name).MinLogLevel > logLevel)
+            {
+                return;
+            }
+        }
+        else if (_minLogLevels.Any(x => x.ClassName == method.DeclaringType.Name && string.IsNullOrWhiteSpace(x.MethodName)))
+        {
+            if (_minLogLevels.First(x => x.ClassName == method.DeclaringType.Name && string.IsNullOrWhiteSpace(x.MethodName)).MinLogLevel > logLevel)
             {
                 return;
             }
         }
 
-        string seperator = " ";
+            string seperator = " ";
         string formatedDateTime = $"[{DateTime.Now}]";
         string formatedLogLevel = $"[{logLevel}]";
 
-        string formatedMessage = "";
+        string formatedMessage = $"[{classDefaultLogPrefix}] ";
 
         if (prefix != null)
         {
-            formatedMessage += $"[{prefix}] ";
+            formatedMessage += $"({prefix}): ";
+        } 
+        else if (methodDefaultLogPrefix != "")
+        {
+            formatedMessage += $"({methodDefaultLogPrefix}): ";
         }
 
         formatedMessage += message + Environment.NewLine;
@@ -86,33 +137,34 @@ public static class Log
         }
     }
 
-    public static void Verbose(string message, string prefix = null)
+    public static void Verbose(string message, string customMethodprefix = null)
     {
-        Write(LogLevel.Verbose, message, prefix);
+        Write(LogLevel.Verbose, message, customMethodprefix);
     }
 
-    public static void Debug(string message, string prefix = null)
+    public static void Debug(string message, string customMethodprefix = null)
     {
-        Write(LogLevel.Debug, message, prefix);
+        Write(LogLevel.Debug, message, customMethodprefix);
     }
 
-    public static void Information(string message, string prefix = null)
+    public static void Information(string message, string customMethodprefix = null)
     {
-        Write(LogLevel.Information, message, prefix);
+
+        Write(LogLevel.Information, message, customMethodprefix);
     }
 
-    public static void Warning(string message, string prefix = null)
+    public static void Warning(string message, string customMethodprefix = null)
     {
-        Write(LogLevel.Warning, message, prefix);
+        Write(LogLevel.Warning, message, customMethodprefix);
     }
 
-    public static void Error(string message, string prefix = null)
+    public static void Error(string message, string customMethodprefix = null)
     {
-        Write(LogLevel.Error, message, prefix);
+        Write(LogLevel.Error, message, customMethodprefix);
     }
 
-    public static void Fatal(string message, string prefix = null)
+    public static void Fatal(string message, string customMethodprefix = null)
     {
-        Write(LogLevel.Fatal, message, prefix);
+        Write(LogLevel.Fatal, message, customMethodprefix);
     }
 }

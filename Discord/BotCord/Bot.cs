@@ -10,11 +10,22 @@ namespace BotCord
 
         public static void Initalize(string[] args)
         {
-            Log.Initalize(new System.Collections.Generic.List<LogVisibility> { LogVisibility.Console }, new System.Collections.Generic.Dictionary<string, LogLevel>()
+            Log.Initalize(new System.Collections.Generic.List<LogVisibility> { LogVisibility.Console }, new()
             {
-                {EventHandlers.MessageReceivedEvent.LogPrefix, LogLevel.Information },
-                {CommandsManager.LOG_PREFIX, LogLevel.Error },
-                {ControllerManager.LOG_PREFIX, LogLevel.Error },
+                new() {
+                    ClassName = typeof(EventHandlers.MessageReceivedEvent).Name,
+                    MinLogLevel = LogLevel.Information
+                },
+                new()
+                {
+                    ClassName = typeof(CommandsManager).Name,
+                    MinLogLevel = LogLevel.Error
+                },
+                new()
+                {
+                    ClassName = typeof(ControllerManager).Name,
+                    MinLogLevel = LogLevel.Error
+                },
             });
 
             Log.Information("Booting the bot...");

@@ -11,8 +11,6 @@ namespace ArcticWolf.DataMiner.Managers
 {
     public static class OldVersionsManager
     {
-        private const string LOG_PREFIX = "OldVersionsManager";
-
         public static void Init()
         {
             Thread analyseOldVersionThread = new(AnalyseOldVersions);
@@ -21,19 +19,19 @@ namespace ArcticWolf.DataMiner.Managers
 
         public static void AnalyseOldVersions()
         {
-            Log.Information("(EventFlags): Trying to retrive old event flags...");
+            Log.Information("Trying to retrive old event flags...");
             Program.NitestatsApiClient.LoadEventFlagsFromMessages();
 
-            Log.Information("(HotFixes): Trying to retrive hotfix data...");
+            Log.Information("Trying to retrive hotfix data...");
             Program.NitestatsApiClient.LoadHotFixesFromMessages();
 
-            Log.Information("(AnalyseVersions): Starting analytics for older versions...");
+            Log.Information("Starting analytics for older versions...");
             foreach (decimal version in Fortnite.Versions)
             {
                 AnalyseVersion(version);
             }
 
-            Log.Information("(AnalyseVersions): Finished analysing older versions!");
+            Log.Information("Finished analysing older versions!");
         }
 
         public static void AnalyseVersion(decimal version)
@@ -48,7 +46,7 @@ namespace ArcticWolf.DataMiner.Managers
 
                 if (aesResponse == null)
                 {
-                    Log.Error($"(AnalyseVersion): Can't get data for v{version:F}", LOG_PREFIX);
+                    Log.Error($"Can't get data for v{version:F}", "AnalyseVersion");
                     return;
                 }
 

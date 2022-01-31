@@ -14,16 +14,14 @@ namespace ArcticWolf.DataMiner.Apis.FnDotNet
         public FortniteApi Client;
         public OAuthSession AuthSession;
 
-        public const string LOG_PREFIX = "FortniteApi";
-
         public FnDotNetApiClient()
         {
-            Log.Information("Initalizing...", LOG_PREFIX);
+            Log.Information("Initalizing...");
 
             Client = new FortniteApi();
             if (!LoginUsingRefreshToken(Program.Configuration.FnApiRefreshToken))
             {
-                Log.Error("API Client is disabled in this session because the login failed!", LOG_PREFIX);
+                Log.Error("API Client is disabled in this session because the login failed!");
                 return;
             }
         }
@@ -32,7 +30,7 @@ namespace ArcticWolf.DataMiner.Apis.FnDotNet
         {
             try
             {
-                Log.Information($"(Login): Logging in using refresh token '{refreshToken}'...", LOG_PREFIX);
+                Log.Information($"(Login): Logging in using refresh token '{refreshToken}'...");
                 AuthSession = Client.AccountService.GenerateOAuthSession(GrantType.RefreshToken, AuthClient.PC, new()
                 {
 
@@ -41,7 +39,7 @@ namespace ArcticWolf.DataMiner.Apis.FnDotNet
             }
             catch (Exception ex)
             {
-                Log.Error("(Login): Login using refresh token failed. Reason: " + ex.Message, LOG_PREFIX);
+                Log.Error("(Login): Login using refresh token failed. Reason: " + ex.Message);
                 return false;
             }
 

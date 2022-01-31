@@ -17,10 +17,6 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
 {
     public class BenbotApiClient
     {
-        private const string LOG_PREFIX = "BenbotApi";
-        private const string STATUS_LOG_PREFIX = "BenbotApi|Status";
-        private const string ANALYSER_LOG_PREFIX = "BenbotApi|Analyser";
-
         /// <summary>
         /// True if the cdn version doesn't match the benbot version after an update
         /// </summary>
@@ -43,7 +39,7 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
 
         public BenbotApiClient()
         {
-            Log.Information("Initialising...", LOG_PREFIX);
+            Log.Information("Initialising...");
             _client = new HttpClient(defaultHeaders);
 
             GetAesKeys = new(_client);
@@ -65,7 +61,7 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
 
             if (!response.Success)
             {
-                Log.Error("Request to retrieve status data was not successful!", LOG_PREFIX);
+                Log.Error("Request to retrieve status data was not successful!");
                 return null;
             }
 
@@ -75,7 +71,7 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
             {
                 if (Program.Configuration.LastCheckedFnVersion == 0)
                 {
-                    Log.Warning("It seems like ArcticWolf DataMiner is runnning for the first time. Starting full checks for the current Fn version...", STATUS_LOG_PREFIX);
+                    Log.Warning("It seems like ArcticWolf DataMiner is runnning for the first time. Starting full checks for the current Fn version...", "Status");
                 }
 
                 Log.Information($"Detected a new Fn version: {$"{Program.Configuration.LastCheckedFnVersion:F}"} -> {$"{statusResponse.CurrentCdnVersionNumber:F}"}");
@@ -150,11 +146,11 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
             {
                 if (dbPakFiles.Where(x => x.File == foundPakFile).Any())
                 {
-                    Log.Debug($"(Pak): Skipping pak file '{foundPakFile}'. Reason: Already exists", ANALYSER_LOG_PREFIX);
+                    Log.Debug($"(Pak): Skipping pak file '{foundPakFile}'. Reason: Already exists", "Analyser");
                     continue;
                 }
 
-                Log.Debug($"(Pak): Adding pak file '{foundPakFile}' to '{currentVersion.Version:F}'...", ANALYSER_LOG_PREFIX);
+                Log.Debug($"(Pak): Adding pak file '{foundPakFile}' to '{currentVersion.Version:F}'...", "Analyser");
 
                 PakFile newPakFile = new();
                 newPakFile.File = foundPakFile;

@@ -2,7 +2,6 @@
 using ArcticWolf.DataMiner.Common.Http;
 using ArcticWolf.DataMiner.Common.Json;
 using ArcticWolf.DataMiner.Extensions;
-using ArcticWolf.DataMiner.Models;
 using ArcticWolf.DataMiner.Models.Apis.Nitestats;
 using ArcticWolf.DataMiner.Models.Apis.Nitestats.Calendar.Channels;
 using ArcticWolf.DataMiner.Models.Apis.Nitestats.Calendar.Channels.States;
@@ -10,6 +9,7 @@ using ArcticWolf.DataMiner.Models.Apis.Nitestats.Staging;
 using ArcticWolf.DataMiner.Models.Discord;
 using ArcticWolf.Storage;
 using ArcticWolf.Storage.Constants;
+using Logging;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -17,30 +17,24 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Net;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ArcticWolf.DataMiner.Apis.Nitestats
 {
     public class NitestatsApiClient
     {
-        private const string LOG_PREFIX = "NiteStatsApi";
-        private const string DATA_PARSER_LOG_PREFIX = "NiteStatsApi|DataParser";
-        private const string CALENDAR_LOG_PREFIX = "NiteStatsApi|Calendar";
-
         private const string EVENT_FLAGS_DISCORD_BOT = "eventflag-updates";
 
         private CalendarResponse _cachedLastCalendarResponse = null;
 
         public NitestatsApiClient()
         {
-            Log.Information("Initalizing...", LOG_PREFIX);
+            Log.Information("Initalizing...");
             GetCalendarData();
         }
 
+        [LogPrefix("Calendar")]
         private void GetCalendarData()
         {
             DatabaseContext dbContext = Program.DbContext;
@@ -49,7 +43,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
             if (!response.Success)
             {
-                Log.Error("Request to retrieve calendar data was not successful!", CALENDAR_LOG_PREFIX);
+                Log.Error("Request to retrieve calendar data was not successful!");
                 return;
             }
 
@@ -66,15 +60,15 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                     switch (diff.Type)
                     {
                         case DifferenceType.Added:
-                            Log.Error($"(PropertyChanged) Object of type {diff.Type} at {diff.Path} has been added", DATA_PARSER_LOG_PREFIX);
+                            Log.Error($"(PropertyChanged) Object of type {diff.Type} at {diff.Path} has been added");
                             break;
 
                         case DifferenceType.Changed:
-                            Log.Error($"(PropertyChanged) {diff.Property} changed from '{diff.OriginalValue}' to '{diff.NewValue}'", DATA_PARSER_LOG_PREFIX);
+                            Log.Error($"(PropertyChanged) {diff.Property} changed from '{diff.OriginalValue}' to '{diff.NewValue}'");
                             break;
 
                         case DifferenceType.Removed:
-                            Log.Error($"(PropertyChanged) {diff.Property} at {diff.Path} was removed", DATA_PARSER_LOG_PREFIX);
+                            Log.Error($"(PropertyChanged) {diff.Property} at {diff.Path} was removed");
                             break;
                     }
                 }
@@ -97,8 +91,8 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             FnEventFlag flag = foundFlags.First();
                             // flag exists so check if it has been modified or readded
 
-                            Log.Verbose($"Found flag {flag.Event}", CALENDAR_LOG_PREFIX);
-                            Log.Verbose($"Flag has {flag.TimeSpans.Count} time spans", CALENDAR_LOG_PREFIX);
+                            Log.Verbose($"Found flag {flag.Event}");
+                            Log.Verbose($"Flag has {flag.TimeSpans.Count} time spans");
 
                             IEnumerable<FnEventFlagTimeSpan> foundTimeSpans = flag.TimeSpans.Where(x => x.StartTime == activeEvent.ActiveSince || x.EndTime == activeEvent.ActiveUntil);
 
@@ -110,9 +104,9 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
                                 if (timeSpan.EndTime != activeEvent.ActiveUntil || timeSpan.StartTime != activeEvent.ActiveSince)
                                 {
-                                    Log.Information($"Flag {activeEvent.EventType}: Modified timespan", CALENDAR_LOG_PREFIX);
-                                    Log.Information($"Flag {activeEvent.EventType}: Start: {timeSpan.StartTime}' -> '{activeEvent.ActiveSince}'", CALENDAR_LOG_PREFIX);
-                                    Log.Information($"Flag {activeEvent.EventType}: End: {timeSpan.EndTime}' -> '{activeEvent.ActiveUntil}'", CALENDAR_LOG_PREFIX);
+                                    Log.Information($"Flag {activeEvent.EventType}: Modified timespan");
+                                    Log.Information($"Flag {activeEvent.EventType}: Start: {timeSpan.StartTime}' -> '{activeEvent.ActiveSince}'");
+                                    Log.Information($"Flag {activeEvent.EventType}: End: {timeSpan.EndTime}' -> '{activeEvent.ActiveUntil}'");
 
                                     FnEventFlagModification modification = new();
                                     modification.ModifiedTimeSpan = timeSpan;
@@ -139,12 +133,12 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             newTimeSpan.StartTime = activeEvent.ActiveSince;
                             newTimeSpan.EndTime = activeEvent.ActiveUntil;
                             flag.TimeSpans.Add(newTimeSpan);
-                            Log.Information($"Flag {activeEvent.EventType}: Added new time span: Start: {newTimeSpan.StartTime} | End: {newTimeSpan.EndTime}", CALENDAR_LOG_PREFIX);
+                            Log.Information($"Flag {activeEvent.EventType}: Added new time span: Start: {newTimeSpan.StartTime} | End: {newTimeSpan.EndTime}");
                         }
                         else
                         {
                             // flag doesn't exist so create it
-                            Log.Information($"Adding new flag {activeEvent.EventType}", CALENDAR_LOG_PREFIX);
+                            Log.Information($"Adding new flag {activeEvent.EventType}");
 
                             FnEventFlag flag = new();
                             flag.Event = activeEvent.EventType;
@@ -167,7 +161,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
         {
             DatabaseContext dbContext = Program.DbContext;
 
-            Log.Information("(EventFlagsLoader): Loading data...", LOG_PREFIX);
+            Log.Information("Loading data...", "EventFlagsLoader");
 
             string jsonData;
             try
@@ -176,13 +170,13 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
             }
             catch (Exception ex)
             {
-                Log.Error("(EventFlagsLoader): An error occured while reading the event flags chat history: " + ex.Message, LOG_PREFIX);
+                Log.Error("An error occured while reading the event flags chat history: " + ex.Message, "EventFlagsLoader");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(jsonData))
             {
-                Log.Error("(EventFlagsLoader): An error occured while reading the event flags chat history: File is empty", LOG_PREFIX);
+                Log.Error("An error occured while reading the event flags chat history: File is empty", "EventFlagsLoader");
                 return;
             }
 
@@ -193,22 +187,22 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
             }
             catch (Exception ex)
             {
-                Log.Error("(EventFlagsLoader): An error occured while parsing the event flags chat history: " + ex.Message, LOG_PREFIX);
+                Log.Error("An error occured while parsing the event flags chat history: " + ex.Message, "EventFlagsLoader");
                 return;
             }
 
-            Log.Information($"(EventFlagsLoader): Parsing event flags from '{chatHistory.Guild.Name} - {chatHistory.Channel.Name}'...", LOG_PREFIX);
+            Log.Information($"Parsing event flags from '{chatHistory.Guild.Name} - {chatHistory.Channel.Name}'...", "EventFlagsLoader");
 
             dbContext.FnEventFlags.Load();
 
             foreach (Message message in chatHistory.Messages)
             {
-                Log.Verbose($"(EventFlagsLoader): Analysing message from {message.Author.Name} at {message.Timestamp.ToUniversalTime()}...", LOG_PREFIX);
+                Log.Verbose($"Analysing message from {message.Author.Name} at {message.Timestamp.ToUniversalTime()}...", "EventFlagsLoader");
 
                 // validate message
                 if (message.Author.Name != EVENT_FLAGS_DISCORD_BOT || !message.Embeds.Any())
                 {
-                    Log.Verbose($"(EventFlagsLoader): Message invalid! Reason: Wrong author name or no embeds.", LOG_PREFIX);
+                    Log.Verbose($"Message invalid! Reason: Wrong author name or no embeds.", "EventFlagsLoader");
                     continue;
                 }
 
@@ -222,8 +216,8 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                     // validate embed
                     if (eventTypeField == null || startsField == null || endsField == null || statusField == null)
                     {
-                        Log.Verbose($"(EventFlagsLoader): Message invalid! Reason: One or more fields are empty.", LOG_PREFIX);
-                        Log.Verbose($"(EventFlagsLoader): Fields data for previous error: " + JsonConvert.SerializeObject(embed.Fields), LOG_PREFIX);
+                        Log.Verbose($"Message invalid! Reason: One or more fields are empty.", "EventFlagsLoader");
+                        Log.Verbose($"Fields data for previous error: " + JsonConvert.SerializeObject(embed.Fields), "EventFlagsLoader");
                         continue;
                     }
 
@@ -267,8 +261,8 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                     }
                     catch (Exception ex)
                     {
-                        Log.Error($"(EventFlagsLoader): Start or end time is invalid! Error: " + ex.Message, LOG_PREFIX);
-                        Log.Error($"(EventFlagsLoader): Fields data for previous error: " + JsonConvert.SerializeObject(embed.Fields), LOG_PREFIX);
+                        Log.Error($"Start or end time is invalid! Error: " + ex.Message, "EventFlagsLoader");
+                        Log.Error($"Fields data for previous error: " + JsonConvert.SerializeObject(embed.Fields), "EventFlagsLoader");
                         continue;
                     }
 
@@ -304,15 +298,15 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
                     if (flagEndSeason.SeasonNumber == 0 && flagStartSeason.SeasonNumber == 0)
                     {
-                        Log.Verbose("(EventFlagsLoader): Flag starts and ends in unsupported season", LOG_PREFIX);
+                        Log.Verbose("Flag starts and ends in unsupported season", "EventFlagsLoader");
                     }
                     else if (flagEndSeason.SeasonNumber == 0)
                     {
-                        Log.Verbose("(EventFlagsLoader): Flag ends in unsupported season", LOG_PREFIX);
+                        Log.Verbose("Flag ends in unsupported season", "EventFlagsLoader");
                     }
                     else // flagStartSeason.SeasonNumber == 0
                     {
-                        Log.Verbose("(EventFlagsLoader): Flag starts in unsupported season", LOG_PREFIX);
+                        Log.Verbose("Flag starts in unsupported season", "EventFlagsLoader");
                     }
 
                     IEnumerable<FnSeason> flagSeasons = Fortnite.Seasons.Where(x =>
@@ -337,8 +331,8 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                         case "Added":
                             if (eventFlag.TimeSpans.Any(x => x.StartTime == flagStartTimeUtc && x.EndTime == flagEndTimeUtc))
                             {
-                                Log.Verbose("(EventFlagsLoader): TimeSpan already exists", LOG_PREFIX);
-                                Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
+                                Log.Verbose("TimeSpan already exists", "EventFlagsLoader");
+                                Log.Debug($"_______________", "EventFlagsLoader");
                                 break;
                             }
 
@@ -353,14 +347,14 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             timeSpan.EndTime = flagEndTimeUtc;
                             eventFlag.TimeSpans.Add(timeSpan);
 
-                            Log.Debug($"(EventFlagsLoader): Action: Added", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): Flag: {eventTypeField.Value}", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): Flag starts at {flagStartTimeUtc}", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): Flag ends at {flagEndTimeUtc}", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): Flag starts in S{flagStartSeason.SeasonNumber}", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): Flag ends in S{flagEndSeason.SeasonNumber}", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): Used in: {flagSeasonsString}", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
+                            Log.Debug($"Action: Added", "EventFlagsLoader");
+                            Log.Debug($"Flag: {eventTypeField.Value}", "EventFlagsLoader");
+                            Log.Debug($"Flag starts at {flagStartTimeUtc}", "EventFlagsLoader");
+                            Log.Debug($"Flag ends at {flagEndTimeUtc}", "EventFlagsLoader");
+                            Log.Debug($"Flag starts in S{flagStartSeason.SeasonNumber}", "EventFlagsLoader");
+                            Log.Debug($"Flag ends in S{flagEndSeason.SeasonNumber}", "EventFlagsLoader");
+                            Log.Debug($"Used in: {flagSeasonsString}", "EventFlagsLoader");
+                            Log.Debug($"_______________", "EventFlagsLoader");
 
                             break;
 
@@ -368,10 +362,10 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
                             if (overriddenFlagStartTimeUtc == default && overriddenFlagEndTimeUtc == default)
                             {
-                                Log.Fatal($"(EventFlagsLoader): Well... That shouldn't happen. The overridden times have default values even though the flag has been modified.", LOG_PREFIX);
-                                Log.Error($"(EventFlagsLoader): Fields data for previous error: " + JsonConvert.SerializeObject(embed.Fields), LOG_PREFIX);
-                                Log.Error($"(EventFlagsLoader): Flag update from " + message.Timestamp, LOG_PREFIX);
-                                Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
+                                Log.Fatal($"Well... That shouldn't happen. The overridden times have default values even though the flag has been modified.", "EventFlagsLoader");
+                                Log.Error($"Fields data for previous error: " + JsonConvert.SerializeObject(embed.Fields), "EventFlagsLoader");
+                                Log.Error($"Flag update from " + message.Timestamp, "EventFlagsLoader");
+                                Log.Debug($"_______________", "EventFlagsLoader");
                                 break;
                             }
 
@@ -379,7 +373,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             if (eventFlag.Modifications.Any(x => x.OverriddenStartTime == overriddenFlagStartTimeUtc && x.OverriddenEndTime == overriddenFlagEndTimeUtc
                             && x.NewStartTime == flagStartTimeUtc && x.NewEndTime == flagEndTimeUtc))
                             {
-                                Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
+                                Log.Debug($"_______________", "EventFlagsLoader");
                                 break;
                             }
 
@@ -407,8 +401,8 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             {
                                 if (eventFlag.TimeSpans.Any(x => x.StartTime == flagStartTimeUtc && x.EndTime == flagEndTimeUtc))
                                 {
-                                    Log.Verbose("(EventFlagsLoader): TimeSpan already exists", LOG_PREFIX);
-                                    Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
+                                    Log.Verbose("TimeSpan already exists", "EventFlagsLoader");
+                                    Log.Debug($"_______________", "EventFlagsLoader");
                                     break;
                                 }
 
@@ -418,26 +412,26 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                                 eventFlag.TimeSpans.Add(timeSpan);
                             }
 
-                            Log.Debug($"(EventFlagsLoader): Action: Modified", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): Flag: {eventTypeField.Value}", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): Flag starts at {flagStartTimeUtc}", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): Flag ends at {flagEndTimeUtc}", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): Flag starts in S{flagStartSeason.SeasonNumber}", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): Flag ends in S{flagEndSeason.SeasonNumber}", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): Used in: {flagSeasonsString}", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
+                            Log.Debug($"Action: Modified", "EventFlagsLoader");
+                            Log.Debug($"Flag: {eventTypeField.Value}", "EventFlagsLoader");
+                            Log.Debug($"Flag starts at {flagStartTimeUtc}", "EventFlagsLoader");
+                            Log.Debug($"Flag ends at {flagEndTimeUtc}", "EventFlagsLoader");
+                            Log.Debug($"Flag starts in S{flagStartSeason.SeasonNumber}", "EventFlagsLoader");
+                            Log.Debug($"Flag ends in S{flagEndSeason.SeasonNumber}", "EventFlagsLoader");
+                            Log.Debug($"Used in: {flagSeasonsString}", "EventFlagsLoader");
+                            Log.Debug($"_______________", "EventFlagsLoader");
 
                             break;
 
                         case "Removed":
-                            Log.Verbose($"(EventFlagsLoader): Action: Removed", LOG_PREFIX);
-                            Log.Verbose($"(EventFlagsLoader): Flag: {eventTypeField.Value}", LOG_PREFIX);
-                            Log.Verbose($"(EventFlagsLoader): Flag starts at {flagStartTimeUtc}", LOG_PREFIX);
-                            Log.Verbose($"(EventFlagsLoader): Flag ends at {flagEndTimeUtc}", LOG_PREFIX);
-                            Log.Verbose($"(EventFlagsLoader): Flag starts in S{flagStartSeason.SeasonNumber}", LOG_PREFIX);
-                            Log.Verbose($"(EventFlagsLoader): Flag ends in S{flagEndSeason.SeasonNumber}", LOG_PREFIX);
-                            Log.Verbose($"(EventFlagsLoader): Used in: {flagSeasonsString}", LOG_PREFIX);
-                            Log.Verbose($"(EventFlagsLoader): _______________", LOG_PREFIX);
+                            Log.Verbose($"Action: Removed", "EventFlagsLoader");
+                            Log.Verbose($"Flag: {eventTypeField.Value}", "EventFlagsLoader");
+                            Log.Verbose($"Flag starts at {flagStartTimeUtc}", "EventFlagsLoader");
+                            Log.Verbose($"Flag ends at {flagEndTimeUtc}", "EventFlagsLoader");
+                            Log.Verbose($"Flag starts in S{flagStartSeason.SeasonNumber}", "EventFlagsLoader");
+                            Log.Verbose($"Flag ends in S{flagEndSeason.SeasonNumber}", "EventFlagsLoader");
+                            Log.Verbose($"Used in: {flagSeasonsString}", "EventFlagsLoader");
+                            Log.Verbose($"_______________", "EventFlagsLoader");
 
                             // Add removed flag if it hasn't been added yet
                             if (!eventFlag.TimeSpans.Any(x => x.StartTime == flagStartTimeUtc && x.EndTime == flagEndTimeUtc))
@@ -452,8 +446,8 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             break;
 
                         default:
-                            Log.Error($"(EventFlagsLoader): Flag '{eventTypeField.Value}' has an unknown status ({statusField.Value})", LOG_PREFIX);
-                            Log.Debug($"(EventFlagsLoader): _______________", LOG_PREFIX);
+                            Log.Error($"Flag '{eventTypeField.Value}' has an unknown status ({statusField.Value})", "EventFlagsLoader");
+                            Log.Debug($"_______________", "EventFlagsLoader");
                             break;
                     }
                 }
@@ -478,7 +472,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
         {
             DatabaseContext dbContext = Program.DbContext;
 
-            Log.Information("(HotfixLoader): Loading data...", LOG_PREFIX);
+            Log.Information("Loading data...", "HotfixLoader");
 
             string jsonData;
             try
@@ -487,13 +481,13 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
             }
             catch (Exception ex)
             {
-                Log.Error("(HotfixLoader): An error occured while reading the hotfix chat history: " + ex.Message, LOG_PREFIX);
+                Log.Error("An error occured while reading the hotfix chat history: " + ex.Message, "HotfixLoader");
                 return;
             }
 
             if (string.IsNullOrWhiteSpace(jsonData))
             {
-                Log.Error("(HotfixLoader): An error occured while reading the hotfix chat history: File is empty", LOG_PREFIX);
+                Log.Error("An error occured while reading the hotfix chat history: File is empty", "HotfixLoader");
                 return;
             }
 
@@ -504,11 +498,11 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
             }
             catch (Exception ex)
             {
-                Log.Error("(HotfixLoader): An error occured while parsing the hotfix chat history: " + ex.Message, LOG_PREFIX);
+                Log.Error("An error occured while parsing the hotfix chat history: " + ex.Message, "HotfixLoader");
                 return;
             }
 
-            Log.Information($"(HotfixLoader): Parsing hotfix data from '{chatHistory.Guild.Name} - {chatHistory.Channel.Name}'...", LOG_PREFIX);
+            Log.Information($"Parsing hotfix data from '{chatHistory.Guild.Name} - {chatHistory.Channel.Name}'...", "HotfixLoader");
 
             foreach (Message msg in chatHistory.Messages)
             {
@@ -519,7 +513,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
                 foreach (Attachment attachment in msg.Attachments)
                 {
-                    Log.Debug($"(HotfixLoader): Loading file '{attachment.Url}'");
+                    Log.Debug($"Loading file '{attachment.Url}'", "HotfixLoader");
 
                     string hotFixFileContent = "";
                     try
@@ -528,13 +522,13 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                     }
                     catch (Exception ex)
                     {
-                        Log.Error("(HotfixLoader): An error occured while parsing a hotfix file: " + ex.Message, LOG_PREFIX);
+                        Log.Error("An error occured while parsing a hotfix file: " + ex.Message, "HotfixLoader");
                         continue;
                     }
 
                     if (string.IsNullOrWhiteSpace(hotFixFileContent))
                     {
-                        Log.Verbose("(HotfixLoader): Skipping file, because it's empty");
+                        Log.Verbose("Skipping file, because it's empty", "HotfixLoader");
                         continue;
                     }
 
@@ -550,7 +544,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                         if (categoryEndIndex == 0)
                         {
                             categoryEndIndex = hotFixFileContent.Length;
-                            Log.Debug("(HotfixLoader): This is the last category of this hotfix file.");
+                            Log.Debug("This is the last category of this hotfix file.", "HotfixLoader");
                         }
 
                         Log.Debug($"Found hotfix category '{catergoryName}', starting at index {categoryMatch.Index} and ending at index {categoryEndIndex}");
@@ -574,11 +568,11 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             Match variableNameMatch = Regex.Matches(variableContent, @"([^=])*=").First();
                             string variableName = variableNameMatch.Value.Replace("=", "").Replace("+", "").Replace("-", "");
 
-                            Log.Debug($"(HotfixLoader): Found variable: '{variableName}'");
+                            Log.Debug($"Found variable: '{variableName}'", "HotfixLoader");
 
                             string variableValue = variableContent.Replace(variableNameMatch.Value, "");
 
-                            Log.Debug($"(HotfixLoader): Found variable value: '{variableValue}'");
+                            Log.Debug($"Found variable value: '{variableValue}'", "HotfixLoader");
 
                             if (variableValue.StartsWith("(") && variableValue.EndsWith(")"))
                             {
@@ -597,12 +591,12 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
                                     string paramValue = Regex.Match(paramMatch.Value, @"=.*").Value[1..]; // remove '=' sign
 
-                                    Log.Debug($"(HotfixLoader): Found variable param '{paramName}' with value of '{paramValue}'");
+                                    Log.Debug($"Found variable param '{paramName}' with value of '{paramValue}'", "HotfixLoader");
                                 }
                             }
                             else // Variable Value
                             {
-                                Log.Debug($"(HotfixLoader): Found variable value: '{variableValue}'");
+                                Log.Debug($"Found variable value: '{variableValue}'", "HotfixLoader");
                             }
                         }
                     }
@@ -618,7 +612,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
             if (!response.Success)
             {
-                Log.Error("Request to retrieve staging data was not successful!", CALENDAR_LOG_PREFIX);
+                Log.Error("Request to retrieve staging data was not successful!", "Calendar");
                 return new Dictionary<string, Server>();
             }
 

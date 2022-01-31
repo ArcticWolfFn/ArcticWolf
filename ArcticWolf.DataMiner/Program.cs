@@ -1,6 +1,7 @@
 ﻿using ArcticWolf.DataMiner.Apis.Benbot;
 using ArcticWolf.DataMiner.Apis.FnDotNet;
 using ArcticWolf.DataMiner.Apis.Nitestats;
+using ArcticWolf.DataMiner.Common.Http;
 using ArcticWolf.DataMiner.Managers;
 using ArcticWolf.DataMiner.Models;
 using ArcticWolf.Storage;
@@ -51,13 +52,35 @@ namespace ArcticWolf.DataMiner
             Log.Initalize(new List<LogVisibility>
             {
                 LogVisibility.Console 
-            }, new Dictionary<string, LogLevel>
+            }, new ()
             {
-                {"Http", LogLevel.Information },
-                {"NiteStatsApi", LogLevel.Information },
-                {"NiteStatsApi|Calendar", LogLevel.Information },
-                {CurrentVersionMonitor.AES_LOG_PREFIX, LogLevel.Debug },
-                {CurrentVersionMonitor.LOG_PREFIX, LogLevel.Debug }
+                new()
+                {
+                    ClassName = nameof(HttpClient),
+                    MinLogLevel = LogLevel.Information
+                },
+                new()
+                {
+                    ClassName = nameof(Apis.Nitestats.NitestatsApiClient),
+                    MinLogLevel = LogLevel.Information
+                },
+                new()
+                {
+                    ClassName = nameof(Apis.Nitestats.NitestatsApiClient),
+                    MethodName = nameof(Apis.Nitestats.NitestatsApiClient.LoadHotFixesFromMessages),
+                    MinLogLevel = LogLevel.Verbose
+                },
+                new()
+                {
+                    ClassName = nameof(CurrentVersionMonitor),
+                    MethodName = "AesAnalyser",
+                    MinLogLevel = LogLevel.Debug
+                },
+                new()
+                {
+                    ClassName = nameof(CurrentVersionMonitor),
+                    MinLogLevel = LogLevel.Debug
+                },
             }
             );
 

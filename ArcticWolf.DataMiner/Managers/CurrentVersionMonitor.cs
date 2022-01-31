@@ -11,7 +11,6 @@ namespace ArcticWolf.DataMiner.Managers
 {
     public static class CurrentVersionMonitor
     {
-        public const string LOG_PREFIX = "CurrentVersionMonitor";
         public const string AES_LOG_PREFIX = "AesAnalyser";
 
         private static Timer _updateAesTimer;
@@ -45,7 +44,7 @@ namespace ArcticWolf.DataMiner.Managers
 
         private static void BenbotApiClient_NewUpdateAvailable(object sender, Events.NewUpdateAvailableEventArgs e)
         {
-            Log.Information("It seems that the Benbot API has the latest FN version. Trying to collect data...", LOG_PREFIX);
+            Log.Information("It seems that the Benbot API has the latest FN version. Trying to collect data...");
 
             AnalyseAesForVersion(e.UpdateVersion.Version);
         }
@@ -59,13 +58,13 @@ namespace ArcticWolf.DataMiner.Managers
         {
             DatabaseContext dbContext = Program.DbContext;
 
-            Log.Debug($"(Aes): Analsing keys for v{version:F}", AES_LOG_PREFIX);
+            Log.Debug($"Analsing keys for v{version:F}", AES_LOG_PREFIX);
 
             AesResponse aesResponse = Program.BenbotApiClient.GetAesKeys.Get(version.ToString());
 
             if (aesResponse == null)
             {
-                Log.Warning($"(Aes): Failed to get aes data for v{version:F}", AES_LOG_PREFIX);
+                Log.Warning($"Failed to get aes data for v{version:F}", AES_LOG_PREFIX);
                 return;
             }
 
@@ -82,7 +81,7 @@ namespace ArcticWolf.DataMiner.Managers
             if (string.IsNullOrWhiteSpace(currentVersion.MainKey) && !string.IsNullOrWhiteSpace(aesResponse.MainKey))
             {
                 currentVersion.MainKey = aesResponse.MainKey;
-                Log.Information($"(Aes): Set MainKey for '{currentVersion.Version:F}' to '{aesResponse.MainKey}'", AES_LOG_PREFIX);
+                Log.Information($"Set MainKey for '{currentVersion.Version:F}' to '{aesResponse.MainKey}'", AES_LOG_PREFIX);
             }
 
             dbContext.Entry(currentVersion).Collection(x => x.PakFiles).Load();
@@ -93,7 +92,7 @@ namespace ArcticWolf.DataMiner.Managers
 
                 if (pakFile == null)
                 {
-                    Log.Warning($"(Aes): Pak '{entry.Key}' doesn't exist for v{currentVersion.Version:F}. Creating it...", AES_LOG_PREFIX);
+                    Log.Warning($"Pak '{entry.Key}' doesn't exist for v{currentVersion.Version:F}. Creating it...", AES_LOG_PREFIX);
 
                     PakFile newPakFile = new();
                     newPakFile.File = entry.Key;
@@ -105,11 +104,11 @@ namespace ArcticWolf.DataMiner.Managers
 
                 if (pakFile.AesKey == entry.Value)
                 {
-                    Log.Verbose($"(Aes): Skipping key for pak '{entry.Key}' in v{currentVersion.Version:F}. Reason: Key already exists", AES_LOG_PREFIX);
+                    Log.Verbose($"Skipping key for pak '{entry.Key}' in v{currentVersion.Version:F}. Reason: Key already exists", AES_LOG_PREFIX);
                     continue;
                 }
 
-                Log.Information($"(Aes): Detected new key '{entry.Value}' for pak file '{entry.Key}' for v{currentVersion.Version:F}", AES_LOG_PREFIX);
+                Log.Information($"Detected new key '{entry.Value}' for pak file '{entry.Key}' for v{currentVersion.Version:F}", AES_LOG_PREFIX);
                 pakFile.AesKey = entry.Value;
             }
 
