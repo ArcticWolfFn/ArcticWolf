@@ -18,7 +18,8 @@ inline HANDLE hConsole;
 
 #define VALIDATE_ADDRESS(address, error) \
     if (!address) { \
-		printfc(FOREGROUND_RED, error) \
+		PLOGE << error; \
+		printfc(FOREGROUND_RED, error); \
         MessageBoxA(0, error, XOR("PlataniumV2"), MB_OK); \
 		FreeLibraryAndExitThread(GetModuleHandle(NULL), 0); \
         return 0; \

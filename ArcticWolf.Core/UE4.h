@@ -21,7 +21,7 @@ class Util;
 inline void* (*ProcessEvent)(void*, void*, void*);
 inline int (*GetViewPoint)(void*, FMinimalViewInfo*, BYTE);
 inline FString(*GetObjectNameInternal)(const InternalUObject* Object);
-inline UObject* (*SpawnActor)(UObject* UWorld, UClass* Class, FTransform const* UserTransformPtr, const FActorSpawnParameters& SpawnParameters);
+inline InternalUObject* (*SpawnActor)(InternalUObject* UWorld, InternalUClass* Class, FTransform const* UserTransformPtr, const FActorSpawnParameters& SpawnParameters);
 inline void (*GetFullName)(FField* Obj, FString& ResultString, const UObject* StopOuter, EObjectFullNameFlags Flags);
 inline void (*GetObjectFullNameInternal)(InternalUObject* Obj, FString& ResultString, const InternalUObject* StopOuter, EObjectFullNameFlags Flags);
 inline void (*FreeInternal)(void*);

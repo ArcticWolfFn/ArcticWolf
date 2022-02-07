@@ -64,11 +64,12 @@ void UCheatManager::Summon(FString ClassName)
 {
 	if (!CanExec_Summon) return;
 
-	if (Util::IsBadReadPtr(InternalCheatManager))
-	{
-		PLOGV << "InternalCheatManager is not valid. Canceling function";
-		return;
-	}
+	ObjectFinder EngineFinder = ObjectFinder::EntryPoint(uintptr_t(GEngine));
+	ObjectFinder LocalPlayer = EngineFinder.Find(XOR(L"GameInstance")).Find(XOR(L"LocalPlayers"));
+
+	ObjectFinder PlayerControllerFinder = LocalPlayer.Find(XOR(L"PlayerController"));
+
+	ObjectFinder CheatManagerFinder = PlayerControllerFinder.Find(XOR(L"CheatManager"));
 
 	struct Params
 	{
@@ -78,5 +79,5 @@ void UCheatManager::Summon(FString ClassName)
 	auto params = new Params();
 	params->ClassName = ClassName;
 
-	ProcessEvent(InternalCheatManager, Fn_Summon, &params);
+	ProcessEvent(CheatManagerFinder.GetObj(), Fn_Summon, &params);
 }

@@ -396,7 +396,7 @@ public:
 	{
 		if (this->Pawn)
 		{
-			this->Summon(XOR(L"PlayerPawn_Athena_C"));
+			GGameEngine.GameViewport->World->SpawnActorEasy(UE4::FindObject<InternalUClass*>(XOR(L"BlueprintGeneratedClass /Game/Athena/PlayerPawn_Athena.PlayerPawn_Athena_C")));
 			this->Pawn = ObjectFinder::FindActor(XOR(L"PlayerPawn_Athena_C"));
 
 			if (this->Pawn)
@@ -416,15 +416,6 @@ public:
 		K2_TeleportTo_Params.DestRotation = Rotation;
 
 		ProcessEvent(this->Pawn, K2_TeleportTo, &K2_TeleportTo_Params);
-	}
-
-	void Summon(const wchar_t* ClassToSummon)
-	{
-		const FString ClassName = ClassToSummon;
-
-		GetGame()->LocalPlayers[0].GetPlayerController()->CheatManager->Summon(ClassName);
-
-		PLOGI.printf("%ls was summoned!", ClassToSummon);
 	}
 
 	void Possess()

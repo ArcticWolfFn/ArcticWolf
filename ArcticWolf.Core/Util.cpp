@@ -62,7 +62,7 @@ uintptr_t Util::FindPattern(LPCSTR lpPattern, LPCSTR lpMask, BOOL SleepBetween)
 	{
 		pAddr = FindPattern(info.lpBaseOfDll, info.SizeOfImage, lpPattern, lpMask);
 
-		Sleep(50);
+		//Sleep(50);
 	} while (!pAddr);
 
 	return pAddr;

@@ -68,7 +68,13 @@ public:
 	// Custom function for refreshing internal stuff
 	void UpdateProps();
 
+	void SpawnActorEasy(InternalUClass* Class, FVector Location = FVector(), FQuat Rotation = FQuat());
+
 private:
+	static UFunction* Fn_SpawnActor;
+
+	static bool CanExec_SpawnActor;
+
 	ObjectFinder InternalFinder;
 	ObjectFinder GameViewportFinder;
 

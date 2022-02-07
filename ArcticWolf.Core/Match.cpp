@@ -212,7 +212,7 @@ void Match::Init()
 
 	Console::CheatManager();
 
-	NeoPlayer.Summon(XOR(L"PlayerPawn_Athena_C"));
+	GGameEngine.GameViewport->World->SpawnActorEasy(UE4::FindObject<InternalUClass*>(XOR(L"BlueprintGeneratedClass /Game/Athena/PlayerPawn_Athena.PlayerPawn_Athena_C")));
 
 	NeoPlayer.Pawn = ObjectFinder::FindActor(XOR(L"PlayerPawn_Athena_C"));
 

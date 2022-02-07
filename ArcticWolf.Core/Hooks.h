@@ -210,6 +210,15 @@ public:
 
 		StaticLoadObject = decltype(StaticLoadObject)(SLOIAdd);
 
+		/*PLOGI << "Trying to find pattern";
+		auto SpawnActorAdd = Util::FindPattern(Patterns::Global::SpawnActorInternal,
+			Masks::Global::SpawnActorInternal);
+		PLOGI << "Maybe found a pattern";
+		VALIDATE_ADDRESS(SpawnActorAdd, XOR("Failed to find SpawnActor Address."));
+		PLOGI << "Validated address";
+
+		SpawnActor = decltype(SpawnActor)(SpawnActorAdd);*/
+
 
 		auto AbilityPatchAdd = Util::FindPattern(Patterns::Global::AbilityPatch, Masks::Global::AbilityPatch);
 		VALIDATE_ADDRESS(AbilityPatchAdd, XOR("Failed to find AbilityPatch Address."));
