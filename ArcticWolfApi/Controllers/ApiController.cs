@@ -226,6 +226,5 @@ namespace ArcticWolfApi.Controllers
         {
             public int promotion = 0;
         }
-
     }
 }

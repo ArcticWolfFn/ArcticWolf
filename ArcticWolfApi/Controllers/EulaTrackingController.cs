@@ -9,7 +9,7 @@ namespace ArcticWolfApi.Controllers
         [HttpGet("public/agreements/{agreement}/account/{accountId}")]
         public ActionResult GetUserSetting(string agreement, string accountId)
         {
-            return this.NoContent();
+            return NoContent();
         }
     }
 }

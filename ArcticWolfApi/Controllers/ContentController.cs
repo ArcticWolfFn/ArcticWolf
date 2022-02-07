@@ -27,11 +27,7 @@ namespace ArcticWolfApi.Controllers
                 stage = "halloween2020";
             }
 
-            string tileImage = "https://cdn.discordapp.com/attachments/864975167490490419/867830756760223774/rift.png";
-            if (seasonNumber >= 5)
-            {
-                tileImage = "https://cdn.discordapp.com/attachments/797250357485895730/797473690324828170/1024-512.png";
-            }
+            string tileImage = "https://cdn.discordapp.com/attachments/797250357485895730/797473690324828170/1024-512.png";
 
             return new Pages()
             {

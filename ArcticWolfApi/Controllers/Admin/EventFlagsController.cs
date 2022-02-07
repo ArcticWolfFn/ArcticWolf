@@ -4,10 +4,12 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Controllers.Admin
 {
+    /// <summary>
+    /// Used for a custom data dashboard
+    /// </summary>
     [Route("/admin/[controller]/")]
     [ApiController]
     public class EventFlagsController : ControllerBase
@@ -52,6 +54,9 @@ namespace ArcticWolfApi.Controllers.Admin
             return returnedFlags;
         }
 
+        /// <summary>
+        /// Model for returning minimal information about the event flag
+        /// </summary>
         public class EventFlagMinified
         {
             public string Id {get; set;}

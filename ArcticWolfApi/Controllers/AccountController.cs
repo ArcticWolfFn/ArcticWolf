@@ -13,14 +13,13 @@ namespace ArcticWolfApi.Controllers
         [HttpPost("oauth/token")]
         public ActionResult<OAuthToken> CreateOAuthToken([FromForm] string grant_type)
         {
-            IFormCollection form = this.Request.Form;
+            IFormCollection form = Request.Form;
 
             if (grant_type == "client_credentials")
             {
                 return new OAuthToken(Program.ClientId);
             }
-
-            if (!(grant_type == "password"))
+            else if (!(grant_type == "password"))
             {
                 if (!(grant_type == "refresh_token"))
                 {
@@ -34,8 +33,7 @@ namespace ArcticWolfApi.Controllers
 
                 return new OAuthToken(Program.ClientId, Program.Id, Program.DisplayName);
             }
-
-            if (string.IsNullOrWhiteSpace(form["username"]))
+            else if (string.IsNullOrWhiteSpace(form["username"]))
             {
                 throw new InvalidRequestException("username");
             }
@@ -47,11 +45,17 @@ namespace ArcticWolfApi.Controllers
         }
 
         [HttpGet("oauth/verify")]
-        public ActionResult<OAuthToken> VerifyOAuthToken() => new OAuthToken(Program.ClientId, Program.Id, Program.DisplayName);
+        public ActionResult<OAuthToken> VerifyOAuthToken()
+        {
+            return new OAuthToken(Program.ClientId, Program.Id, Program.DisplayName);
+        }
 
         [HttpDelete("oauth/sessions/kill")]
         [HttpDelete("oauth/sessions/kill/{accessToken}")]
-        public ActionResult KillOAuthSession() => NoContent();
+        public ActionResult KillOAuthSession()
+        {
+            return NoContent();
+        }
 
         [HttpGet("public/account")]
         public ActionResult<List<Account>> GetAccountLookupByIds()
@@ -61,15 +65,15 @@ namespace ArcticWolfApi.Controllers
                 Id = Program.Id,
                 DisplayName = Program.DisplayName
             };
+
             return new List<Account>()
-    {
-      account
-    };
+            {
+                account
+            };
         }
 
         [HttpGet("public/account/{accountId}")]
-        public ActionResult<Account> GetAccountLookupById(
-          string accountId)
+        public ActionResult<Account> GetAccountLookupById(string accountId)
         {
             return new Account()
             {

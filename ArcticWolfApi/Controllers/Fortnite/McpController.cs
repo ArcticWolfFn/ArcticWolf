@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace ArcticWolfApi.Controllers
 {
@@ -23,11 +22,15 @@ namespace ArcticWolfApi.Controllers
 
         public McpController(IProfileService profileService, IHttpContextAccessor accessor)
         {
-            this._profileService = profileService;
-            this._profile = accessor.HttpContext.Request.Query["profileId"].ToString() ?? "common_core";
+            _profileService = profileService;
+            _profile = accessor.HttpContext.Request.Query["profileId"].ToString() ?? "common_core";
+
             if (!int.TryParse((string)accessor.HttpContext.Request.Query["rvn"], out this._rvn))
+            {
                 this._rvn = -1;
-            this._changes = new List<object>();
+            }
+
+            _changes = new List<object>();
         }
 
         [HttpPost("QueryProfile")]
