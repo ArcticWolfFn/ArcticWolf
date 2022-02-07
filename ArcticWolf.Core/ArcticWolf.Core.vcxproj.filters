@@ -490,5 +490,6 @@
     <Library Include="..\PlataniumV2\minhook.lib">
       <Filter>Headerdateien\modules\MinHook</Filter>
     </Library>
+    <Library Include="MinHook\minhook.lib" />
   </ItemGroup>
 </Project>

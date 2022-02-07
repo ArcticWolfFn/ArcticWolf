@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using System.Collections.Generic;;
+using System.Collections.Generic;
 
 namespace ArcticWolfApi.Models.Fortnite
 {

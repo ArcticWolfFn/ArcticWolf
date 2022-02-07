@@ -66,7 +66,8 @@ void UCheatManager::Summon(FString ClassName)
 
 	if (Util::IsBadReadPtr(InternalCheatManager))
 	{
-		PLOGV << "InternalCheatManager is not valid. Trying to "
+		PLOGV << "InternalCheatManager is not valid. Canceling function";
+		return;
 	}
 
 	struct Params

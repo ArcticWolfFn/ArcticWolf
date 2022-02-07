@@ -12,7 +12,7 @@ namespace ArcticWolfApi.Models.Content
 
         public PagesMessage(string title, string body, string image = null, string adspace = null)
         {
-            this.Message = new PagesMessageBase(title, body, image, adspace)
+            this.Message = new PagesMessageBase(title, body, image, adspace);
         }
     }
 }
