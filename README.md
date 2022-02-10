@@ -1,4 +1,4 @@
-# ArcticWolf | Fortnite DataMiner & Mod
+# ArcticWolf | Fortnite DataMiner, Mod & Bot
 
 ## Projects and their purpose
 | Project | Purpose | Note |
