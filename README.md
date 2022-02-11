@@ -1,8 +1,7 @@
 # ArcticWolf | Fortnite DataMiner, Mod & Bot
 
 ## Current State
-I am currently not regularly working on this project anymore (but I am actively managing and moderating this repository). The Core worked in a previous version, but after I refactored the code to create a framework
-the game crashes due to a memory exception and I can't fix it currently.
+The Core worked in a previous version, but after I refactored the code to create a framework but now the game crashes due to a memory exception and I can't fix it currently.
 
 ## Projects and their purpose
 | Project | Purpose | Note |
