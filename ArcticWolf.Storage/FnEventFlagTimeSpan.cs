@@ -20,7 +20,7 @@ namespace ArcticWolf.Storage
             get {
                 if (_startsInSeason.SeasonNumber == 0)
                 {
-                    _startsInSeason = Fortnite.Seasons.Find(x => x.StartTime <= StartTime && x.EndTime >= StartTime);
+                    _startsInSeason = StartTime.GetSeason();
                 }
 
                 return _startsInSeason;
@@ -37,7 +37,7 @@ namespace ArcticWolf.Storage
             {
                 if (_endsInSeason.SeasonNumber == 0)
                 {
-                    _endsInSeason = Fortnite.Seasons.Find(x => x.StartTime <= EndTime && x.EndTime >= EndTime);
+                    _endsInSeason = EndTime.GetSeason();
                 }
 
                 return _endsInSeason;
