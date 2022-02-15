@@ -83,8 +83,8 @@ namespace ArcticWolf.DataMiner
             }
             );
 
-            BenbotApiClient = new BenbotApiClient();
             NitestatsApiClient = new NitestatsApiClient();
+            BenbotApiClient = new BenbotApiClient();
             FnDotNetApiClient = new FnDotNetApiClient();
 
             CurrentVersionMonitor.Init();
