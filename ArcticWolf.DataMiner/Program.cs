@@ -7,7 +7,6 @@ using ArcticWolf.DataMiner.Models;
 using ArcticWolf.Storage;
 using Config.Net;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
