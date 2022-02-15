@@ -19,8 +19,11 @@ namespace ArcticWolf.DataMiner.Managers
 
         public static void AnalyseOldVersions()
         {
-            Log.Information("Trying to retrive old event flags...");
-            Program.NitestatsApiClient.LoadEventFlagsFromMessages();
+            if (!string.IsNullOrWhiteSpace(Program.Configuration.EventFlagsDiscordChatHistoryFilePath))
+            {
+                Log.Information("Trying to retrive old event flags...");
+                Program.NitestatsApiClient.LoadEventFlagsFromMessages();
+            }
 
             Log.Information("Trying to retrive hotfix data...");
             Program.NitestatsApiClient.LoadHotFixesFromMessages();
