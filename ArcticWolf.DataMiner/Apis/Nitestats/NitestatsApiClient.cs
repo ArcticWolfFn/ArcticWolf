@@ -291,10 +291,10 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
 
                     // get season of the flag start time
-                    FnSeason flagStartSeason = Fortnite.Seasons.Find(x => x.StartTime <= flagStartTimeUtc && x.EndTime >= flagStartTimeUtc);
+                    FnSeason flagStartSeason = flagStartTimeUtc.GetSeason();
 
                     // get season of the flag end time
-                    FnSeason flagEndSeason = Fortnite.Seasons.Find(x => x.StartTime <= flagEndTimeUtc && x.EndTime >= flagEndTimeUtc);
+                    FnSeason flagEndSeason = flagEndTimeUtc.GetSeason();
 
                     if (flagEndSeason.SeasonNumber == 0 && flagStartSeason.SeasonNumber == 0)
                     {
