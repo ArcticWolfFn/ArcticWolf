@@ -157,6 +157,24 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
             }
         }
 
+        /// <summary>
+        /// Generates an epic games client credentials token, not linked to an account. All tokens are cached and regenerated every 10 minutes.
+        /// </summary>
+        public AccessTokenResponse GetAccessToken()
+        {
+            HttpResponse response = new HttpClient().Request("https://api.nitestats.com/v1/epic/bearer");
+
+            if (!response.Success)
+            {
+                Log.Error("Request to retrieve access token was not successful!");
+                return new AccessTokenResponse();
+            }
+
+            AccessTokenResponse accessTokenResponse = JsonDeserializer.Deserialize<AccessTokenResponse>(response.Content);
+
+            return accessTokenResponse;
+        }
+
         public void LoadEventFlagsFromMessages()
         {
             DatabaseContext dbContext = Program.DbContext;

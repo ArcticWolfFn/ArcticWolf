@@ -19,7 +19,7 @@ namespace ArcticWolf.DataMiner.Apis.FnDotNet
             Log.Information("Initalizing...");
 
             Client = new FortniteApi();
-            if (!LoginUsingRefreshToken(Program.Configuration.FnApiRefreshToken))
+            if (!LoginUsingRefreshToken(Program.NitestatsApiClient.GetAccessToken().AccessToken))
             {
                 Log.Error("API Client is disabled in this session because the login failed!");
                 return;
@@ -31,7 +31,7 @@ namespace ArcticWolf.DataMiner.Apis.FnDotNet
             try
             {
                 Log.Information($"(Login): Logging in using refresh token '{refreshToken}'...");
-                AuthSession = Client.AccountService.GenerateOAuthSession(GrantType.RefreshToken, AuthClient.PC, new()
+                AuthSession = Client.AccountService.GenerateOAuthSession(GrantType.TokenToToken, AuthClient.PC, new()
                 {
 
                     { "refresh_token", refreshToken },
