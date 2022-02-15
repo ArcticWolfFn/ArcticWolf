@@ -73,7 +73,7 @@ namespace ArcticWolf.DataMiner
                 new()
                 {
                     ClassName = nameof(CurrentVersionMonitor),
-                    MethodName = "AesAnalyser",
+                    MethodName = CurrentVersionMonitor.AES_LOG_PREFIX,
                     MinLogLevel = LogLevel.Debug
                 },
                 new()
