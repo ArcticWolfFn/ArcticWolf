@@ -67,7 +67,6 @@ namespace BotCord.Managers
                 if (controllerInfo.ShutDownOnInitFail)
                 {
                     ShutDownControllers();
-                    Environment.Exit(-1);
                 }
             }
             else
@@ -113,7 +112,6 @@ namespace BotCord.Managers
             }
 
             Console.WriteLine(LOG_PREFIX + "The controller shutdown has been completed!");
-            Environment.Exit(0);
         }
 
         /// <summary>
