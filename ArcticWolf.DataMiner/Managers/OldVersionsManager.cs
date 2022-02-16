@@ -1,7 +1,6 @@
 ﻿using ArcticWolf.DataMiner.Models.Apis.Benbot;
 using ArcticWolf.Storage;
 using ArcticWolf.Storage.Constants;
-using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -17,15 +16,15 @@ namespace ArcticWolf.DataMiner.Managers
             analyseOldVersionThread.Start();
         }
 
-        public static void AnalyseOldVersions()
+        private static void AnalyseOldVersions()
         {
             if (!string.IsNullOrWhiteSpace(Program.Configuration.EventFlagsDiscordChatHistoryFilePath))
             {
-                Log.Information("Trying to retrive old event flags...");
+                Log.Information("Trying to retrieve old event flags...");
                 Program.NitestatsApiClient.LoadEventFlagsFromMessages();
             }
 
-            Log.Information("Trying to retrive hotfix data...");
+            Log.Information("Trying to retrieve hotfix data...");
             Program.NitestatsApiClient.LoadHotFixesFromMessages();
 
             Log.Information("Starting analytics for older versions...");
@@ -37,7 +36,7 @@ namespace ArcticWolf.DataMiner.Managers
             Log.Information("Finished analysing older versions!");
         }
 
-        public static void AnalyseVersion(decimal version)
+        private static void AnalyseVersion(decimal version)
         {
             DatabaseContext dbContext = Program.DbContext;
 
@@ -53,9 +52,11 @@ namespace ArcticWolf.DataMiner.Managers
                     return;
                 }
 
-                FnVersion newVersion = new();
-                newVersion.Version = aesResponse.VersionNumber;
-                newVersion.VersionString = aesResponse.Version;
+                FnVersion newVersion = new()
+                {
+                    Version = aesResponse.VersionNumber,
+                    VersionString = aesResponse.Version
+                };
                 _ = dbContext.FnVersions.Add(newVersion);
                 _ = dbContext.SaveChanges();
             }

@@ -2,10 +2,6 @@
 using BotCord.Managers;
 using BotCord.Models;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ArcticWolf.DataMiner.Managers
 {
@@ -31,7 +27,7 @@ namespace ArcticWolf.DataMiner.Managers
                 commandDetails: "Returns the latest Fortnite news"
                 ));
 
-            Bot.Initalize(new string[0]);
+            Bot.Initalize(Array.Empty<string>());
         }
     }
 }

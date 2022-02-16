@@ -1,11 +1,8 @@
-﻿using ArcticWolf.DataMiner.Models.Apis.Benbot;
-using ArcticWolf.Storage;
-using System;
+﻿using ArcticWolf.Storage;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace ArcticWolf.DataMiner.Managers
 {
@@ -55,11 +52,11 @@ namespace ArcticWolf.DataMiner.Managers
 
         public static void AnalyseAesForVersion(decimal version)
         {
-            DatabaseContext dbContext = Program.DbContext;
+            var dbContext = Program.DbContext;
 
-            Log.Verbose($"Analsing keys for v{version:F}", AES_LOG_PREFIX);
+            Log.Verbose($"Analysing keys for v{version:F}", AES_LOG_PREFIX);
 
-            AesResponse aesResponse = Program.BenbotApiClient.GetAesKeys.Get(version.ToString());
+            var aesResponse = Program.BenbotApiClient.GetAesKeys.Get(version.ToString(CultureInfo.InvariantCulture));
 
             if (aesResponse == null)
             {
@@ -85,17 +82,19 @@ namespace ArcticWolf.DataMiner.Managers
 
             dbContext.Entry(currentVersion).Collection(x => x.PakFiles).Load();
 
-            foreach (KeyValuePair<string, string> entry in aesResponse.DynamicKeys)
+            foreach (var entry in aesResponse.DynamicKeys)
             {
-                PakFile pakFile = currentVersion.PakFiles.Where(x => x.File == entry.Key).FirstOrDefault();
+                var pakFile = currentVersion.PakFiles.FirstOrDefault(x => x.File == entry.Key);
 
                 if (pakFile == null)
                 {
                     Log.Warning($"Pak '{entry.Key}' doesn't exist for v{currentVersion.Version:F}. Creating it...", AES_LOG_PREFIX);
 
-                    PakFile newPakFile = new();
-                    newPakFile.File = entry.Key;
-                    newPakFile.FnVersion = currentVersion;
+                    PakFile newPakFile = new()
+                    {
+                        File = entry.Key,
+                        FnVersion = currentVersion
+                    };
                     currentVersion.PakFiles.Add(newPakFile);
 
                     pakFile = newPakFile;
