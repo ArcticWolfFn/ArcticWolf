@@ -57,7 +57,7 @@ namespace ArcticWolf.DataMiner.Managers
         {
             DatabaseContext dbContext = Program.DbContext;
 
-            Log.Debug($"Analsing keys for v{version:F}", AES_LOG_PREFIX);
+            Log.Verbose($"Analsing keys for v{version:F}", AES_LOG_PREFIX);
 
             AesResponse aesResponse = Program.BenbotApiClient.GetAesKeys.Get(version.ToString());
 
