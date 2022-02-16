@@ -33,7 +33,6 @@ namespace ArcticWolf.DataMiner.Managers
         private static void _updateStagingServersTimer_Elapsed(object state)
         {
             var response = Program.NitestatsApiClient.GetStagingServers();
-            Log.Information($"Response contains {response.Count} elements", AES_LOG_PREFIX);
             FNitePlusBot.Cache.StagingServers = response;
         }
 
