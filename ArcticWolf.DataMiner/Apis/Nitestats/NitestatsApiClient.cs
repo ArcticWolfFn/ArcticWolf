@@ -19,23 +19,33 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading;
+using ArcticWolf.DataMiner.Apis.Nitestats.Routes;
 
 namespace ArcticWolf.DataMiner.Apis.Nitestats
 {
-    public class NitestatsApiClient
+    public class NitestatsApiClient : IApiClient
     {
+        public string ServerUrl => "https://api.nitestats.com";
+
         private const string EVENT_FLAGS_DISCORD_BOT = "eventflag-updates";
 
         private CalendarResponse _cachedLastCalendarResponse = null;
 
+        public readonly GetStagingServersRoute GetStagingServers;
+        public readonly GetCalendarDataRoute GetCalendarData;
+
         public NitestatsApiClient()
         {
-            Log.Information("Initalizing...");
-            GetCalendarData();
+            Log.Information("Initializing...");
+
+            GetStagingServers = new GetStagingServersRoute(this);
+            GetCalendarData = new GetCalendarDataRoute(this);
+            
+            GetCalendarDataOld();
         }
 
         [LogPrefix("Calendar")]
-        private void GetCalendarData()
+        private void GetCalendarDataOld()
         {
             DatabaseContext dbContext = Program.DbContext;
 
@@ -622,19 +632,6 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                     Thread.Sleep(3000);
                 }
             }
-        }
-
-        public Dictionary<string, Server> GetStagingServers()
-        {
-            HttpResponse response = new HttpClient().Request("https://api.nitestats.com/v1/epic/staging/fortnite");
-
-            if (!response.Success)
-            {
-                Log.Error("Request to retrieve staging data was not successful!", "Calendar");
-                return new Dictionary<string, Server>();
-            }
-
-            return JsonDeserializer.Deserialize<Dictionary<string, Server>>(response.Content);
         }
     }
 }
