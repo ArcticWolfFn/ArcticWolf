@@ -141,34 +141,33 @@ public static class Log
         }
     }
 
-    public static void Verbose(string message, string customMethodprefix = null)
+    public static void Verbose(string message, string customMethodprefix = null, string customClassPrefix = null)
     {
-        Write(LogLevel.Verbose, message, customMethodprefix);
+        Write(LogLevel.Verbose, message, customMethodprefix, customClassPrefix);
     }
 
-    public static void Debug(string message, string customMethodprefix = null)
+    public static void Debug(string message, string customMethodprefix = null, string customClassPrefix = null)
     {
-        Write(LogLevel.Debug, message, customMethodprefix);
+        Write(LogLevel.Debug, message, customMethodprefix, customClassPrefix);
     }
 
-    public static void Information(string message, string customMethodprefix = null)
+    public static void Information(string message, string customMethodprefix = null, string customClassPrefix = null)
     {
-
-        Write(LogLevel.Information, message, customMethodprefix);
+        Write(LogLevel.Information, message, customMethodprefix, customClassPrefix);
     }
 
-    public static void Warning(string message, string customMethodprefix = null)
+    public static void Warning(string message, string customMethodprefix = null, string customClassPrefix = null)
     {
-        Write(LogLevel.Warning, message, customMethodprefix);
+        Write(LogLevel.Warning, message, customMethodprefix, customClassPrefix);
     }
 
-    public static void Error(string message, string customMethodprefix = null)
+    public static void Error(string message, string customMethodprefix = null, string customClassPrefix = null)
     {
-        Write(LogLevel.Error, message, customMethodprefix);
+        Write(LogLevel.Error, message, customMethodprefix, customClassPrefix);
     }
 
-    public static void Fatal(string message, string customMethodprefix = null)
+    public static void Fatal(string message, string customMethodprefix = null, string customClassPrefix = null)
     {
-        Write(LogLevel.Fatal, message, customMethodprefix);
+        Write(LogLevel.Fatal, message, customMethodprefix, customClassPrefix);
     }
 }
