@@ -1,5 +1,4 @@
 ﻿using ArcticWolf.DataMiner.Apis.Benbot;
-using ArcticWolf.DataMiner.Apis.FnDotNet;
 using ArcticWolf.DataMiner.Apis.Nitestats;
 using ArcticWolf.DataMiner.Common.Http;
 using ArcticWolf.DataMiner.Managers;
@@ -29,7 +28,6 @@ namespace ArcticWolf.DataMiner
         public static IAppConfig Configuration { get; private set; }
         public static BenbotApiClient BenbotApiClient { get; private set; }
         public static NitestatsApiClient NitestatsApiClient { get; private set; }
-        public static FnDotNetApiClient FnDotNetApiClient { get; private set; }
 
         static void Main(string[] args)
         {
@@ -85,7 +83,6 @@ namespace ArcticWolf.DataMiner
 
             NitestatsApiClient = new NitestatsApiClient();
             BenbotApiClient = new BenbotApiClient();
-            FnDotNetApiClient = new FnDotNetApiClient();
 
             CurrentVersionMonitor.Init();
             OldVersionsManager.Init();

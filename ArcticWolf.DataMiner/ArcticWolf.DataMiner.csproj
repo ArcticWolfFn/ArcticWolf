@@ -8,7 +8,6 @@
   <ItemGroup>
     <PackageReference Include="AnyDiff" Version="1.0.88" />
     <PackageReference Include="Config.Net" Version="4.17.0" />
-    <PackageReference Include="FortniteDotNet" Version="1.0.5.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Ini" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
