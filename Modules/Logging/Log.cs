@@ -67,7 +67,7 @@ public static class Log
         }
     }
 
-    private static void Write(LogLevel logLevel, string message, string prefix = null)
+    private static void Write(LogLevel logLevel, string message, string prefix = null, string classPrefix = null)
     {
         StackFrame frame = new StackFrame(2);
         var method = frame.GetMethod();
@@ -106,11 +106,15 @@ public static class Log
             }
         }
 
-            string seperator = " ";
-        string formatedDateTime = $"[{DateTime.Now}]";
-        string formatedLogLevel = $"[{logLevel}]";
+        var seperator = " ";
+        var formatedDateTime = $"[{DateTime.Now}]";
+        var formatedLogLevel = $"[{logLevel}]";
 
-        string formatedMessage = $"[{classDefaultLogPrefix}] ";
+        var formatedMessage = $"[{classDefaultLogPrefix}] ";
+        if (classPrefix != null)
+        {
+            formatedMessage = classPrefix;
+        }
 
         if (prefix != null)
         {
