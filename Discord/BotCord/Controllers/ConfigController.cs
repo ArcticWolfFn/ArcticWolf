@@ -15,7 +15,7 @@ namespace BotCord.Controllers
     /// </summary>
     public class ConfigController : ControllerBase
     {
-        private readonly string LOG_PREFIX = $"[{nameof(ConfigController)}] ";
+        private readonly string LOG_PREFIX = nameof(ConfigController);
         private readonly string CONFIG_FILE_PATH = "./config.json";
 
         public static Models.Config Config = null;
