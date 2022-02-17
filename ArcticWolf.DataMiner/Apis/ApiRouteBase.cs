@@ -12,11 +12,19 @@ namespace ArcticWolf.DataMiner.Apis
 
         public TApiClient ParentApiClient { get; }
 
+        private readonly HttpClient _httpClient;
+
         protected abstract string ClassLogPrefix { get; }
 
-        public ApiRouteBase(TApiClient apiClient)
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="apiClient"></param>
+        /// <param name="httpClient">If not null, it will be used for all requests.</param>
+        protected ApiRouteBase(TApiClient apiClient, HttpClient httpClient = null)
         {
             ParentApiClient = apiClient;
+            _httpClient = httpClient;
         }
 
         public virtual TReturnType Request(FnSeason? season = null)
@@ -25,10 +33,10 @@ namespace ArcticWolf.DataMiner.Apis
             if (SupportsPreviousFnVersions && season != null)
             {
                 // ToDo: make this custom
-                requestUrl += "?version=" + season?.SeasonNumber;
+                requestUrl += "?version=" + season.Value.SeasonNumber;
             }
             
-            var response = new HttpClient().Request(requestUrl);
+            var response = _httpClient?.Request(requestUrl) ?? new HttpClient().Request(requestUrl);
 
             if (response.Success) return JsonDeserializer.Deserialize<TReturnType>(response.Content);
             
