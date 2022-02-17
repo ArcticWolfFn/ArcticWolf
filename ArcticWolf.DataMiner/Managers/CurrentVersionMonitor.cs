@@ -42,7 +42,7 @@ namespace ArcticWolf.DataMiner.Managers
 
         private static void ProcessFlagData()
         {
-            var calendarResponse = Program.NitestatsApiClient.GetCalendarData.Request(null);
+            var calendarResponse = Program.NitestatsApiClient.GetCalendarData.Request();
 
             var dbContext = Program.DbContext;
             
@@ -185,7 +185,7 @@ namespace ArcticWolf.DataMiner.Managers
 
             Log.Verbose($"Analysing keys for v{version:F}", AES_LOG_PREFIX);
 
-            var aesResponse = Program.BenbotApiClient.GetAesKeys.Get(version.ToString(CultureInfo.InvariantCulture));
+            var aesResponse = Program.BenbotApiClient.GetAesKeys.Request(version);
 
             if (aesResponse == null)
             {

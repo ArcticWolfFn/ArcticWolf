@@ -1,6 +1,5 @@
 ﻿using ArcticWolf.DataMiner.Common.Http;
 using ArcticWolf.DataMiner.Common.Json;
-using ArcticWolf.Storage;
 
 namespace ArcticWolf.DataMiner.Apis
 {
@@ -27,13 +26,13 @@ namespace ArcticWolf.DataMiner.Apis
             _httpClient = httpClient;
         }
 
-        public virtual TReturnType Request(FnSeason? season = null)
+        public virtual TReturnType Request(decimal version = 0)
         {
             var requestUrl = ParentApiClient.ServerUrl + Path;
-            if (SupportsPreviousFnVersions && season != null)
+            if (SupportsPreviousFnVersions && version != 0)
             {
                 // ToDo: make this custom
-                requestUrl += "?version=" + season.Value.SeasonNumber;
+                requestUrl += $"?version={version:F}";
             }
             
             var response = _httpClient?.Request(requestUrl) ?? new HttpClient().Request(requestUrl);

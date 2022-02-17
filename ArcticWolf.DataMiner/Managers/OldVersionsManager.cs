@@ -44,7 +44,7 @@ namespace ArcticWolf.DataMiner.Managers
 
             if (!foundVersions.Any())
             {
-                AesResponse aesResponse = Program.BenbotApiClient.GetAesKeys.Get(version.ToString(CultureInfo.InvariantCulture));
+                AesResponse aesResponse = Program.BenbotApiClient.GetAesKeys.Request(version);
 
                 if (aesResponse == null)
                 {

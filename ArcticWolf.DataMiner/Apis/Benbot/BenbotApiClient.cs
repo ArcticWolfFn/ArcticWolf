@@ -5,17 +5,13 @@ using ArcticWolf.DataMiner.Events;
 using ArcticWolf.DataMiner.Models.Apis.Benbot;
 using ArcticWolf.Storage;
 using Microsoft.EntityFrameworkCore;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace ArcticWolf.DataMiner.Apis.Benbot
 {
-    public class BenbotApiClient
+    public class BenbotApiClient : IApiClient
     {
         /// <summary>
         /// True if the cdn version doesn't match the benbot version after an update
@@ -24,14 +20,14 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
 
         private bool isNewUpdateAvailable = false;
 
-        private HttpClient _client;
+        private readonly HttpClient _client;
         private static readonly WebHeaderCollection defaultHeaders = new()
         {
             { HttpRequestHeader.ContentType, "application/json" }
         };
 
         // Routes
-        public GetAesKeys GetAesKeys;
+        public GetAesKeysRoute GetAesKeys;
 
         public delegate void NewUpdateAvailableEventHandler(object sender, NewUpdateAvailableEventArgs e);
 
@@ -42,7 +38,7 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
             Log.Information("Initialising...");
             _client = new HttpClient(defaultHeaders);
 
-            GetAesKeys = new(_client);
+            GetAesKeys = new GetAesKeysRoute(this, _client);
         }
 
         public StatusResponse GetStatus()
@@ -151,5 +147,7 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
                 dbContext.PakFiles.Add(newPakFile);
             }
         }
+
+        public string ServerUrl => "https://benbot.app";
     }
 }
