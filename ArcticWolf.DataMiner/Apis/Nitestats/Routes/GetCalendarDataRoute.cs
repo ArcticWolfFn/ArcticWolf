@@ -1,20 +1,16 @@
-using System.Collections.Generic;
 using ArcticWolf.DataMiner.Models.Apis.Nitestats;
 
 namespace ArcticWolf.DataMiner.Apis.Nitestats.Routes;
 
-public class GetCalendarDataRoute : IApiRoute<CalendarResponse, NitestatsApiClient>
+public class GetCalendarDataRoute : ApiRouteBase<CalendarResponse, NitestatsApiClient>
 {
-    public bool SupportsPreviousFnVersions => false;
+    public override bool SupportsPreviousFnVersions => false;
     
-    public string Path => "/v1/epic/modes";
-    
-    public NitestatsApiClient ParentApiClient { get; }
-    
-    public string ClassLogPrefix => nameof(GetCalendarDataRoute);
+    protected override string Path => "/v1/epic/modes";
 
-    public GetCalendarDataRoute(NitestatsApiClient apiClient)
+    protected override string ClassLogPrefix => nameof(GetCalendarDataRoute);
+
+    public GetCalendarDataRoute(NitestatsApiClient apiClient) : base(apiClient)
     {
-        ParentApiClient = apiClient;
     }
 }

@@ -1,15 +1,7 @@
-﻿
-using ArcticWolf.DataMiner.Common.Http;
-using ArcticWolf.DataMiner.Common.Json;
-using ArcticWolf.DataMiner.Extensions;
-using ArcticWolf.DataMiner.Models.Apis.Nitestats;
-using ArcticWolf.DataMiner.Models.Apis.Nitestats.Calendar.Channels;
-using ArcticWolf.DataMiner.Models.Apis.Nitestats.Calendar.Channels.States;
-using ArcticWolf.DataMiner.Models.Apis.Nitestats.Staging;
+﻿using ArcticWolf.DataMiner.Common.Json;
 using ArcticWolf.DataMiner.Models.Discord;
 using ArcticWolf.Storage;
 using ArcticWolf.Storage.Constants;
-using Logging;
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using System;
@@ -29,10 +21,9 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
         private const string EVENT_FLAGS_DISCORD_BOT = "eventflag-updates";
 
-        private CalendarResponse _cachedLastCalendarResponse = null;
-
         public readonly GetStagingServersRoute GetStagingServers;
         public readonly GetCalendarDataRoute GetCalendarData;
+        public readonly GetAccessTokenRoute GetAccessToken;
 
         public NitestatsApiClient()
         {
@@ -40,149 +31,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
             GetStagingServers = new GetStagingServersRoute(this);
             GetCalendarData = new GetCalendarDataRoute(this);
-            
-            GetCalendarDataOld();
-        }
-
-        [LogPrefix("Calendar")]
-        private void GetCalendarDataOld()
-        {
-            DatabaseContext dbContext = Program.DbContext;
-
-            HttpResponse response = new HttpClient().Request("https://api.nitestats.com/v1/epic/modes");
-
-            if (!response.Success)
-            {
-                Log.Error("Request to retrieve calendar data was not successful!");
-                return;
-            }
-
-            CalendarResponse calendarResponse = JsonDeserializer.Deserialize<CalendarResponse>(response.Content);
-
-            dbContext.FnEventFlags.Load();
-
-            if (_cachedLastCalendarResponse != null)
-            {
-                // do comparison
-                List<Difference> differences = calendarResponse.GetDifferences(_cachedLastCalendarResponse);
-                foreach (Difference diff in differences)
-                {
-                    switch (diff.Type)
-                    {
-                        case DifferenceType.Added:
-                            Log.Error($"(PropertyChanged) Object of type {diff.Type} at {diff.Path} has been added");
-                            break;
-
-                        case DifferenceType.Changed:
-                            Log.Error($"(PropertyChanged) {diff.Property} changed from '{diff.OriginalValue}' to '{diff.NewValue}'");
-                            break;
-
-                        case DifferenceType.Removed:
-                            Log.Error($"(PropertyChanged) {diff.Property} at {diff.Path} was removed");
-                            break;
-                    }
-                }
-
-                return;
-            }
-            else
-            {
-                // got data for first time
-
-                // process ClientEvents channel
-                foreach (State<ClientEventsSubState> currentState in calendarResponse.Channels.ClientEvents.States)
-                {
-                    foreach (Event activeEvent in currentState.ActiveEvents)
-                    {
-                        IQueryable<FnEventFlag> foundFlags = dbContext.FnEventFlags.Include(x => x.TimeSpans).Where(x => x.Event == activeEvent.EventType);
-
-                        if (foundFlags.Count() > 0)
-                        {
-                            FnEventFlag flag = foundFlags.First();
-                            // flag exists so check if it has been modified or readded
-
-                            Log.Verbose($"Found flag {flag.Event}");
-                            Log.Verbose($"Flag has {flag.TimeSpans.Count} time spans");
-
-                            IEnumerable<FnEventFlagTimeSpan> foundTimeSpans = flag.TimeSpans.Where(x => x.StartTime == activeEvent.ActiveSince || x.EndTime == activeEvent.ActiveUntil);
-
-                            if (foundTimeSpans.Count() > 0)
-                            {
-                                // time span was modified
-                                // make sure to modify the time span that will end last
-                                FnEventFlagTimeSpan timeSpan = foundTimeSpans.OrderByDescending(x => x.EndTime).First();
-
-                                if (timeSpan.EndTime != activeEvent.ActiveUntil || timeSpan.StartTime != activeEvent.ActiveSince)
-                                {
-                                    Log.Information($"Flag {activeEvent.EventType}: Modified timespan");
-                                    Log.Information($"Flag {activeEvent.EventType}: Start: {timeSpan.StartTime}' -> '{activeEvent.ActiveSince}'");
-                                    Log.Information($"Flag {activeEvent.EventType}: End: {timeSpan.EndTime}' -> '{activeEvent.ActiveUntil}'");
-
-                                    FnEventFlagModification modification = new();
-                                    modification.ModifiedTimeSpan = timeSpan;
-                                    modification.NewStartTime = activeEvent.ActiveSince;
-                                    modification.NewEndTime = activeEvent.ActiveUntil;
-                                    modification.OverriddenStartTime = timeSpan.StartTime;
-                                    modification.OverriddenEndTime = timeSpan.EndTime;
-                                    flag.Modifications.Add(modification);
-
-                                    timeSpan.StartTime = activeEvent.ActiveSince;
-                                    timeSpan.EndTime = activeEvent.ActiveUntil;
-                                    continue;
-                                }
-                            }
-
-                            // time span already exists
-                            if (flag.TimeSpans.Where(x => x.StartTime == activeEvent.ActiveSince && x.EndTime == activeEvent.ActiveUntil).Any())
-                            {
-                                continue;
-                            }
-
-                            // new time span was added
-                            FnEventFlagTimeSpan newTimeSpan = new();
-                            newTimeSpan.StartTime = activeEvent.ActiveSince;
-                            newTimeSpan.EndTime = activeEvent.ActiveUntil;
-                            flag.TimeSpans.Add(newTimeSpan);
-                            Log.Information($"Flag {activeEvent.EventType}: Added new time span: Start: {newTimeSpan.StartTime} | End: {newTimeSpan.EndTime}");
-                        }
-                        else
-                        {
-                            // flag doesn't exist so create it
-                            Log.Information($"Adding new flag {activeEvent.EventType}");
-
-                            FnEventFlag flag = new();
-                            flag.Event = activeEvent.EventType;
-                            
-                            FnEventFlagTimeSpan newTimeSpan = new();
-                            newTimeSpan.StartTime = activeEvent.ActiveSince;
-                            newTimeSpan.EndTime = activeEvent.ActiveUntil;
-                            flag.TimeSpans.Add(newTimeSpan);
-
-                            dbContext.FnEventFlags.Add(flag);
-                        }
-                    }
-                }
-
-                _ = dbContext.SaveChanges();
-            }
-        }
-
-        /// <summary>
-        /// Generates an epic games client credentials token, not linked to an account. All tokens are cached and regenerated every 10 minutes.
-        /// </summary>
-        public AccessTokenResponse GetAccessToken()
-        {
-            HttpResponse response = new HttpClient().Request("https://api.nitestats.com/v1/epic/bearer");
-
-            if (!response.Success)
-            {
-                Log.Error("Request to retrieve access token was not successful!");
-                return new AccessTokenResponse();
-            }
-
-            AccessTokenResponse accessTokenResponse = JsonDeserializer.Deserialize<AccessTokenResponse>(response.Content);
-
-            return accessTokenResponse;
+            GetAccessToken = new GetAccessTokenRoute(this);
         }
 
         public void LoadEventFlagsFromMessages()
@@ -234,12 +83,12 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                     continue;
                 }
 
-                foreach (Embed embed in message.Embeds)
+                foreach (var embed in message.Embeds)
                 {
-                    Field eventTypeField = embed.Fields.Find(x => x.Name.Contains("EventType"));
-                    Field startsField = embed.Fields.Find(x => x.Name.Contains("Starts"));
-                    Field endsField = embed.Fields.Find(x => x.Name.Contains("Ends"));
-                    Field statusField = embed.Fields.Find(x => x.Name.Contains("Status"));
+                    var eventTypeField = embed.Fields.Find(x => x.Name.Contains("EventType"));
+                    var startsField = embed.Fields.Find(x => x.Name.Contains("Starts"));
+                    var endsField = embed.Fields.Find(x => x.Name.Contains("Ends"));
+                    var statusField = embed.Fields.Find(x => x.Name.Contains("Status"));
 
                     // validate embed
                     if (eventTypeField == null || startsField == null || endsField == null || statusField == null)
@@ -254,9 +103,9 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
                     }
 
-                    // get the overridden datetimes
-                    string overriddenStartsField = Regex.Match(startsField.Value, "~~.*~~").Value;
-                    string overriddenEndsField = Regex.Match(endsField.Value, "~~.*~~").Value;
+                    // get the overridden times
+                    var overriddenStartsField = Regex.Match(startsField.Value, "~~.*~~").Value;
+                    var overriddenEndsField = Regex.Match(endsField.Value, "~~.*~~").Value;
 
                     // fix DateTime parsing error due to Discord text styling
                     startsField.Value = Regex.Replace(startsField.Value, "~~.*~~", "");
@@ -268,8 +117,8 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
                     DateTime overriddenFlagStartTimeUtc = new();
                     DateTime overriddenFlagEndTimeUtc = new();
-                    DateTime flagStartTimeUtc = new();
-                    DateTime flagEndTimeUtc = new();
+                    DateTime flagStartTimeUtc;
+                    DateTime flagEndTimeUtc;
 
                     try
                     {
@@ -311,8 +160,10 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                     }
                     else
                     {
-                        eventFlag = new();
-                        eventFlag.Event = eventTypeField.Value;
+                        eventFlag = new()
+                        {
+                            Event = eventTypeField.Value
+                        };
                         _ = dbContext.FnEventFlags.Add(eventFlag);
                     }
 
@@ -348,11 +199,8 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                         (x.StartTime >= flagStartTimeUtc && x.EndTime <= flagStartTimeUtc)
                         );
 
-                    string flagSeasonsString = "";
-                    foreach (FnSeason season in flagSeasons)
-                    {
-                        flagSeasonsString += $"S{season.SeasonNumber}, ";
-                    }
+                    var flagSeasonsString =
+                        flagSeasons.Aggregate("", (current, season) => current + $"S{season.SeasonNumber}, ");
 
                     switch (statusField.Value.Trim())
                     {
@@ -370,9 +218,11 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                                 break;
                             }
 
-                            FnEventFlagTimeSpan timeSpan = new();
-                            timeSpan.StartTime = flagStartTimeUtc;
-                            timeSpan.EndTime = flagEndTimeUtc;
+                            FnEventFlagTimeSpan timeSpan = new()
+                            {
+                                StartTime = flagStartTimeUtc,
+                                EndTime = flagEndTimeUtc
+                            };
                             eventFlag.TimeSpans.Add(timeSpan);
 
                             Log.Debug($"Action: Added", "EventFlagsLoader");
@@ -409,12 +259,14 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             {
                                 timeSpan = eventFlag.TimeSpans.First(x => x.StartTime == overriddenFlagStartTimeUtc && x.EndTime == overriddenFlagEndTimeUtc);
 
-                                FnEventFlagModification modification = new();
-                                modification.ModifiedTimeSpan = timeSpan;
-                                modification.OverriddenStartTime = overriddenFlagStartTimeUtc;
-                                modification.OverriddenEndTime = overriddenFlagEndTimeUtc;
-                                modification.NewStartTime = flagStartTimeUtc;
-                                modification.NewEndTime = flagEndTimeUtc;
+                                FnEventFlagModification modification = new()
+                                {
+                                    ModifiedTimeSpan = timeSpan,
+                                    OverriddenStartTime = overriddenFlagStartTimeUtc,
+                                    OverriddenEndTime = overriddenFlagEndTimeUtc,
+                                    NewStartTime = flagStartTimeUtc,
+                                    NewEndTime = flagEndTimeUtc
+                                };
                                 eventFlag.Modifications.Add(modification);
 
                                 // modified before active
@@ -434,9 +286,11 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                                     break;
                                 }
 
-                                timeSpan = new();
-                                timeSpan.StartTime = flagStartTimeUtc;
-                                timeSpan.EndTime = flagEndTimeUtc;
+                                timeSpan = new()
+                                {
+                                    StartTime = flagStartTimeUtc,
+                                    EndTime = flagEndTimeUtc
+                                };
                                 eventFlag.TimeSpans.Add(timeSpan);
                             }
 
@@ -464,9 +318,11 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                             // Add removed flag if it hasn't been added yet
                             if (!eventFlag.TimeSpans.Any(x => x.StartTime == flagStartTimeUtc && x.EndTime == flagEndTimeUtc))
                             {
-                                timeSpan = new();
-                                timeSpan.StartTime = flagStartTimeUtc;
-                                timeSpan.EndTime = flagEndTimeUtc;
+                                timeSpan = new()
+                                {
+                                    StartTime = flagStartTimeUtc,
+                                    EndTime = flagEndTimeUtc
+                                };
                                 eventFlag.TimeSpans.Add(timeSpan);
                             }
 
@@ -481,15 +337,15 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                 }
             }
 
-            int modifiedItemsCount = dbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Modified && x.Entity.GetType().Name == nameof(FnEventFlag));
-            int addedItemsCount = dbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Added && x.Entity.GetType().Name == nameof(FnEventFlag));
+            var modifiedItemsCount = dbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Modified && x.Entity.GetType().Name == nameof(FnEventFlag));
+            var addedItemsCount = dbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Added && x.Entity.GetType().Name == nameof(FnEventFlag));
 
             Log.Information($"(EventFlagsLoader): Added {addedItemsCount} items and modified {modifiedItemsCount} items.");
 
-            int modifiedTSItemsCount = dbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Modified && x.Entity.GetType().Name == nameof(FnEventFlagTimeSpan));
-            int addedTSItemsCount = dbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Added && x.Entity.GetType().Name == nameof(FnEventFlagTimeSpan));
+            var modifiedTsItemsCount = dbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Modified && x.Entity.GetType().Name == nameof(FnEventFlagTimeSpan));
+            var addedTsItemsCount = dbContext.ChangeTracker.Entries().Count(x => x.State == EntityState.Added && x.Entity.GetType().Name == nameof(FnEventFlagTimeSpan));
 
-            Log.Information($"(EventFlagsLoader): Added {addedTSItemsCount} TS items and modified {modifiedTSItemsCount} TS items.");
+            Log.Information($"(EventFlagsLoader): Added {addedTsItemsCount} TS items and modified {modifiedTsItemsCount} TS items.");
 
             dbContext.SaveChanges();
 
@@ -498,7 +354,7 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
 
         public void LoadHotFixesFromMessages()
         {
-            DatabaseContext dbContext = Program.DbContext;
+            var dbContext = Program.DbContext;
 
             Log.Information("Loading data...", "HotfixLoader");
 
@@ -539,11 +395,11 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                     continue;
                 }
 
-                foreach (Attachment attachment in msg.Attachments)
+                foreach (var attachment in msg.Attachments)
                 {
                     Log.Debug($"Loading file '{attachment.Url}'", "HotfixLoader");
 
-                    string hotFixFileContent = "";
+                    string hotFixFileContent;
                     try
                     {
                         hotFixFileContent = File.ReadAllText(Path.Combine(Path.GetDirectoryName(Program.Configuration.HotfixDiscordChatHistoryFilePath), attachment.Url));
@@ -561,31 +417,31 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                     }
 
                     // Category Regex
-                    MatchCollection categoryMatches = Regex.Matches(hotFixFileContent, @"\[.*\]\s");
+                    var categoryMatches = Regex.Matches(hotFixFileContent, @"\[.*\]\s");
 
                     foreach (Match categoryMatch in categoryMatches)
                     {
-                        Match nextMatch = categoryMatch.NextMatch();
-                        string catergoryName = categoryMatch.Value.Replace('\r', ' ').Replace('\n', ' ').Replace('[', ' ').Replace(']', ' ').Trim();
+                        var nextMatch = categoryMatch.NextMatch();
+                        var categoryName = categoryMatch.Value.Replace('\r', ' ').Replace('\n', ' ').Replace('[', ' ').Replace(']', ' ').Trim();
 
-                        int categoryEndIndex = nextMatch.Index;
+                        var categoryEndIndex = nextMatch.Index;
                         if (categoryEndIndex == 0)
                         {
                             categoryEndIndex = hotFixFileContent.Length;
                             Log.Debug("This is the last category of this hotfix file.", "HotfixLoader");
                         }
 
-                        Log.Debug($"Found hotfix category '{catergoryName}', starting at index {categoryMatch.Index} and ending at index {categoryEndIndex}");
+                        Log.Debug($"Found hotfix category '{categoryName}', starting at index {categoryMatch.Index} and ending at index {categoryEndIndex}");
 
-                        int categoryStartIndex = categoryMatch.Index + categoryMatch.Length;
+                        var categoryStartIndex = categoryMatch.Index + categoryMatch.Length;
 
-                        string categoryContent = hotFixFileContent.Substring(categoryStartIndex, categoryEndIndex - categoryStartIndex);
+                        var categoryContent = hotFixFileContent.Substring(categoryStartIndex, categoryEndIndex - categoryStartIndex);
 
-                        MatchCollection variableMatches = Regex.Matches(hotFixFileContent, @".*=.*(\r\n|\r|\n|$)");
+                        var variableMatches = Regex.Matches(hotFixFileContent, @".*=.*(\r\n|\r|\n|$)");
 
                         foreach(Match variableMatch in variableMatches)
                         {
-                            string variableContent = variableMatch.Value.Replace('\r', ' ').Replace('\n', ' ').Trim();
+                            var variableContent = variableMatch.Value.Replace('\r', ' ').Replace('\n', ' ').Trim();
 
                             // remove the diff prefix
                             if (variableContent.StartsWith("+ ") || variableContent.StartsWith("- "))
@@ -593,12 +449,12 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                                 variableContent = variableContent[2..];
                             }
 
-                            Match variableNameMatch = Regex.Matches(variableContent, @"([^=])*=").First();
-                            string variableName = variableNameMatch.Value.Replace("=", "").Replace("+", "").Replace("-", "");
+                            var variableNameMatch = Regex.Matches(variableContent, @"([^=])*=").First();
+                            var variableName = variableNameMatch.Value.Replace("=", "").Replace("+", "").Replace("-", "");
 
                             Log.Debug($"Found variable: '{variableName}'", "HotfixLoader");
 
-                            string variableValue = variableContent.Replace(variableNameMatch.Value, "");
+                            var variableValue = variableContent.Replace(variableNameMatch.Value, "");
 
                             Log.Debug($"Found variable value: '{variableValue}'", "HotfixLoader");
 
@@ -610,14 +466,14 @@ namespace ArcticWolf.DataMiner.Apis.Nitestats
                                 variableValue = variableValue[1..];
                                 variableValue = variableValue.Remove(variableValue.Length - 1);
 
-                                MatchCollection variableParamMatches = Regex.Matches(variableValue, @"\w*=(\((\(.*\))*?\)|\(.*\)|\"".*?\""|\w*)");
+                                var variableParamMatches = Regex.Matches(variableValue, @"\w*=(\((\(.*\))*?\)|\(.*\)|\"".*?\""|\w*)");
 
                                 foreach (Match paramMatch in variableParamMatches)
                                 {
-                                    string paramName = Regex.Match(paramMatch.Value, @"\w*=").Value;
+                                    var paramName = Regex.Match(paramMatch.Value, @"\w*=").Value;
                                     paramName = paramName.Remove(paramName.Length - 1); // remove '=' sign
 
-                                    string paramValue = Regex.Match(paramMatch.Value, @"=.*").Value[1..]; // remove '=' sign
+                                    var paramValue = Regex.Match(paramMatch.Value, @"=.*").Value[1..]; // remove '=' sign
 
                                     Log.Debug($"Found variable param '{paramName}' with value of '{paramValue}'", "HotfixLoader");
                                 }

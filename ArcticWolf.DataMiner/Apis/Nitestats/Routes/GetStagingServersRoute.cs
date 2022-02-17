@@ -1,20 +1,18 @@
 using System.Collections.Generic;
 using ArcticWolf.DataMiner.Models.Apis.Nitestats.Staging;
+using ArcticWolf.Storage;
 
 namespace ArcticWolf.DataMiner.Apis.Nitestats.Routes;
 
-public class GetStagingServersRoute : IApiRoute<Dictionary<string, Server>, NitestatsApiClient>
+public class GetStagingServersRoute : ApiRouteBase<Dictionary<string, Server>, NitestatsApiClient>
 {
-    public bool SupportsPreviousFnVersions => false;
+    public override bool SupportsPreviousFnVersions => false;
     
-    public string Path => "v1/epic/staging/fortnite";
-    
-    public NitestatsApiClient ParentApiClient { get; }
-    
-    public string ClassLogPrefix => nameof(GetStagingServersRoute);
+    protected override string Path => "v1/epic/staging/fortnite";
 
-    public GetStagingServersRoute(NitestatsApiClient apiClient)
+    protected override string ClassLogPrefix => nameof(GetStagingServersRoute);
+
+    public GetStagingServersRoute(NitestatsApiClient apiClient) : base(apiClient)
     {
-        ParentApiClient = apiClient;
     }
 }

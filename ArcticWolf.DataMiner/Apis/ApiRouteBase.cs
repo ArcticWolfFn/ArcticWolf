@@ -4,23 +4,28 @@ using ArcticWolf.Storage;
 
 namespace ArcticWolf.DataMiner.Apis
 {
-    public interface IApiRoute<out TReturnType, out TApiClient> where TReturnType : new() where TApiClient : IApiClient
+    public abstract class ApiRouteBase<TReturnType, TApiClient> where TReturnType : new() where TApiClient : IApiClient
     {
-        public bool SupportsPreviousFnVersions { get; }
+        public abstract bool SupportsPreviousFnVersions { get; }
 
-        public string Path { get; }
+        protected abstract string Path { get; }
 
         public TApiClient ParentApiClient { get; }
 
-        public string ClassLogPrefix { get; }
+        protected abstract string ClassLogPrefix { get; }
 
-        public virtual TReturnType Request(FnSeason season)
+        public ApiRouteBase(TApiClient apiClient)
+        {
+            ParentApiClient = apiClient;
+        }
+
+        public virtual TReturnType Request(FnSeason? season = null)
         {
             var requestUrl = ParentApiClient.ServerUrl + Path;
-            if (SupportsPreviousFnVersions)
+            if (SupportsPreviousFnVersions && season != null)
             {
                 // ToDo: make this custom
-                requestUrl += "?version=" + season.SeasonNumber;
+                requestUrl += "?version=" + season?.SeasonNumber;
             }
             
             var response = new HttpClient().Request(requestUrl);
