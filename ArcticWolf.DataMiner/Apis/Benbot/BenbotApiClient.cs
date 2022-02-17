@@ -43,14 +43,6 @@ namespace ArcticWolf.DataMiner.Apis.Benbot
             _client = new HttpClient(defaultHeaders);
 
             GetAesKeys = new(_client);
-
-            /*StatusResponse statusResponse = GetStatus();
-
-            if (statusResponse != null)
-            {
-                Log.Information("Current FN CDN version is " + statusResponse.CurrentCdnVersion, LOG_PREFIX);
-                Log.Information("Current FN version is " + statusResponse.CurrentCdnVersionNumber, LOG_PREFIX);
-            }*/
         }
 
         public StatusResponse GetStatus()
