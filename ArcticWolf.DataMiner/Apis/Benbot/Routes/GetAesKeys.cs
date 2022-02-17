@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace ArcticWolf.DataMiner.Apis.Benbot.Routes
 {
-    public class GetAesKeys : IApiRoute
+    public class GetAesKeys
     {
         public bool SupportsPreviousFnVersions => true;
 
