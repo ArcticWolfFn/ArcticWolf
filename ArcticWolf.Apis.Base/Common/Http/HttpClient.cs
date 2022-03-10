@@ -1,21 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
+﻿using System.Net;
 
-namespace ArcticWolf.DataMiner.Common.Http
+namespace ArcticWolf.Apis.Base.Common.Http
 {
     public class HttpClient
     {
         private const string LOG_PREFIX = "Http";
-        private WebHeaderCollection _defaultHeaders = new();
 
-        public HttpClient(WebHeaderCollection defaultHeaders = null)
+        private readonly WebHeaderCollection _defaultHeaders = new();
+
+        public HttpClient(WebHeaderCollection? defaultHeaders = null)
         {
             if (defaultHeaders != null)
             {
@@ -62,8 +55,8 @@ namespace ArcticWolf.DataMiner.Common.Http
                 }
             }*/
 
-            HttpWebResponse response = null;
-            string statusCode = null;
+            HttpWebResponse? response = null;
+            string? statusCode = null;
             try
             {
                 response = (HttpWebResponse)request.GetResponse();
@@ -80,15 +73,17 @@ namespace ArcticWolf.DataMiner.Common.Http
             }
             if (response != null)
             {
-                Stream resStream = response.GetResponseStream();
-                StreamReader sr = new StreamReader(resStream);
-                string response_data = sr.ReadToEnd();
-                sr.Close();
-                resStream.Close();
-                Log.Debug($"Status code: {statusCode}", LOG_PREFIX);
-                Log.Verbose($"Response data: {response_data}", LOG_PREFIX);
+                var resStream = response.GetResponseStream();
+                using (StreamReader sr = new(resStream))
+                {
+                    var response_data = sr.ReadToEnd();
+                    sr.Close();
+                    resStream.Close();
+                    Log.Debug($"Status code: {statusCode}", LOG_PREFIX);
+                    Log.Verbose($"Response data: {response_data}", LOG_PREFIX);
 
-                result.Content = response_data;
+                    result.Content = response_data;
+                }
                 result.Success = true;
             }
             else

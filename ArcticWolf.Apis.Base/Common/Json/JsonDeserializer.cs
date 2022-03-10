@@ -1,12 +1,6 @@
 ﻿using Newtonsoft.Json;
-using Newtonsoft.Json.Serialization;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace ArcticWolf.DataMiner.Common.Json
+namespace ArcticWolf.Apis.Base.Common.Json
 {
     public static class JsonDeserializer
     {
@@ -20,7 +14,7 @@ namespace ArcticWolf.DataMiner.Common.Json
         /// <param name="json"></param>
         /// <param name="enableReport"></param>
         /// <returns></returns>
-        public static Type Deserialize<Type>(string json, bool enableReport = true)
+        public static Type? Deserialize<Type>(string json, bool enableReport = true)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings
             {
@@ -31,7 +25,7 @@ namespace ArcticWolf.DataMiner.Common.Json
             return JsonConvert.DeserializeObject<Type>(json);
         }
 
-        private static void ErrorHandler(object sender, ErrorEventArgs e)
+        private static void ErrorHandler(object? sender, Newtonsoft.Json.Serialization.ErrorEventArgs e)
         {
             if (e.ErrorContext.Error.Message.StartsWith("Could not find member "))
             {
