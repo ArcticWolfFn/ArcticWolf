@@ -1,17 +1,11 @@
-﻿using ArcticWolf.DataMiner.Models.Apis.Nitestats.Staging;
-using BotCord.Commands;
-using BotCord.Controllers;
+﻿using BotCord.Commands;
 using BotCord.Extensions;
 using BotCord.Models.Enums;
 using Discord.WebSocket;
 using FNitePlusBot.Messages.Staging;
-using Newtonsoft.Json;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net.Http;
-using System.Text;
-using System.Threading.Tasks;
+using ArcticWolf.Apis.NiteStats.Models.Staging;
 
 namespace FNitePlusBot.Commands.Fortnite.Staging
 {

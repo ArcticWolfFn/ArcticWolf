@@ -1,10 +1,9 @@
-﻿using ArcticWolf.DataMiner.Models.Apis.Benbot;
-using ArcticWolf.Storage;
+﻿using ArcticWolf.Storage;
 using ArcticWolf.Storage.Constants;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Threading;
+using ArcticWolf.Apis.BenBot.Models;
 
 namespace ArcticWolf.DataMiner.Managers
 {
@@ -21,14 +20,14 @@ namespace ArcticWolf.DataMiner.Managers
             if (!string.IsNullOrWhiteSpace(Program.Configuration.EventFlagsDiscordChatHistoryFilePath))
             {
                 Log.Information("Trying to retrieve old event flags...");
-                Program.NitestatsApiClient.LoadEventFlagsFromMessages();
+                EventFlagsManager.LoadEventFlagsFromMessages();
             }
 
             Log.Information("Trying to retrieve hotfix data...");
-            Program.NitestatsApiClient.LoadHotFixesFromMessages();
+            HotFixManager.LoadHotFixesFromMessages();
 
             Log.Information("Starting analytics for older versions...");
-            foreach (decimal version in Fortnite.Versions)
+            foreach (var version in Fortnite.Versions)
             {
                 AnalyseVersion(version);
             }
@@ -38,13 +37,13 @@ namespace ArcticWolf.DataMiner.Managers
 
         private static void AnalyseVersion(decimal version)
         {
-            DatabaseContext dbContext = Program.DbContext;
+            var dbContext = Program.DbContext;
 
             IEnumerable<FnVersion> foundVersions = dbContext.FnVersions.AsQueryable().Where(x => x.Version == version);
 
             if (!foundVersions.Any())
             {
-                AesResponse aesResponse = Program.BenbotApiClient.GetAesKeys.Request(version);
+                var aesResponse = Program.BenbotApiClient.GetAesKeys.Request(version);
 
                 if (aesResponse == null)
                 {

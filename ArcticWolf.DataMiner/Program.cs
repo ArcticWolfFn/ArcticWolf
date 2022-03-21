@@ -1,7 +1,4 @@
-﻿using ArcticWolf.DataMiner.Apis.Benbot;
-using ArcticWolf.DataMiner.Apis.Nitestats;
-using ArcticWolf.DataMiner.Common.Http;
-using ArcticWolf.DataMiner.Managers;
+﻿using ArcticWolf.DataMiner.Managers;
 using ArcticWolf.DataMiner.Models;
 using ArcticWolf.Storage;
 using Config.Net;
@@ -11,6 +8,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Threading;
+using ArcticWolf.Apis.Base.Common.Http;
+using ArcticWolf.Apis.BenBot;
+using ArcticWolf.Apis.NiteStats;
 
 namespace ArcticWolf.DataMiner
 {
@@ -20,14 +20,14 @@ namespace ArcticWolf.DataMiner
         {
             get
             {
-                DatabaseContext DbContext = new DatabaseContext(Program.Configuration.DatabasePath);
-                DbContext.Database.Migrate();
-                return DbContext;
+                var dbContext = new DatabaseContext(Configuration.DatabasePath);
+                dbContext.Database.Migrate();
+                return dbContext;
             }
         }
         public static IAppConfig Configuration { get; private set; }
-        public static BenbotApiClient BenbotApiClient { get; private set; }
-        public static NitestatsApiClient NitestatsApiClient { get; private set; }
+        public static BenBotApiClient BenbotApiClient { get; private set; }
+        public static NiteStatsApiClient NiteStatsApiClient { get; private set; }
 
         static void Main(string[] args)
         {
@@ -58,31 +58,31 @@ namespace ArcticWolf.DataMiner
                 },
                 new()
                 {
-                    ClassName = nameof(Apis.Nitestats.NitestatsApiClient),
+                    ClassName = nameof(Apis.NiteStats.NiteStatsApiClient),
                     MinLogLevel = LogLevel.Information
                 },
                 new()
                 {
-                    ClassName = nameof(Apis.Nitestats.NitestatsApiClient),
-                    MethodName = nameof(Apis.Nitestats.NitestatsApiClient.LoadHotFixesFromMessages),
+                    ClassName = nameof(HotFixManager),
+                    MethodName = nameof(HotFixManager.LoadHotFixesFromMessages),
                     MinLogLevel = LogLevel.Verbose
                 },
                 new()
                 {
                     ClassName = nameof(CurrentVersionMonitor),
                     MethodName = CurrentVersionMonitor.AES_LOG_PREFIX,
-                    MinLogLevel = LogLevel.Debug
+                    MinLogLevel = LogLevel.Verbose
                 },
                 new()
                 {
                     ClassName = nameof(CurrentVersionMonitor),
-                    MinLogLevel = LogLevel.Debug
+                    MinLogLevel = LogLevel.Verbose
                 },
             }
             );
 
-            NitestatsApiClient = new NitestatsApiClient();
-            BenbotApiClient = new BenbotApiClient();
+            NiteStatsApiClient = new NiteStatsApiClient();
+            BenbotApiClient = new BenBotApiClient();
 
             CurrentVersionMonitor.Init();
             OldVersionsManager.Init();

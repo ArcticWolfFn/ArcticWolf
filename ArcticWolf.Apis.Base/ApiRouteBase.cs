@@ -10,7 +10,7 @@ namespace ArcticWolf.Apis.Base
 
         public TApiClient ParentApiClient { get; }
 
-        private readonly Common.Http.HttpClient _httpClient;
+        private readonly Common.Http.HttpClient? _httpClient;
 
         protected abstract string ClassLogPrefix { get; }
 
@@ -19,7 +19,7 @@ namespace ArcticWolf.Apis.Base
         /// </summary>
         /// <param name="apiClient"></param>
         /// <param name="httpClient">If not null, it will be used for all requests.</param>
-        protected ApiRouteBase(TApiClient apiClient, Common.Http.HttpClient httpClient = null)
+        protected ApiRouteBase(TApiClient apiClient, Common.Http.HttpClient? httpClient = null)
         {
             ParentApiClient = apiClient;
             _httpClient = httpClient;

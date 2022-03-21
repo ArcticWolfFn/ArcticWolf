@@ -32,11 +32,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ArcticWolf.Core", "ArcticWo
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Apis", "Apis", "{558A80C2-FF63-4DD3-A571-9E61180BF464}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcticWolf.Apis.Benbot", "ArcticWolf.Apis.Benbot\ArcticWolf.Apis.Benbot.csproj", "{1E6079F1-942C-4940-8088-5F9C9A3377F7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcticWolf.Apis.BenBot", "ArcticWolf.Apis.BenBot\ArcticWolf.Apis.BenBot.csproj", "{1E6079F1-942C-4940-8088-5F9C9A3377F7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcticWolf.Apis.Base", "ArcticWolf.Apis.Base\ArcticWolf.Apis.Base.csproj", "{B7EAA9DE-5783-40BE-98DA-72FDFD05CAAF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcticWolf.Apis.Nitestats", "ArcticWolf.Apis.Nitestats\ArcticWolf.Apis.Nitestats.csproj", "{567A15B2-CBC3-4812-8D79-5B38E137A63D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ArcticWolf.Apis.NiteStats", "ArcticWolf.Apis.NiteStats\ArcticWolf.Apis.NiteStats.csproj", "{567A15B2-CBC3-4812-8D79-5B38E137A63D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

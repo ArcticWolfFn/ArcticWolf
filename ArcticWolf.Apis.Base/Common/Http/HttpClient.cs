@@ -68,7 +68,7 @@ namespace ArcticWolf.Apis.Base.Common.Http
                 if (ex.Status.ToString() == "OK")
                 {
                     response = ex.Response as HttpWebResponse;
-                    statusCode = ((int)response.StatusCode).ToString();
+                    if (response != null) statusCode = ((int) response.StatusCode).ToString();
                 }
             }
             if (response != null)
@@ -76,13 +76,13 @@ namespace ArcticWolf.Apis.Base.Common.Http
                 var resStream = response.GetResponseStream();
                 using (StreamReader sr = new(resStream))
                 {
-                    var response_data = sr.ReadToEnd();
+                    var responseData = sr.ReadToEnd();
                     sr.Close();
                     resStream.Close();
                     Log.Debug($"Status code: {statusCode}", LOG_PREFIX);
-                    Log.Verbose($"Response data: {response_data}", LOG_PREFIX);
+                    Log.Verbose($"Response data: {responseData}", LOG_PREFIX);
 
-                    result.Content = response_data;
+                    result.Content = responseData;
                 }
                 result.Success = true;
             }

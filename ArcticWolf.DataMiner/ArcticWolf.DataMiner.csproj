@@ -15,6 +15,8 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ArcticWolf.Apis.BenBot\ArcticWolf.Apis.BenBot.csproj" />
+    <ProjectReference Include="..\ArcticWolf.Apis.NiteStats\ArcticWolf.Apis.NiteStats.csproj" />
     <ProjectReference Include="..\ArcticWolf.Storage\ArcticWolf.Storage.csproj" />
     <ProjectReference Include="..\Discord\FNitePlusBot\FNitePlusBot.csproj" />
   </ItemGroup>
