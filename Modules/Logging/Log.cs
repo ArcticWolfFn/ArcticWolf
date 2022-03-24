@@ -91,9 +91,9 @@ public static class Log
         }
 
         // first check if there is a custom log level setting for the specified function, then default to the class setting
-        if (_minLogLevels.Any(x => x.ClassName == method.DeclaringType.Name && x.MethodName == method.Name))
+        if (_minLogLevels.Any(x => x.ClassName == method.DeclaringType.Name && x.MethodName == (prefix ?? method.Name)))
         {
-            if (_minLogLevels.First(x => x.ClassName == method.DeclaringType.Name && x.MethodName == method.Name).MinLogLevel > logLevel)
+            if (_minLogLevels.First(x => x.ClassName == method.DeclaringType.Name && x.MethodName == (prefix ?? method.Name)).MinLogLevel > logLevel)
             {
                 return;
             }
