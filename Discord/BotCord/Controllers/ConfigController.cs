@@ -40,6 +40,8 @@ namespace BotCord.Controllers
                 }
             }
 
+            Log.Information("Loading config file located at " + Path.GetFullPath(CONFIG_FILE_PATH), LOG_PREFIX);
+            
             string ConfigFileContent = "";
             try
             {
