@@ -111,7 +111,7 @@ namespace BotCord.Managers
                 ShutDownController(controllerInfo);
             }
 
-            Console.WriteLine(LOG_PREFIX + "The controller shutdown has been completed!");
+            Log.Information( "The controller shutdown has been completed!", LOG_PREFIX);
         }
 
         /// <summary>
