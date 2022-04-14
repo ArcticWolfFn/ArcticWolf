@@ -10,7 +10,7 @@ namespace BotCord
 
         public static void Initalize(string[] args)
         {
-            Log.Initalize(new System.Collections.Generic.List<LogVisibility> { LogVisibility.Console }, new()
+            Log.Initialize(new System.Collections.Generic.List<LogVisibility> { LogVisibility.Console }, new()
             {
                 new() {
                     ClassName = typeof(EventHandlers.MessageReceivedEvent).Name,

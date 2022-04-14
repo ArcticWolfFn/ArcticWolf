@@ -46,7 +46,7 @@ namespace ArcticWolf.DataMiner
 
             // DbContext.FnEventFlags.Include(x => x.TimeSpans).Include(x => x.Modifications);
 
-            Log.Initalize(new List<LogVisibility>
+            Log.Initialize(new List<LogVisibility>
             {
                 LogVisibility.Console 
             }, new ()

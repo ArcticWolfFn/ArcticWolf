@@ -28,7 +28,7 @@ public static class Log
     private static bool _initalized = false;
     private static readonly object _consoleLock = new object();
 
-    public static void Initalize(List<LogVisibility> logVisibilities, List<MinLogLevelOption> minLogLevels)
+    public static void Initialize(List<LogVisibility> logVisibilities, List<MinLogLevelOption> minLogLevels)
     {
         if (_initalized)
         {
