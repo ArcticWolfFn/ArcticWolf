@@ -1,4 +1,6 @@
-﻿public enum LogLevel
+﻿// ReSharper disable CheckNamespace
+
+public enum LogLevel
 {
     Verbose,
     Debug,

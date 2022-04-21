@@ -3,13 +3,13 @@
 namespace Logging
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-    public class LogPrefixAttribute : Attribute
+    public abstract class LogPrefixAttribute : Attribute
     {
-        public string Prefix;
+        public readonly string Prefix;
 
-        public LogPrefixAttribute(string name)
+        protected LogPrefixAttribute(string name)
         {
-            this.Prefix = name;
+            Prefix = name;
         }
     }
 }
