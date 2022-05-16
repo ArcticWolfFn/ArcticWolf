@@ -15,3 +15,6 @@ The Core worked in a previous version, but after I refactored the code to create
 | [Discord/BotCord](/Discord/BotCord/) | Simple framework for Discord bots | |
 | [Discord/FNitePlusBot](/Discord/FNitePlusBot/) | Bot for interacting with Fortnite-related data | |
 | [Modules/Logging](/Modules/Logging/) | Custom and easy-to-use logger | |
+
+## Contact
+Discord: DeveloperJoschi#3193
