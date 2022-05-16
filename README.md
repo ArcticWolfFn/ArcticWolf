@@ -1,7 +1,7 @@
 # ArcticWolf | Fortnite DataMiner, Mod & Bot
 
 ## Current State
-The Core worked in a previous version, but after I refactored the code to create a framework but now the game crashes due to a memory exception and I can't fix it currently.
+The Core can be used to go to the lobby, but after I refactored the code to create a framework but now the game crashes while starting a match due to a memory exception and I can't fix it currently. Only tested and developed for v15.00. You need to start the "ArcticWolfApi" before starting the game using the ArcticWolfLauncher.
 
 ## Projects and their purpose
 | Project | Purpose | Note |
