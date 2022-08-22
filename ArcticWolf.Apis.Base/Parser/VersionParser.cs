@@ -1,3 +1,4 @@
+using ArcticWolf.Apis.Base.Exceptions;
 using System.Globalization;
 
 namespace ArcticWolf.Apis.Base.Parser;
@@ -6,6 +7,8 @@ public static class VersionParser
 {
     public static decimal GetVersionFromFnVersionString(string version)
     {
+        if (version == null) throw new InvalidParameterException($"Parameter '{nameof(version)}' cannot be null");
+
         string[] parts = version.Split("-");
         string previousPart = "";
 
