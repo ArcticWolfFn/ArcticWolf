@@ -89,6 +89,7 @@ namespace ArcticWolf.Apis.Base.Common.Http
             else
             {
                 Log.Error($"Request to '{url}' failed. ", LOG_PREFIX);
+                result.Success = false;
             }
             return result;
         }

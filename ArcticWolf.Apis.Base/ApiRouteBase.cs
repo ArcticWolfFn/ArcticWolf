@@ -40,7 +40,7 @@ namespace ArcticWolf.Apis.Base
 
             Log.Error("Request to retrieve data was not successful: " + response.Content, null, ClassLogPrefix);
 
-            return new TReturnType();
+            return default(TReturnType);
         }
     }
 }
